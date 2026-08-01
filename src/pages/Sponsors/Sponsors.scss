@@ -1,0 +1,311 @@
+@use '../../static/styles/base/colors' as *;
+@use '../../static/styles/base/variables' as *;
+.sponsors {
+  div {
+    margin-bottom: 30px;
+  }
+}
+
+.spons-page {
+  margin-top: 30px;
+  .spons-groups {
+    text-align: center;
+    padding-bottom: 50px !important;
+    .spons-block {
+      padding-top: 30px;
+      display: flex;
+      flex-direction: column;
+      .spons-title {
+        font-family: 'Montserrat', sans-serif;
+        margin-bottom: 30px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+      h2 {
+        font-size: calc(4vh + 4vw);
+      }
+      h3 {
+        font-size: calc(3.5vh + 3.5vw);
+      }
+      h4 {
+        font-size: calc(2.5vh + 2.5vw);
+      }
+      h5 {
+        font-size: calc(2vh + 2vw);
+      }
+      h6 {
+        font-size: calc(1.75vh + 1.75vw);
+      }
+      .two-line {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-evenly;
+        padding: 0vw 5vw;
+      }
+      .spons-img {
+        max-width: 100%;
+        margin-bottom: 50px;
+        object-fit: contain;
+        height: auto;
+        width: auto;
+      }
+      // Diamond - Largest (both width and height boundaries)
+      .plat-spons {
+        max-width: 90%;
+        width: calc(30vh + 30vw);
+        height: auto;
+      }
+      // Gold - Large (but smaller than Diamond)
+      .gold-spons {
+        max-width: 380px;
+        max-height: 140px;
+        width: auto;
+        height: auto;
+      }
+      .half-gold-spons {
+        max-width: calc(10vh + 10vw);
+      }
+      // Silver - Medium
+      .silver-spons {
+        max-width: 320px;
+        max-height: 180px;
+        width: auto;
+        height: auto;
+      }
+      // Bronze/Other - Smaller
+      .other-spons {
+        max-width: 200px;
+        max-height: 110px;
+        width: auto;
+        height: auto;
+      }
+      .spons-text-block {
+        font-size: calc(1vh + 1vw);
+        .party-text {
+          font-family: 'Jura', 'Montserrat', sans-serif;
+          font-size: calc(1.2vh + 1.2vw);
+          color: $text-highlight;
+          font-weight: 500;
+        }
+      }
+      .foodbev-spons {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        .single-foodbev-spons {
+          display: flex;
+          flex-direction: column;
+          width: 50%;
+          // Food/Beverage/Coffee - Smallest
+          .fdbev-spons {
+            max-width: 200px;
+            max-height: 110px;
+            margin-bottom: 20px;
+            width: auto;
+            height: auto;
+          }
+        }
+      }
+      // .toool-logo {
+      //   max-height: 210px;
+      // }
+    }
+  }
+}
+
+.platinum {
+  color: $platinum;
+}
+
+.diamond {
+  color: #34ebc9;
+}
+
+.gold {
+  color: goldenrod;
+}
+
+.silver {
+  color: silver;
+}
+
+.bronze {
+  color: #c9992b;
+}
+
+.ctf-spons {
+  color: $dm-highlight;
+}
+
+.ctf-spons-logo {
+  max-width: 640px;
+  max-height: 360px;
+  width: auto;
+  height: auto;
+  transform: scale(1.5);
+}
+
+.all-dark {
+  filter: brightness(0);
+}
+
+.all-bright {
+  filter: invert(1) grayscale(1) brightness(1000);
+}
+
+.sub-party-spons {
+  width: auto; 
+  height: calc(4vh + 6vw); 
+  object-fit: contain;
+  max-width: 100%; 
+}
+
+.sub-party-logos {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  width: 100%;
+  flex-wrap: nowrap; 
+  gap: 20px; 
+}
+
+.gp-logo {
+  margin-bottom: 0px !important;
+}
+
+.cribl-logo {
+  transform: scale(1.6);
+}
+
+.crowdstrike-logo {
+  transform: scale(2.2);
+}
+
+.past-sponsors {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 15px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+  
+  .sponsors-label {
+    font-weight: 600;
+    margin-right: 10px;
+  }
+  
+  .sponsor-year {
+    a {
+      text-decoration: none;
+      color: inherit;
+      font-weight: 500;
+      
+      &:hover {
+        text-decoration: underline;
+        color: $text-highlight;
+      }
+    }
+  }
+  
+  .sponsor-separator {
+    color: #666;
+    font-weight: 300;
+    margin: 0 5px;
+  }
+}
+
+// Mobile responsive adjustments
+@media only screen and (max-width: 768px) {
+  .spons-page {
+    .spons-groups {
+      .spons-block {
+        .spons-img {
+          margin-bottom: 30px;
+        }
+        // Diamond - Largest on mobile (both width and height boundaries)
+        .plat-spons {
+          max-width: 90vw;
+          width: calc(25vh + 25vw);
+          height: auto;
+        }
+        // Gold - Smaller than Diamond
+        .gold-spons {
+          max-width: 50vw;
+          max-height: 8vh;
+          width: auto;
+          height: auto;
+        }
+        .silver-spons {
+          max-width: 55vw;
+          max-height: 24vh;
+          width: auto;
+          height: auto;
+        }
+        .other-spons {
+          max-width: 40vw;
+          max-height: 16vh;
+          width: auto;
+          height: auto;
+        }
+        .ctf-spons-logo {
+          max-width: 80vw;
+          max-height: 32vh;
+          width: auto;
+          height: auto;
+        }
+        .foodbev-spons {
+          .single-foodbev-spons {
+            width: 100%;
+            margin-bottom: 20px;
+            .fdbev-spons {
+              max-width: 40vw;
+              max-height: 16vh;
+              width: auto;
+              height: auto;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Tablet adjustments
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+  .spons-page {
+    .spons-groups {
+      .spons-block {
+        .plat-spons {
+          max-width: 85vw;
+          width: calc(28vh + 28vw);
+        }
+        .gold-spons {
+          max-width: 40vw;
+          max-height: 15vh;
+        }
+        .silver-spons {
+          max-width: 55vw;
+          max-height: 26vh;
+        }
+        .other-spons {
+          max-width: 35vw;
+          max-height: 18vh;
+        }
+        .ctf-spons-logo {
+          max-width: 70vw;
+          max-height: 36vh;
+        }
+        .foodbev-spons {
+          .single-foodbev-spons {
+            .fdbev-spons {
+              max-width: 35vw;
+              max-height: 18vh;
+            }
+          }
+        }
+      }
+    }
+  }
+}

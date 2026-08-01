@@ -1,0 +1,85 @@
+@use '../../static/styles/base/colors' as *;
+.tab-bullets {
+    margin-left: 30px;
+    margin-bottom: 20px;
+}
+
+.tab-sub-heading {
+    font-size: 20px;
+    font-weight: 900;
+    padding: 20px 0px;
+    font-family: 'Jura', 'Montserrat', sans-serif;
+}
+
+.fine-notes {
+    font-size: 12px;
+    font-weight: 700;
+    padding-bottom: 20px;
+}
+
+.stickers {
+    width: calc(100vw - 200px);
+    max-width: 700px;
+    margin-left: calc(2vw + 10vh);
+    margin-top: -10px;
+    margin-bottom: -80px;
+}
+
+.tab-ordered-list {
+    margin-left: 35px;
+    font-size: 14px;
+    ul>li {
+        margin-left: 30px;
+    }
+}
+
+.tab-note {
+    font-size: 14px;
+    font-style: italic;
+}
+
+.tab-heading {
+    font-weight: 700;
+}
+
+.tab-title {
+    font-family: 'Jura', 'Montserrat', sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: #409ABF;
+    display: block !important;
+}
+
+.tab-closed-banner {
+    font-family: 'Jura', 'Montserrat', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #FFFFFF;
+    background-color: #FF6B6B;
+    padding: 15px 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+    text-align: center;
+    display: block;
+}
+
+.tab-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.closed-tag {
+    font-family: 'Jura', 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #FFFFFF;
+    background: linear-gradient(135deg, #FF6B6B 0%, #EE5A5A 100%);
+    padding: 6px 14px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+    display: inline-block;
+}

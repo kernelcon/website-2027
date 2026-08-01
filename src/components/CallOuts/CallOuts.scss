@@ -1,0 +1,141 @@
+.callout-area {
+  .callout-title {
+    font-size: 20px;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    margin-bottom: 0px;
+    background-color: skyblue;
+    color: #25282a;
+  }
+  .callout-section {
+    padding: 15px 0px 30px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    &>* {
+      flex: 1 250px 300px;
+    }
+    .callout-name-logo {
+      display: flex;
+      flex-direction: column;
+      max-width: 240px;
+      justify-content: flex-start;
+      margin-right: 40px;
+      .callout-author {
+        font-size: 16px;
+        font-weight: 300;
+        margin-bottom: 20px;
+        margin-left: 10px;
+        a {
+          text-decoration: none;
+          color: #006688;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+      .callout-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .callout-img {
+          min-width: 130px;
+          max-width: 240px;
+          max-height: 120px;
+          width: auto;
+          height: auto;
+          object-fit: contain;
+          margin-bottom: 30px;
+        }
+        .callout-comic {
+          max-height: none !important;
+        }
+        .panic-live-logo {
+          background-color: #000;
+          padding: 10px;
+          border-radius: 4px;
+          display: inline-block;
+        }
+        // Specific styling for CTF logo
+        img[alt="Kernelcon Capture the Flag"] {
+          transform: scale(1.5);
+          margin-top: 30px;
+        }
+      }
+    }
+    .callout-description {
+      font-size: 14px;
+      line-height: 1.75;
+      margin-bottom: 20px;
+      a {
+        text-decoration: none;
+        color: #006688;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+      p {
+        margin-bottom: 14px;
+      }
+      .callout-details {
+        margin-top: 10px;
+        font-size: 12px;
+        border-left: 6px solid #ddd;
+        //border-left: 6px solid #dddddd0f;
+        padding-left: 6px;
+        background-color: #eee;
+        //background-color: #eeeeee0f;
+        padding-bottom: 3px;
+
+        .callout-detail-name {
+          font-weight: bolder;
+        }
+      }
+      .careers-footnote {
+        font-size: 12px;
+        color: #777;
+        margin-top: 10px;
+      }
+    }
+  }
+}
+
+
+.activity-bullets {
+  margin-left: 30px;
+  margin-top: -15px;
+  margin-bottom: 10px;
+}
+
+.warning {
+  color: #fc7878;
+}
+
+.catcher {
+  margin: 10px 30px 10px;
+}
+
+body.dark-mode {
+  .callout-author {
+    a {
+      color: #ee09;
+    }
+  }
+  .callout-description {
+    a {
+      color: #ee09;
+    }
+  }
+}
+
+// Make specific village logos appear white/bright in dark mode
+body.dark-mode {
+  .callout-logo {
+    .badge-invert,
+    .hhv-invert,
+    .rfv-invert {
+      filter: invert(1) grayscale(1) brightness(1000);
+    }
+  }
+}

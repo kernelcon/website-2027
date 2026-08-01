@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 2160 1384" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1,0,0,1,0,-2456)">
+        <path id="Close-Mountains" serif:id="Close Mountains" d="M0,2513L274,2556L736,2494L920,2511L1056,2463L1606,2508L1700,2461L1926,2510L2114,2492L2147,2460L2160,2456L2160,3840L0,3840L0,2513Z" style="fill:url(#_Linear1);"/>
+    </g>
+    <defs>
+        <linearGradient id="_Linear1" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(3.40183e-13,-5555.62,5555.62,3.40183e-13,1088.1,4062.39)"><stop offset="0" style="stop-color:rgb(7,0,27);stop-opacity:1"/><stop offset="0.06" style="stop-color:rgb(6,0,20);stop-opacity:1"/><stop offset="0.16" style="stop-color:rgb(3,0,11);stop-opacity:1"/><stop offset="0.23" style="stop-color:rgb(0,0,2);stop-opacity:1"/><stop offset="0.34" style="stop-color:rgb(21,8,59);stop-opacity:1"/><stop offset="0.37" style="stop-color:rgb(33,12,69);stop-opacity:1"/><stop offset="0.48" style="stop-color:rgb(107,54,108);stop-opacity:1"/><stop offset="0.52" style="stop-color:rgb(105,52,107);stop-opacity:1"/><stop offset="0.57" style="stop-color:rgb(91,39,104);stop-opacity:1"/><stop offset="0.59" style="stop-color:rgb(89,37,104);stop-opacity:1"/><stop offset="0.7" style="stop-color:rgb(59,22,84);stop-opacity:1"/><stop offset="0.81" style="stop-color:rgb(28,9,67);stop-opacity:1"/><stop offset="0.89" style="stop-color:rgb(22,5,57);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(6,0,18);stop-opacity:1"/></linearGradient>
+    </defs>
+</svg>

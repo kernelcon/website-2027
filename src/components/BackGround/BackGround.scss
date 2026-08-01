@@ -1,0 +1,231 @@
+@use '../../static/styles/base/colors' as *;
+@use '../../static/styles/base/variables' as *;
+
+.layer-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.scene-layer {
+  will-change: transform;
+}
+
+section.content {
+  position: relative;
+  z-index: 20;
+  max-width: 900px;
+  margin: 0 auto;        // center horizontally
+  padding: 1.5rem 2rem 1rem;
+  color: #fff;
+  text-align: left;      // revert to left alignment
+  top: -150px;
+  
+  // Black glass effect
+  background: rgba(0, 0, 0, 0.75); // subtle black background
+  backdrop-filter: blur(20px) saturate(180%); // heavy blur with saturation
+  -webkit-backdrop-filter: blur(20px) saturate(180%); // Safari support
+  border: 1px solid rgba(255, 255, 255, 0.15); // subtle white border
+  border-radius: 24px; // slightly more rounded corners
+  
+  // Enhanced shadows for depth
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3), // main shadow
+    0 4px 16px rgba(0, 0, 0, 0.2), // secondary shadow
+    inset 0 1px 0 rgba(255, 255, 255, 0.1); // inner highlight
+  
+  opacity: 0.65;            // start invisible for animation
+  transform: translateY(20vh); // start higher - only 20vh down from top
+  backface-visibility: hidden; // prevent flickering
+  transform-style: preserve-3d; // smoother 3D transforms
+
+  h1 {
+    font-family: "Jura", "Montserrat", sans-serif;
+  }
+
+  strong {
+    color: #b7f3f5;
+    font-family: "Jura", "Montserrat", sans-serif;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8); // dark shadow for contrast
+  }
+
+  .content-title {
+    color: #b7f3f5;
+    text-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.95), // heavy black shadow
+      0 2px 8px rgba(0, 0, 0, 0.9),   // secondary heavy shadow
+      0 1px 4px rgba(0, 0, 0, 0.8),   // tertiary shadow
+      0 0 2px rgba(0, 0, 0, 1);       // crisp black outline
+    font-weight: 600; // slightly bolder
+  }
+
+  .content-subtitle {
+    color: #d47cff;
+    padding: 10px 0px;
+    font-family: "Jura", "Montserrat", sans-serif;
+    text-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.95), // heavy black shadow
+      0 2px 8px rgba(0, 0, 0, 0.9),   // secondary heavy shadow
+      0 1px 4px rgba(0, 0, 0, 0.8),   // tertiary shadow
+      0 0 2px rgba(0, 0, 0, 1);       // crisp black outline
+    font-weight: 700; // slightly bolder
+  }
+
+  .content-paragraph {
+    margin: 10px 0px 20px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8); // dark shadow for paragraphs
+    line-height: 1.6; // better line spacing for readability
+    font-weight: 400; // ensure good weight
+  }
+}
+
+// Mobile-specific adjustments
+@media (max-width: 768px) {
+  section.content {
+    // transform: translateY(30vh); // start higher on mobile too
+     top: 100px;
+  }
+}
+
+.scene-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+}
+
+#sitter {
+  position: absolute;
+  left: 35%;
+  transform: translateX(-50%);
+  width: calc(100vw * (144 / 2160));
+  height: auto;
+}
+
+#camper {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100vw * (1327 / 2160));
+  height: auto;
+}
+
+#ray1 {
+  position: absolute;
+  width: calc(100vw * (145 / 2160));
+  height: 3860px;
+  position: absolute;
+  top: 0;
+  left: 45.25%;
+  transform: translateX(-50%);
+  opacity: 0;
+  mix-blend-mode: hard-light;
+  pointer-events: none;
+}
+
+#ray2 {
+  position: absolute;
+  width: calc(100vw * (20 / 2160));
+  height: 3860px;
+  background: rgba(255, 255, 255, .2);
+  position: sticky;
+  top: 0;
+  left: 45.25%;
+  transform: translateX(-50%);
+  filter: blur(3px);
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* Morse code pulses for ray2 */
+.morse-pulse {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 1);
+  pointer-events: none;
+  box-shadow: 0 0 16px 8px rgba(0, 170, 255, 0.15);
+  z-index: 2;
+}
+
+.morse-pulse.dot {
+  height: 30px;
+}
+
+.morse-pulse.dash {
+  height: 110px;
+}
+
+#ray-mask {
+  width: 100%;
+  height: calc(
+    50vh - (
+      (252px + (50 * ((100vw - 400px) / 1500))) - 5vw
+    )
+  );
+  top: 0;
+  left: 0;
+  position: absolute;
+  overflow: hidden;
+}
+
+
+#logo-container {
+  position: absolute;
+  left: 50%;
+  top: 1vh;
+  transform: translateX(-50%);
+  display: block;
+  width: calc(100vw * (1200 / 2160));
+  aspect-ratio: 1200 / 277;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+#logo {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 0 30px rgba(0, 170, 255, 1));
+}
+
+#logo-text {
+  position: absolute;
+  right: 0;
+  bottom: -10px;
+  color: rgb(205, 255, 255);
+  font-family: courier;
+  font-weight: bolder;
+  mix-blend-mode: hard-light;
+  font-size: 1.5vw;
+  padding: 0.2em 0.5em;
+  pointer-events: none;
+  text-align: right;
+  line-height: 1.1;
+  width: auto;
+  max-width: 90%;
+  max-height: 50%;
+}
+
+.screen {
+  mix-blend-mode: screen;
+}
+
+.demo-content {
+  position: relative;
+  z-index: 1;
+  scroll-behavior: smooth; // ensure smooth scrolling
+  -webkit-overflow-scrolling: touch; // smooth scrolling on iOS
+}

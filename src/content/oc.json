@@ -1,0 +1,144 @@
+[{
+  "heading": "Organizing Committee",
+  "people": [{
+      "id": 1,
+      "name": "Wacey Lanier",
+      "title": "Social Butterfly",
+      "image": "wacey.gif",
+      "twitter": "_wacey",
+      "mastodon": "",
+      "mastodon_url": "",
+      "oc": true
+    },
+    {
+      "id": 2,
+      "name": "Tyler Rosonke",
+      "title": "Badge Chair",
+      "image": "tyler.png",
+      "twitter": "zonksec",
+      "mastodon": "",
+      "mastodon_url": "",
+      "oc": true
+    },
+    {
+      "id": 3,
+      "name": "Dan Browder",
+      "title": "Graphics Chair and Website",
+      "image": "popcorn.png",
+      "twitter": "popcornhax",
+      "mastodon": "",
+      "mastodon_url": "",
+      "oc": true
+    },
+    {
+      "id": 4,
+      "name": "Henry Karpf",
+      "title": "Registration Chair",
+      "image": "henry.png",
+      "twitter": "hk6045",
+      "mastodon": "",
+      "mastodon_url": "",
+      "oc": true
+    },
+    {
+      "id": 5,
+      "name": "Adam Schaal",
+      "title": "Village Chair and Website",
+      "image": "adam.png",
+      "twitter": "clevernyyyy",
+      "mastodon": "",
+      "mastodon_url": "",
+      "oc": true
+    },
+    {
+      "id": 6,
+      "name": "Jason Lehr",
+      "title": "Training Chair and Security",
+      "image": "jason.png",
+      "twitter": "__JCL__",
+      "mastodon": "",
+      "mastodon_url": "",
+      "oc": true
+    },
+    {
+      "id": 7,
+      "name": "Tim Vidas",
+      "title": "General Chair",
+      "image": "tim.png",
+      "twitter": "tvidas",
+      "mastodon": "",
+      "mastodon_url": "",
+      "oc": true
+    },
+    {
+      "id": 8,
+      "name": "Aaron Gunning",
+      "title": "Sponsorship Chair",
+      "image": "aaron.png",
+      "twitter": "scotchsec",
+      "mastodon": "",
+      "mastodon_url": "",
+      "oc": true
+    },
+    {
+      "id": 9,
+      "name": "Kate Knowlton",
+      "title": "Store Czar",
+      "image": "kate.png",
+      "twitter": "vulnKat",
+      "mastodon": "",
+      "mastodon_url": "",
+      "oc": true
+    },
+    {
+      "id": 10,
+      "name": "Nate Wood",
+      "title": "CTF Director",
+      "image": "nate.png",
+      "twitter": "woodnsec",
+      "mastodon": "",
+      "mastodon_url": "",
+      "oc": true
+    },
+    {
+      "id": 11,
+      "name": "Jeris Rue",
+      "title": "Badge",
+      "image": "jeris.png",
+      "twitter": "elaboraterues",
+      "mastodon": "",
+      "mastodon_url": "",
+      "oc": true
+    },
+    {
+      "id": 13,
+      "name": "Will Gentle",
+      "title": "Entertainment",
+      "image": "will.png",
+      "twitter": "",
+      "mastodon": "Negahyphen",
+      "mastodon_url": "https://infosec.exchange/@Negahyphen",
+      "oc": true
+    },
+    {
+      "id": 16,
+      "name": "Matt Virus",
+      "title": "Hardware and Infrastructure Lord",
+      "image": "mattv.webp",
+      "twitter": "themattvirus",
+      "mastodon": "",
+      "mastodon_url": "",
+      "oc": true
+    },
+    {
+      "id": 17,
+      "name": "Arber",
+      "title": "Volunteer Coordinator",
+      "image": "arber.png",
+      "twitter": "sud0m4st3r",
+      "mastodon": "",
+      "mastodon_url": "",
+      "oc": true
+    }
+  ]
+}]

@@ -1,0 +1,27 @@
+services:
+  # Local development with hot reload:  docker compose up dev
+  dev:
+    image: node:20-alpine
+    container_name: kernelcon-2027-dev
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+      # Needed for file-watching to work reliably inside containers
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+
+  # Production build served by nginx:  docker compose up --build web
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: kernelcon-2027:latest
+    container_name: kernelcon-2027-web
+    ports:
+      - "8080:80"
+    restart: unless-stopped

@@ -1,0 +1,40 @@
+[
+  {
+    "title": "Kernel Panic",
+    "author": "",
+    "id": "panic",
+    "hidden": false,
+    "logo": {
+      "dark_mode_support": false,
+      "image_name": "kernel-panic.png",
+      "image_class": "callout-comic",
+      "dark_mode_image_name": "",
+      "dark_mode_image_class": ""
+    },
+    "dates": [{
+      "day": "Thursday, April 9th"
+    }],
+    "description": "<div><p>When the grid goes down, the real hackers emerge. Kernel Panic is where we disconnect from the mainstream and create our own power grid. Join us for a night that runs entirely off-grid - no corporate overlords, no cloud dependencies, just pure, unadulterated tech culture running on its own infrastructure.</p><p>Featuring live performances by nerdcore legends YTcracker and Dual Core - because when you're off the grid, you need beats that can survive without a network connection. These artists know how to generate their own power.</p><p>The Setup:</p><ul class='activity-bullets'><li>Open bar & proper food (sustainably sourced, grid-independent)</li><li>Networking that operates on peer-to-peer protocols, no central server required</li><li>Live music that runs on pure energy, no external dependencies</li></ul><p>This isn't your typical plugged-in tech event. This is where we prove that the best connections happen when you're completely disconnected. When the infrastructure fails, we build our own.</p><p>Quick heads up: Word in the field is there's a surprise belt event happening. That's all we can say for now - some things are better discovered off-grid.</p></div>"
+  },
+  {
+    "title": "Kernelcon Carnage Belt",
+    "author": "",
+    "id": "carnage",
+    "hidden": false,
+    "logo": {
+      "dark_mode_support": false,
+      "image_name": "",
+      "image_class": "",
+      "dark_mode_image_name": "",
+      "dark_mode_image_class": ""
+    },
+    "dates": [{
+      "day": "Thursday, April 9th"
+    }],
+    "description": "More information coming soon!"
+  }
+]
+
+
+
+

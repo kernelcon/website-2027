@@ -1,0 +1,61 @@
+[{
+  "title": "Kernelcon Escape Room",
+  "author": "Falkor Security",
+  "id": "esc",
+  "hidden": false,
+  "logo": {
+    "dark_mode_support": false,
+    "image_name": "escape_room.png",
+    "image_class": "",
+    "dark_mode_image_name": "",
+    "dark_mode_image_class": ""
+  },
+  "dates": [{
+      "day": "Thursday, April 4th"
+    },
+    {
+      "day": "Friday, April 5th"
+    }
+  ],
+  "description": "Introducing Kernelcon's second annual escape room! It's a fixed race and the conditions are questionable. Someone is trying to manipulate the FCR Race season. Teams of six can sneak into the offices and do a quick investigation, but only have 30 minutes to find the clues, solve the mystery, and get out. Gather your friends to test your wits and compete in this fun side quest.<p>AI-pocalypse. Zombies are a thing of the past. Artificial Intelligence bots have taken over major cities. You and your group were able to escape the city to an offline location only to find it abandoned. Fortunately, the last people that were there left supplies and clues to get help. You have 30 minutes to send out a communication before the bots find you. Gather your survival buddies (team of 6) to solve the clues, get help, and compete in this fun team building challenge.</p>"
+},{
+  "title": "Kernelcon Corn Cob Catcher",
+  "author": "Kernelcon",
+  "id": "catch",
+  "hidden": false,
+  "logo": {
+    "dark_mode_support": false,
+    "image_name": "corncatcher.jpg",
+    "image_class": "",
+    "dark_mode_image_name": "",
+    "dark_mode_image_class": ""
+  },
+  "dates": [{
+      "day": "Thursday, April 4th"
+    },
+    {
+      "day": "Friday, April 5th"
+    }
+  ],
+  "description": "<b>How to play the Kernelcon Corn Cob Catcher</b><ol class='catcher'><li>Press the top doorbell to turn on the magnets.</li><li>Attach the corn cobs to the magnets. If you take too long the magnets will shut off to prevent overheating.</li><li>When ready press the second button to start a 5 second timer before they begin randomly dropping.</li><li>Attempt to catch all the corn cobs.</li><li>Return the corn cobs to the basket when done.</li></ol><span class='warning'>Please don't steal the corn cobs :)</span>"
+},{
+  "title": "Kernelcon Capture the Flag",
+  "author": "Kernelcon",
+  "id": "ctf",
+  "hidden": false,
+  "logo": {
+    "dark_mode_support": false,
+    "image_name": "ctf.png",
+    "image_class": "",
+    "dark_mode_image_name": "",
+    "dark_mode_image_class": ""
+  },
+  "dates": [{
+      "day": "Thursday, April 9th"
+    },
+    {
+      "day": "Friday, April 10th"
+    }
+  ],
+  "description": "Our annual Kernelcon Capture the Flag roars back stronger than ever, throwing competitors into a post-apocalyptic digital wasteland where only skill, grit, and community keep the engines running. This year, it's all about the Tribe—your war rig, your crew, your family—banding together to survive the ruins of broken systems, dead code, and hostile networks. Battle through challenges in web hacking, reversing, pwning, cryptography, and more as you scavenge Flags from the ashes and climb the Thunderdome leaderboard. The competition will be brutal, the exploits unforgiving, and only one crew will ride eternal, earning the coveted Eternal Kernel badges. Do you have the rig to survive the wasteland? If so, witness us at Kernelcon CTF."
+}]

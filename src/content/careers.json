@@ -1,0 +1,21 @@
+[
+  {
+    "title": "Resume Review & Career Coaching",
+    "author": "TEKsystems",
+    "id": "teksystems-careers",
+    "hidden": false,
+    "logo": {
+      "dark_mode_support": false,
+      "image_name": "teksystems.png",
+      "image_class": "",
+      "dark_mode_image_name": "",
+      "dark_mode_image_class": ""
+    },
+    "dates": [
+      { "day": "Thursday, April 3rd" },
+      { "day": "Friday, April 4th" }
+    ],
+    "description": "Did you know you should update your resume every six months, even if you’re not looking for a new job? Have a recruiting expert take a look at your resume and assist with advice on making it the best it can be.<p style='margin-top: 18px'>TEKsystems volunteers will be here on Thursday and Friday at the Kernelcon Resume Review table within the village area to provide professional resume review assistance. Attendees are welcome to walk up to the table at any point throughout the day and should expect to spend 15–20 minutes discussing resume updates.</p><p class='careers-footnote'><em>TEKsystems is a global provider of technology, business and talent solutions that help organizations transform and achieve their goals. We partner with clients to build, modernize and optimize their digital and cloud environments, deliver innovative solutions and empower their teams with top technology talent.</em></p>"
+  }
+]
+

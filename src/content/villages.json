@@ -1,0 +1,205 @@
+[  {
+    "title": "Badge Village",
+    "author": "Kernelcon",
+    "id": "badge",
+    "hidden": false,
+    "logo": {
+      "dark_mode_support": true,
+      "image_name": "badge_village_trans.png",
+      "image_class": "light-mode-logo",
+      "dark_mode_image_name": "badge_village_trans.png",
+      "dark_mode_image_class": "dark-mode-logo badge-invert"
+    },
+    "dates": [{
+      "day": "Thursday, April 3rd"
+    },
+    {
+      "day": "Friday, April 4th"
+    }
+  ],
+    "description": "Ready to get hands-on and go 'Off Grid'? Skip the screen and head to the <b>Badge Village</b> to master your powerful conference device! Discover what your badge can do and how to use it. Learn how to embark on the <b>interactive narrative quest</b>, which will guide you to unique challenges throughout the conference. Grab your parts, pick up a soldering iron, and <b>level up your hardware skills</b> by building an additional enhancement for your badge. Whether you're a seasoned maker or new to electronics, stop by the Village to learn, build, and prep for your adventure!"
+  },
+  {
+    "title": "HAM Radio Village",
+    "author": "https://hamvillage.org/",
+    "id": "hamradiovillage",
+    "hidden": false,
+    "logo": {
+      "dark_mode_support": false,
+      "image_name": "ham_village.png",
+      "image_class": "logo-reverse",
+      "dark_mode_image_name": "",
+      "dark_mode_image_class": ""
+    },
+    "dates": [{
+      "day": "Thursday, April 3rd"
+    },
+    {
+      "day": "Friday, April 4th"
+    }
+  ],
+    "description": "Ham Radio has been considered to be the original form of hacking, launching before computers, integrated circuits, and even the transistor! Hams of all generations have a hacker mindset, solving problems their own way, regardless of what the manual has to say. Licensed hams are the only individuals legally authorized to build and modify their own transmitters!  Continuing this pioneer spirit, the Ham Radio Village is here to support advancement of the hobby with a cybersecurity slant.<p>Everything we do today involves wireless communications of some sort, and a basic knowledge of how radio works is crucial. In the Ham Radio Village, you can learn hand-on with topics such as how to legally use a radio to send commands to a satellite, communicating around the globe when no other methods exist, and how to send and receive real-time location data without relying on any cellular networks. You can put your skills to the test by trying to find the hidden transmitters in the Ham Radio Fox Hunt contest, as well as transmitting memes over the airwaves to other attendees.</p><p>We provide license testing services for those looking to become licensed or upgrade their license class, as well as guidance on how to hack on the medium to achieve the best results and have the most fun!</p>"
+  },
+  {
+    "title": "Hardware Hacking Village",
+    "author": "Hackspace.io",
+    "id": "hhv",
+    "hidden": false,
+    "logo": {
+      "dark_mode_support": false,
+      "image_name": "hhv.png",
+      "image_class": "hhv-invert",
+      "dark_mode_image_name": "",
+      "dark_mode_image_class": ""
+    },
+    "dates": [
+      {
+        "day": "Thursday, April 3rd"
+      },
+      {
+        "day": "Friday, April 4th"
+      }
+    ],
+    "details": [
+      {
+        "detail_name": "Campfire Control: Smart Plug Flashing",
+        "detail_desc": "The cloud is great… until it isn’t. In Campfire Control, you’ll flash smart plugs with open firmware so you decide how and when they operate — no internet, no vendor lock-in, no mystery traffic heading home. You’ll learn how to flash smart plugs with open-source firmware, how these devices communicate on your local network, and why off-grid automation still matters (even in a cabin or trailer). Perfect for anyone who wants local control over power — whether that’s a workshop, RV, or a very paranoid shed."
+      },
+      {
+        "detail_name": "Basecamp Wi-Fi: OpenWRT Anywhere",
+        "detail_desc": "Basecamp Wi-Fi walks you through flashing vendor-locked or \"bricked\" Meraki APs with OpenWRT to escape cloud lock-in and build off-grid Wi-Fi that works anywhere. No licenses, no internet, just hardware you control. You’ll learn how to flash and configure an AP, how off-grid networks differ from home setups, and how to build a local wireless island for devices, services, and tools — perfect for field labs, basecamps, and hacker cabins in the woods."
+      },
+      {
+        "detail_name": "Glow Stick Engineering: LED Light Strip Assembly",
+        "detail_desc": "When you’re off-grid, lighting matters. In Glow Stick Engineering, you’ll assemble and power LED light strips designed for low-power, portable setups, and off-grid raving. You’ll learn how LED strips are wired, powered, and firmware-flashed; how voltage, current, and efficiency actually matter; and how to light up a space without draining your batteries. It’s part electronics lab, part survival skill, and far more satisfying than headlamps."
+      },
+      {
+        "detail_name": "Cabin Brain: On-Prem Local AI",
+        "detail_desc": "No cloud. No internet. Still smart. Cabin Brain brings AI completely on-prem, running locally using models like DeepSeek — even in disconnected environments. You’ll learn how local LLMs work without cloud access, what hardware is required (and what isn’t), and why local AI makes sense off-grid, in the field, or in air-gapped setups. If the internet goes away, your compute doesn’t have to."
+      },
+      {
+        "detail_name": "Smoke Signal 2.0: Meshtastic + MeshCore",
+        "detail_desc": "When phones don’t work, mesh does. Smoke Signal 2.0 brings back Meshtastic and introduces MeshCore, an emerging off-grid mesh networking project. You’ll learn how LoRa-based mesh networks operate, how Meshtastic and MeshCore differ, and how to flash, configure, and join a local mesh. A limited number of Meshtastic node assembly kits will be available for purchase — build it, flash it, and get on the air."
+      },
+      {
+        "detail_name": "Proof of Work Camp: Cryptomining Village",
+        "detail_desc": "Power is scarce. Compute is precious. In Proof of Work Camp, explore cryptomining from an off-grid perspective — where efficiency, thermals, and power matter more than hype. You’ll learn how cryptomining actually works, why certain algorithms favor certain hardware, and what changes when power is limited or solar-backed. It’s less “number go up” and more engineering under constraint… but yes, numbers still go up."
+      }
+    ],
+    "description": "<div><p>When the grid goes dark, the hacks don’t stop. This year’s Hardware Hacking Village takes familiar projects and drops them into an off-grid mindset: self-contained power, resilient networking, local compute, and hardware you control — no cloud required.</p><p>Dive into embedded systems, RF wizardry, mesh networking, and local AI while building, flashing, and breaking real hardware in an Off Grid environment.</p></div>",
+    "final_details": "<br/><p>Beyond the projects, the Hardware Hacking Village is a collaborative space for hackers of all skill levels. Share tips, tricks, and war stories with fellow hardware nerds. Mentors will be on hand to guide you through the challenges and help you push your hardware hacking skills to the next level.</p><p><b>Feature Zones &amp; Showcases</b></p><p><b>Solar Expo Showcase</b><br/>The HHV — and the Kernelcon network core — are powered by off-grid solar. Come see solar panels, battery banks, inverters and charge controllers, and live power flow running conference infrastructure. HHV staff will explain how it works, what fails first, and how to design systems that survive real-world use.</p><p><b>Battery Insanity</b><br/>From USB-C to 18-volt power tools and everything in between. Battery Insanity showcases creative, portable, and sometimes ridiculous ways to power devices off-grid. Bring your questions, bring your gear, and plug stuff in — this is hands-on exploration of real battery hacks people actually use.</p><p><b>Network Pew-Pew Map</b><br/>The HHV is the core of the Kernelcon network, and we make it visible. The Network Pew-Pew Map shows live endpoints, traffic flow and throughput, and real-time network behavior. It’s a rare look at what a hacker conference network actually looks like — from the inside.</p><p>Reminder – many activities in the HHV are free to try. For some projects, if you want to take the hardware home with you when you’re done, there may be a small fee to cover hardware costs and supplies.</p>"
+  },
+  {
+    "title": "Lockpicking Village",
+    "author": "https://toool.us/",
+    "id": "tooolvillage",
+    "hidden": false,
+    "logo": {
+      "dark_mode_support": false,
+      "image_name": "toool.png",
+      "image_class": "",
+      "dark_mode_image_name": "",
+      "dark_mode_image_class": ""
+    },
+    "dates": [{
+      "day": "Thursday, April 3rd"
+    },
+    {
+      "day": "Friday, April 4th"
+    }
+  ],
+    "description": "Tired of staring at a monitor trying to hack your way through a computer...come try your hand [literally] at hacking hardware! The Open Organisation Of Lockpickers [TOOOL] is set up and ready to give you a new kind of challenge. Gaining access has a different meaning here. TOOOL uses their knowledge to guide you through different types of locks, their vulnerabilities, and how to exploit them. Scrape pin tumblers instead of data!"
+  },
+  {
+    "title": "Radio Hacking Outpost",
+    "author": "Kernelcon",
+    "id": "rfvillage",
+    "hidden": false,
+    "logo": {
+      "image_name": "rfv.png",
+      "image_class": "rfv-invert"
+    },
+    "dates": [{
+      "day": "Thursday, April 3rd"
+    },
+    {
+      "day": "Friday, April 4th"
+    }
+  ],
+    "description": "Visit the Kernelcon Radio Hacking Village to learn more about software defined radio applications.  There will be various radio & wifi hardware if anyone wants to get hands on experience and/or see real-time examples of wireless hacking. Wifi adapters, expoitable routers, RTL-SDRs, signal decoding and cloning."
+  },
+  {
+    "title": "Mental Health and Wellness Village",
+    "author": "Mental Health Hackers",
+    "id": "mhhvillage",
+    "hidden": false,
+    "logo": {
+      "dark_mode_support": true,
+      "image_name": "MHH.png",
+      "image_class": "light-mode-logo",
+      "dark_mode_image_name": "MHH-white.png",
+      "dark_mode_image_class": "dark-mode-logo"
+    },
+    "dates": [{
+      "day": "Thursday, April 3rd"
+    },
+    {
+      "day": "Friday, April 4th"
+    }
+  ],
+    "description": "The Mental Health and Wellness Village offers a common place to allow like-minded individuals to share and grow as a community, to better our mental health and the health of those around us. Check out the village for fidget tables, crafts, adult coloring books, and more! Visit https://www.mentalhealthhackers.org/ for more information."
+  },
+  {
+    "title": "Hack/Craft Village",
+    "author": "ArtHax",
+    "id": "hackcraftvillage",
+    "hidden": false,
+    "logo": {
+      "dark_mode_support": false,
+      "image_name": "hackcraft.png",
+      "image_class": "",
+      "dark_mode_image_name": "",
+      "dark_mode_image_class": ""
+    },
+    "dates": [
+      {
+        "day": "Thursday, April 3rd"
+      },
+      {
+        "day": "Friday, April 4th"
+      }
+    ],
+    "details": [
+      {
+        "detail_name": "Print Shop: Screen Printing",
+        "detail_desc": "Screen printing is behind most Kernelcon shirts and hoodies and now it’s your turn at the squeegee. This is DIY printing you can replicate at home. You’ll pull a single-color print using pre-made screens onto paper, your own clothing, or a patch for your bag. More approachable than it looks, and more satisfying than you’d expect. Short demos cover how digital art becomes a screen using Cricut cutters and home printers. Same tools, same process, no print shop required."
+      },
+      {
+        "detail_name": "Texture Lab: Gel Plate Printing",
+        "detail_desc": "Gel plate printing is a monotype process, layered, tactile, and impossible to reproduce exactly. That’s a feature. Use stencils, textures, and pigments to build your own design. Follow along for a guided off-grid scene or use your favorite nature photo and turn it into a colorful textured print. Happy accidents are encouraged."
+      },
+      {
+        "detail_name": "Shirt Station: Direct-To-Film (DTF) Transfers",
+        "detail_desc": "DTF is the modern magic behind much full-color merch. Learn how it works, then press a design of your own onto fabric using a professional heat press. Fast, satisfying, and immediately wearable. Small designs are available for customizing your own garments, like your con shirt. Blank shirts and full-size DTF transfers, some inspired by past Kernelcon art, are available for purchase."
+      },
+      {
+        "detail_name": "Block Printing",
+        "detail_desc": "Try traditional linocut block printing using pre-carved designs from guest artists. Choose your ink color, roll it onto the block, and press it onto paper. Simple, tactile, and surprisingly addictive."
+      },
+      {
+        "detail_name": "Sticker Printing",
+        "detail_desc": "Print hacker stickers on demand. Previous Kernelcon favorites, new off-grid designs, and other classics. Slap them on your laptop or save them for just the right time."
+      },
+      {
+        "detail_name": "Cast Figures",
+        "detail_desc": "Using 3D-printed molds, cast a small Kernelcon collectable in Hydrocal plaster. Casts take up to 30 minutes to cure; explore other stations while you wait. Once hardened, paint it and take it home."
+      },
+      {
+        "detail_name": "Button Press",
+        "detail_desc": "Turn your prints, sketches, or on-the-spot doodles into classic pin-back buttons. Make one for yourself, your CTF team, or the person you just met in the hallway. The options are endless… if they fit in a button."
+      }
+    ],
+    "description": "<div><p>The Hack/Craft Village is where digital art goes physical. A pop-up print studio and maker space where Kernelcon artwork, hacker motifs, and your own ideas become shirts, prints, buttons, and more.</p><p>Roll ink, pull prints, press transfers, cast figures. Try a new technique, remix a design, or just show up and see what happens.</p><p>No art background required, just curiosity and a willingness to get a little ink on your hands.</p></div>",
+    "final_details": "<br/><p>All activities in the Hack/Craft Village are free to try. Some may have limited quantities. Blank shirts for printing, and large-size DTF transfers will have an additional fee.</p>"
+  }
+]

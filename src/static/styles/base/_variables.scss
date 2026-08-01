@@ -1,0 +1,24 @@
+@use "./colors" as *;
+$light-highlight: $seagull;
+$text-highlight-lite: $boston-blue;
+$text-highlight: $madder-lake;
+
+/* punk theme one - blacks, blues, and pinks */
+
+
+/* light mode */
+
+$lm-bkg-highlight: $mercury;
+$lm-bkg-light: $concrete;
+
+/* dark mode */
+
+$dm-main-color: $gray-darkest;
+$dm-darker-main: $black-forest;
+$dm-highlight: $cornflower-blue;
+$dm-theme-highlight: $madder-lake;
+$dm-theme-highlight-alt: $turquoise-green;
+$dm-punk-darklight: $cannon-pink;
+
+/* temp */
+$hero-bottom-border:    10px;

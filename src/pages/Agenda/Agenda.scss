@@ -1,0 +1,88 @@
+@use "../../static/styles/base/base" as *;
+.keynote-section {
+  // display: flex;
+  justify-content: space-between;
+  padding-top: 30px;
+  .keynote-left,
+  .keynote-right {
+    display: flex;
+    flex-direction: column;
+  }
+  .keynote-left {
+    .keynote-name {
+      font-family: 'Jura', 'Roboto', sans-serif;
+      margin: 0;
+      padding-bottom: 10px;
+      font-size: 30px;
+    }
+    .keynote-subtitle {
+      display: flex;
+      flex-direction: row;
+      font-weight: 300;
+      letter-spacing: 2px;
+      .keynote-company,
+      .keynote-handle,
+      .keynote-div {
+        display: flex;
+        color: $dm-highlight;
+        margin: 0 20px;
+        margin-left: 0px;
+      }
+    }
+    .keynote-talk {
+      .keynote-topic {
+        padding: 10px 0px;
+        color: $text-highlight;
+        font-family: 'Jura', 'Roboto', sans-serif;
+        font-size: 24px;
+      }
+    }
+  }
+  .keynote-bio-subtitle {
+    font-weight: 300;
+    margin-bottom: 20px;
+  }
+  .keynote-image {
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top center; /* fixing images */
+  }
+}
+
+.bio-section {
+  margin-top: 60px;
+}
+
+.footer-social-icons {
+  width: 20px;
+  fill: $dm-highlight;
+  margin-right: 41px;
+}
+
+.band-camp {
+  border: 0; width: 100%; height: 42px;
+}
+
+.speaker-titles {
+  color: $dm-highlight;
+  display: inline-block;
+  margin-bottom: 6px;
+  span {
+    &:not(:first-child) {
+      &:before {
+        content: "\2022";
+        color: $text-highlight;
+        margin: 0px 8px;
+      }
+    }
+    a {
+      vertical-align: middle;
+    }
+  }
+  .speaker-socials-logo {
+    width: 16px;
+    // margin: 0px 3px 0px 3px;
+  }
+}

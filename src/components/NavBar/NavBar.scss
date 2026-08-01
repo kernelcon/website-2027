@@ -1,0 +1,269 @@
+@use "../../static/styles/base/base" as *;
+.navbar {
+  position: fixed;
+  top: 0;
+  right: 100;
+  width: 100%;
+  display: flex;
+  padding: 25px;
+  height: 100px;
+  //background-color: rgba(215, 215, 215, .8);
+  // background-color: $lm-bkg-light;
+  z-index: 7;
+
+  .navbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .navbar-brand {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .navbar-brand .navbar-logo-k25 {
+    position: relative;
+    margin-top: 0;
+    margin-left: 0;
+  }
+
+  .navbar-brand .nav-dates,
+  .navbar-brand .second-nav-dates {
+    margin: 0;
+    margin-left: 0;
+    padding: 0;
+    line-height: 1.2;
+  }
+
+  .navbar-brand .nav-dates {
+    margin-top: 2px;
+  }
+
+  .navbar-brand .second-nav-dates {
+    margin-top: 1px;
+  }
+
+  .navbar-register {
+    text-transform: uppercase;
+    font-family: "Montserrat", "Jura", sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: #fff;
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 1px solid rgb(64, 154, 191);
+    border-radius: 4px;
+    background-color: #1a0a1f;
+    transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+
+    &:hover {
+      color: #fff;
+      border-color: rgb(64, 154, 191);
+      box-shadow: 0 0 20px rgba(64, 154, 191, 0.8), 0 0 40px rgba(64, 154, 191, 0.4);
+    }
+  }
+
+  .toggle-group {
+    position: absolute;
+    width: 120px;
+    right: 0;
+    //fix for using goggles svg
+    margin-top: -25px;
+  }
+}
+
+.navbar-transparent {
+  background-color: transparent;
+  
+  .nav-dates,
+  .second-nav-dates {
+    color: #dfdfdf;
+  }
+}
+
+.navbar-dark {
+  background-color: rgb(16, 23, 29);
+  
+  .nav-dates,
+  .second-nav-dates {
+    color: #dfdfdf;
+  }
+}
+
+.navbar-logo, .navbar-logo-k25 {
+  margin-top: -15px;
+  margin-left: -4px;
+  position: fixed;
+}
+
+.nav-dates {
+  font-size: 90%;
+  text-transform: uppercase;
+  margin: 12px 0px 0px -5px;
+  padding: 5px 0px;
+  font-weight: 400;
+  font-family: "Jura", "Montserrat", sans-serif;
+  color: #dfdfdf; /* Default light color for dark navbar */
+}
+
+.second-nav-dates {
+  font-size: 90%;
+  text-transform: uppercase;
+  margin: -10px 0px 0px -5px;
+  font-weight: 400;
+  font-family: "Jura", "Montserrat", sans-serif;
+  color: #dfdfdf; /* Default light color for dark navbar */
+}
+
+.secondary-nav {
+  height: 30px;
+  display: flex;
+  position: fixed;
+  width: 100%;
+  //background-color: rgba(235, 235, 235, .8);
+  // background-color: $lm-bkg-highlight;
+  background-color: rgb(16, 23, 29);
+  margin-top: 100px;
+  z-index: 6;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  text-transform: uppercase;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  z-index: 6;
+  
+  a {
+    color: #dfdfdf;
+    text-decoration: none;
+    
+    &:hover {
+      color: #fff;
+    }
+  }
+}
+
+.nav-menu {
+  padding-top: 2px;
+  z-index: 6;
+  div {
+    z-index: 6;
+  }
+  .nav-small {
+    display: block;
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    left: 0px;
+    height: 85px;
+    padding-top: 15px;
+    padding-left: 12px;
+    z-index: 99;
+    text-align: left;
+    line-height: 40px;
+  }
+  .nav-small .nav-links {
+    display: block;
+    margin-left: -12px;
+    margin-top: 40px;
+    text-align: center;
+    background-color: rgb(16, 23, 29);
+  }
+  .nav-small a {
+    display: block;
+    position: relative;
+    box-sizing: content-box;
+    zoom: 1.5;
+    margin: 5px;
+    color: #dfdfdf;
+    
+    &:hover {
+      color: #fff;
+    }
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  div.nav-small {
+    display: none !important;
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  .navbar {
+    height: 65px;
+    margin-left: 50px;
+    width: 90%;
+    padding-right: 8px;
+    .container {
+      padding: 0px;
+      margin: 0px;
+      width: 60%;
+      left: 0;
+    }
+    .navbar-inner {
+      padding-right: 0;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      align-items: center;
+      height: 30px;
+    }
+    .navbar-register {
+      font-size: 11px;
+      padding: 4px 8px;
+      margin-right: 0;
+      margin-left: auto;
+      position: relative;
+      z-index: 8;
+    }
+    .toggle-group {
+      padding: 0px;
+      margin: 0px;
+      // width: 30%;
+      //fix for using goggles svg
+      margin-top: 5px;
+    }
+  }
+  
+  .navbar-transparent {
+    background-color: transparent !important;
+  }
+  
+  .navbar-dark {
+    background-color: rgb(16, 23, 29) !important;
+  }
+
+  .nav-dates {
+    margin: 24px 0px 0px -5px;
+  }
+  .secondary-nav {
+    height: 85px;
+    margin: 0px;
+  }
+  .backdrop {
+    padding: 5px !important;
+  }
+  .dark-mode-toggle {
+    display: grid;
+    margin: 20px -30px -70px;
+  }
+  .race-car {
+    scale: 1;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .navbar {
+    width: 85%;
+  }
+}

@@ -1,0 +1,30 @@
+
+.map-container {
+  margin-top: 20px;
+  overflow: hidden;
+  height: 340px;
+}
+
+.text-area {
+  padding-bottom: 30px;
+}
+
+.new-tab {
+  color: red;
+}
+
+.new-hotel-section {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+
+.new-hotel-pic {
+  width: calc(min((100vw / 3 - 14px), 250px));
+  margin: 2px;
+}

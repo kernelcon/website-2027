@@ -1,0 +1,176 @@
+[{
+  "id": "adhardening",
+  "hide": false,
+  "instructors": [{
+    "name": "Jordan Drysdale",
+    "title": "",
+    "twitter_handle": "",
+    "github_handle": "",
+    "linkedin_handle": "",
+    "workplace": "",
+    "image_name": "",
+    "bio": "Jordan Drysdale is an experienced cybersecurity professional specializing in Active Directory security and hardening. He brings extensive knowledge in enterprise security, AD auditing, and defensive controls implementation. Jordan has worked with organizations to identify misconfigurations, analyze attack paths, and implement industry best practices to reduce risk in Active Directory environments."
+  }, {
+    "name": "Kent Ickler",
+    "title": "",
+    "twitter_handle": "",
+    "github_handle": "",
+    "linkedin_handle": "",
+    "workplace": "",
+    "image_name": "KentIckler.jpg",
+    "bio": "Kent Ickler is a cybersecurity expert with deep expertise in Active Directory security and enterprise defense. He specializes in AD hardening, privilege auditing, authentication security, and continuous validation techniques. Kent has extensive experience helping organizations secure their Active Directory infrastructure and implement defensive controls at scale."
+  }],
+  "course": {
+    "title": "Active Directory Security Hardening",
+    "days": 2,
+    "scheduled": {
+      "day_one": true,
+      "day_two": true
+    },
+    "time": "8:00 AM - 5:00 PM, with one hour lunch break",
+    "description": {
+      "long_form": "<p>Active Directory is the backbone of most enterprise environments, and it's a prime target for attackers. This hands-on course is built for defenders who want to understand, audit, and harden AD from the inside out. Students will work directly in a lab environment to identify misconfigurations, analyze attack paths, implement defensive controls, and apply industry best practices to reduce risk.</p><p>From initial domain controller promotion through deception technologies, AD enumeration, privilege auditing, authentication hardening, and continuous validation, students will build a practical skillset to secure Active Directory at scale. The labs are real-world, gritty, and tailored for defenders who want to learn how attackers think, and how to stop them.</p>",
+      "short_form": "<p>Active Directory is the backbone of most enterprise environments, and it's a prime target for attackers. This hands-on course is built for defenders who want to understand, audit, and harden AD from the inside out. Students will work directly in a lab environment to identify misconfigurations, analyze attack paths, implement defensive controls, and apply industry best practices to reduce risk.</p>"
+    },
+    "prerequisites": "Familiarity with Windows Server and Active Directory basics is helpful but not required.",
+    "equipment": "• Computer and internet access with appropriate bandwidth to access remote desktop lab environment.<br/>• GitHub.com Account with Multi-Factor Authentication to access Course Content<br/>• MetaCTF CloudLabs account to access Lab Virtual Environment",
+    "whoshouldattend": "This course is ideal for system administrators, security engineers, Blue Teamers, and IT professionals responsible for maintaining and defending Windows enterprise environments. If you manage AD, or if you're on the hook for securing it, this course is for you."
+  }
+}, {
+  "id": "AI",
+  "hide": false,
+  "instructors": [{
+    "name": "Joff Thyer",
+    "title": "",
+    "twitter_handle": "@joff_thyer",
+    "github_handle": "",
+    "linkedin_handle": "joffthyer",
+    "workplace": "",
+    "image_name": "",
+    "bio": "Joff Thyer has been a Security Analyst with Black Hills Information Security (BHIS) since 2013. He has an associate in Computer Science, a B.S. in Mathematics, and an M.S. in Computer Science, as well as several certifications. The best part of a penetration test for Joff is developing sophisticated malware that tackles defensive solutions, ultimately delivering exciting wins for company engagements. He has extensive experience covering intrusion prevention/detection systems, infrastructure defense, vulnerability analysis, defense bypass, source code analysis, and exploit research. When Joff isn't working he enjoys making music and woodworking. Certifications include GIAC GXPN, GWAPT, GPEN, GCIA, GCIA Gold, and Coursera Deep Learning AI Tensorflow Developer Professional."
+  }, {
+    "name": "Derek Banks",
+    "title": "",
+    "twitter_handle": "@0xderuke",
+    "github_handle": "",
+    "linkedin_handle": "derek-banks-117b0012",
+    "workplace": "",
+    "image_name": "",
+    "bio": "Derek Banks has been with Black Hills Information Security (BHIS) since 2014 as a Security Analyst, Penetration Tester, and Red Teamer. He has a B.S. in Information Systems and an M.S. in Data Science, as well as several industry certifications. Derek has experience in computer forensics and incident response, creating custom host and network-based logging and monitoring solutions, internal network and web application penetration testing, vulnerability analysis, and threat modeling. Derek's favorite aspects of working at BHIS include learning from his coworkers and helping customers better their security posture. When not working, Derek enjoys spending time with his family, staying physically fit, and playing the bass guitar. Certifications include GIAC GSEC, GCFA, GCIH, GPEN, GNFA, GMOB, GCIA, and CISSP."
+  }],
+  "course": {
+    "title": "AI for Cyber Security Professionals",
+    "days": 2,
+    "scheduled": {
+      "day_one": true,
+      "day_two": true
+    },
+    "time": "8:00 AM - 5:00 PM, with one hour lunch break",
+    "description": {
+      "long_form": "<p>This course is an introduction to the application of artificial intelligence technology for cyber security professionals. The course will cover AI, machine learning, data science, neural network, natural language processing and large language model (LLM) architecture fundamentals on the first day. In the second day, the course moves into practical applications of LLM technology to optimize cyber security professional workflow followed by an afternoon session on attacking LLM applications.</p><p>By the end of the course, attendees will have a solid understanding of some methodologies that can be applied to accelerate daily cyber security professional tasks. Attendees will also gain an understanding of weaknesses and vulnerabilities in AI-LLM applications.</p>",
+      "short_form": "<p>This course is an introduction to the application of artificial intelligence technology for cyber security professionals. The course will cover AI, machine learning, data science, neural network, natural language processing and large language model (LLM) architecture fundamentals on the first day. In the second day, the course moves into practical applications of LLM technology to optimize cyber security professional workflow followed by an afternoon session on attacking LLM applications.</p>"
+    },
+    "prerequisites": "A working knowledge of Python scripting. Internet connectivity and compliant browser. Familiarity/comfort in a command line environment. https://huggingface.co account. Optional: AWS account with ability to deploy AMI images.",
+    "equipment": "Latest Windows 10/11 laptop with administrative access, or MacOS. MacBook Pro M1/M2/M3 or later. Intel/AMD hardware laptop 2024 or later. Intel/AMD minimum specs: multiple core CPU, 16GB Ram, 1TB disk. Latest Windows 10/11 O/S software with WSL2 support.",
+    "whoshouldattend": "Cyber security managers and professionals"
+  }
+}, {
+  "id": "llmsecurity",
+  "hide": false,
+  "instructors": [{
+    "name": "Seth Law",
+    "title": "",
+    "twitter_handle": "",
+    "github_handle": "",
+    "linkedin_handle": "",
+    "workplace": "Redpoint Security",
+    "image_name": "",
+    "bio": "Seth Law is an experienced Application Security Professional with over 15 years of experience in the computer security industry. During this time, Seth has worked within multiple disciplines in the security field, from software development to network protection, both as a manager and individual contributor. Seth has honed his application security skills using offensive and defensive techniques, including tool development. Seth is the founder and principal of Redpoint Security, hosts the Absolute AppSec podcast with Ken Johnson, and is a regular speaker at developer meetups and security events, including Blackhat, Defcon, CactusCon, and other regional conferences."
+  }, {
+    "name": "Ken Johnson",
+    "title": "",
+    "twitter_handle": "",
+    "github_handle": "",
+    "linkedin_handle": "",
+    "workplace": "DryRun Security",
+    "image_name": "",
+    "bio": "Ken Johnson has been hacking web applications professionally for 14 years and given security training for 11 of those years. Ken is both a breaker and builder and is the CTO & Co-Founder of DryRun Security. Previously, Ken was a Director with GitHub's Product Security Engineering team and has held both technical and leadership roles both within the consulting world as well as a corporate defender. Previously, Ken has spoken at RSA, You Sh0t the Sheriff, Insomnihack, CERN, DerbyCon, AppSec USA, AppSec DC, AppSec California, DevOpsDays DC, LASCON, RubyNation, and numerous Ruby, OWASP, and AWS events about appsec, devops security, and AWS security. Ken's current passion project is the Absolute AppSec podcast with Seth Law."
+  }],
+  "course": {
+    "title": "Harnessing LLMs for Application Security",
+    "days": 2,
+    "dates": "Tuesday, April 7th and Wednesday, April 8th, 2027",
+    "scheduled": {
+      "day_one": true,
+      "day_two": true
+    },
+    "time": "8:00 AM - 5:00 PM, with one hour lunch break",
+    "description": {
+      "long_form": "<p>This comprehensive course is designed for developers and cybersecurity professionals seeking to harness the power of Generative AI and Large Language Models (LLMs) to enhance software security and development practices. You will gain an understanding of how LLMs work, their strengths and weaknesses, and how to craft effective prompts for different use cases. The course covers key topics such as embeddings, vector stores, and Langchain, providing insights into document loading, code analysis, and custom tool creation using Agent Executors. Through hands-on exercises, you'll learn to implement AI-driven techniques like Retrieval-Augmented Generation (RAG) and Few-Shot Prompting for secure code analysis, dynamic testing, threat modeling, and more. By the end of the course, you'll be equipped with the skills (and code) to integrate AI into your security tasks, enhancing your ability to identify vulnerabilities and improve overall application security.</p>",
+      "short_form": "<p>This course offers a deep dive into the intersection of Generative AI, Large Language Models (LLMs), and secure software development. Tailored for developers, cybersecurity professionals, and AI enthusiasts, the program begins with an overview of Gen AI concepts, focusing on how LLMs function, their strengths and weaknesses, and the importance of effective prompting. Participants will explore various prompt types—user, system, and AI—and delve into advanced techniques like Few-Shot Prompting, which enables LLMs to perform complex tasks with minimal examples.</p>"
+    },
+    "prerequisites": "Ability to understand, modify, and troubleshoot python with some support. You do not need to be a full-time developer, but understanding the basics of python is a must for examples and exercises.",
+    "equipment": "Laptop with ability to install and run code. Bring a system where you have the ability to install software or run administrative tools.",
+    "whoshouldattend": "Developers, cybersecurity professionals, and AI enthusiasts seeking to integrate AI-driven techniques into their software development and security practices."
+  }
+}, {
+  "id": "assemblyre",
+  "hide": false,
+  "instructors": [{
+    "name": "Dr. Matt Miller",
+    "title": "",
+    "twitter_handle": "@milhous30",
+    "github_handle": "",
+    "linkedin_handle": "",
+    "workplace": "",
+    "image_name": "",
+    "bio": "Dr. Matt Miller is an experienced educator and security professional specializing in reverse engineering, assembly programming, and binary exploitation. He has delivered training courses at Blackhat, BSides Charleston, university graduate and undergraduate programs, and Cybrary. Dr. Miller brings deep expertise in low-level systems, malware analysis, and practical reverse engineering techniques."
+  }],
+  "course": {
+    "title": "Introduction into Assembly, Reverse Engineering and binary exploitation",
+    "days": 2,
+    "scheduled": {
+      "day_one": true,
+      "day_two": true
+    },
+    "time": "8:00 AM - 5:00 PM, with one hour lunch break",
+    "description": {
+      "long_form": "<p>This 2-day course provides hands-on training in assembly programming and reverse engineering fundamentals for intermediate programmers. Participants will gain deep understanding of x86/x64 architecture, CPU registers, memory addressing, and instruction sets while learning to write functional assembly programs. The first day covers essential assembly concepts including data movement, arithmetic operations, control flow, function calls, and system interactions, culminating in practical exercises like building a simple calculator and file I/O programs.</p><p>Day two transitions into reverse engineering techniques, beginning with static analysis using industry-standard tools like disassemblers and hex editors. Students learn to read disassembled code, identify program structures, analyze control flow graphs, and recognize patterns in compiled binaries. The training emphasizes both theoretical understanding and practical application through guided analysis of crackme challenges and real-world scenarios.</p><p>The course combines dynamic analysis methods including debugging, breakpoint usage, memory examination, and API monitoring to provide comprehensive reverse engineering skills. Participants engage in hands-on projects such as password cracking exercises, serial validation bypasses, and simulated malware analysis while learning to identify security vulnerabilities like buffer overflows. All training occurs in a controlled virtual environment with pre-configured professional tools including debuggers, disassemblers, and analysis frameworks.</p><p>Upon completion, attendees will possess foundational skills in both assembly programming and reverse engineering, equipped with practical experience using industry-standard tools and methodologies. The course includes comprehensive materials, reference documentation, and guidance for continued learning through advanced topics, CTF competitions, and professional development opportunities.</p>",
+      "short_form": "<p>Have you ever wanted to break open a program and see how it works? Have you ever had a malware sample that you wanted to analyze at the binary level? Do you want to understand how your code gets turned into a binary program? The Reverse Engineering for Pentesters and Malware Analysts course will answer these questions and teach you so much more. You will learn how to analyze assembly so that you can read and write code at the machine level. Through hands-on labs and demonstrations, you will gain deeper insight into binary file formats and how programs are executed in memory. Learn how to become proficient with disassemblers and debuggers to perform exhaustive program analysis and get hands-on with prevalent malware obfuscation techniques, analyze the use of encryption and learn how to identify and defeat anti-analysis techniques. This course will help you take your reverse engineering skills to the next level!</p>"
+    },
+    "prerequisites": "The ability to program and understand concepts like if, loops and functions. Content based on trainings previously conducted at Blackhat, BSides Charleston, University graduate/undergraduate courses and Cybrary course. All copyright rights to the course content belongs to trainer.",
+    "equipment": "A laptop running linux or capable of running a VM with 8 gigs of RAM.",
+    "whoshouldattend": "This training is ideal for security professionals, software developers, and analysts seeking to understand low-level system operations and binary analysis techniques."
+  }
+}, {
+  "id": "offensivetooling",
+  "hide": false,
+  "instructors": [{
+    "name": "Chris Traynor",
+    "title": "",
+    "twitter_handle": "@cstraynor",
+    "github_handle": "",
+    "linkedin_handle": "",
+    "workplace": "Black Hills Information Security (BHIS)",
+    "image_name": "",
+    "bio": "Chris Traynor is a Pentester at Black Hills Information Security (BHIS), where he tests web applications, mobile apps, APIs, and networks. He is also the Owner and Instructor at Ridgeback InfoSec, LLC, and the author of two signature courses—Offensive Tooling Foundations and Offensive Tooling for Operators—taught through Antisyphon Training. With nearly two decades of experience spanning web and mobile development, QA automation, and penetration testing, Chris blends development and offensive security expertise to create hands-on, live-fire training. He holds multiple GIAC certifications including GSEC, GCIH, GWAPT, and GPEN, and is active in the GIAC Advisory Board, InfraGard, and TOOOL. When not working, Chris enjoys adventuring with his wife and daughters, exercising, and walking his dog."
+  }],
+  "course": {
+    "title": "Offensive Tooling for Operators",
+    "days": 2,
+    "scheduled": {
+      "day_one": true,
+      "day_two": true
+    },
+    "time": "8:00 AM - 5:00 PM, with one hour lunch break",
+    "description": {
+      "long_form": "<p>Offensive Tooling for Operators is a two-day hands-on training designed for security professionals who want to move beyond \"button-pushing\" executions and learn how to customize, chain, and operationalize offensive security tools.</p><p>Students will explore the internals of widely used tools, extend and script them, and integrate them into flexible workflows. Labs cover offensive infrastructure setup, initial compromise techniques, credential attacks, Active Directory exploitation, web app testing, wireless attacks, and chaining of tools into real-world adversary scenarios.</p><p>The course emphasizes operational trade-offs, stealth, tool hygiene, and troubleshooting. Each lab is designed to build muscle memory and confidence with real attack tooling rather than simulated examples. By the end of the course, students will leave with the mindset and skillset to \"own their toolchain,\" confidently customizing and orchestrating tools in modern offensive engagements.</p>",
+      "short_form": "<p>Elevate your offensive security skills with Offensive Tooling for Operators. This two-day, hands-on course teaches you to go beyond default usage and master the internals, customization, and chaining of offensive security tools. Through guided labs and real-world scenarios, you'll learn to build, automate, and operate your own toolchains with confidence.</p>"
+    },
+    "prerequisites": "Intermediate understanding of networking (TCP/IP, routing, services). Cursory understanding of offensive basics and tools such as Nmap, Metasploit, etc. Comfort working on the command line (Linux/Windows).",
+    "equipment": "Laptop with at least 8 GB RAM (16 GB recommended), modern multi-core CPU. VMware Workstation (Windows/Linux) or VMware Fusion (macOS) installed. Minimum 85 GB free disk space for virtual machines. Local admin rights to install and run software. Reliable Internet connection.",
+    "whoshouldattend": "Security professionals who want to move beyond default tool usage and learn how to customize, chain, and operationalize offensive security tools in modern engagements."
+  }
+}]
+
+

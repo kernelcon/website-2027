@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 2161 2054" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1,0,0,1,0.0251198,-1788.02)">
+        <g id="Far-Mountains" serif:id="Far Mountains" transform="matrix(0.990383,0,0,1,20.7729,0)">
+            <path d="M2040.85,2055.33C2005.09,2066.81 1906.44,2109.41 1874.25,2111.32C1737.22,2119.41 1595.55,2021.19 1552.15,2015.33C1508.75,2009.48 1447.53,2042.35 1315.87,2014.33C1271.27,2004.84 1247.9,1962.54 1216.92,1936.35C1185.94,1910.16 1109.52,1861.23 1067.48,1833.37C1025.45,1805.5 989.334,1772.18 961.46,1796.37C933.586,1820.56 887.74,1851.23 864.526,1862.36C841.313,1873.5 827.62,1878.41 783.749,1890.36C739.877,1902.3 627.242,1954.35 627.242,1954.35C627.242,1954.35 562.016,1980.4 514.153,1985.34C493.966,1982.36 466.51,1981.27 442.463,1967.34C418.415,1953.42 387.408,1944.52 366.733,1938.35C346.059,1932.18 323.353,1928.81 314.228,1934.35C305.102,1939.89 288.554,1958.76 275.858,1966.34C263.162,1973.93 188.991,1973.5 172.867,1978.34C156.743,1983.18 104.512,2005.23 79.972,2001.34C55.433,1997.44 34.816,1978.93 20.399,1971.34C5.981,1963.75 -21,1980.34 -21,1980.34L-21,3842L2160,3842L2160,2019.33C2160,2019.33 2064.02,2047.89 2040.85,2055.33Z" style="fill:url(#_Linear1);"/>
+        </g>
+    </g>
+    <defs>
+        <linearGradient id="_Linear1" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1.2577e-13,-2053.98,2053.98,1.2577e-13,1108.8,3901.09)"><stop offset="0" style="stop-color:black;stop-opacity:1"/><stop offset="0.22" style="stop-color:rgb(2,0,6);stop-opacity:1"/><stop offset="0.42" style="stop-color:rgb(7,2,25);stop-opacity:1"/><stop offset="0.63" style="stop-color:rgb(21,6,60);stop-opacity:1"/><stop offset="0.67" style="stop-color:rgb(21,6,63);stop-opacity:1"/><stop offset="0.78" style="stop-color:rgb(31,10,67);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(82,33,99);stop-opacity:1"/></linearGradient>
+    </defs>
+</svg>

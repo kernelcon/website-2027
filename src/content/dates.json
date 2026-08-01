@@ -1,0 +1,73 @@
+[{
+    "title": "Registration Open",
+    "description": "Sign up for the Con!",
+    "date": "AUG 25, 2026",
+    "hidden": "false"
+  },
+  {
+    "title": "Call for Papers Announced",
+    "description": "",
+    "date": "AUG 25, 2026",
+    "hidden": "false"
+  },
+  {
+    "title": "Call for Training Closes",
+    "description": "",
+    "date": "SEP 30, 2026",
+    "hidden": "false"
+  },
+  {
+    "title": "Training Announced",
+    "description": "",
+    "date": "OCT 27, 2026",
+    "hidden": "false"
+  },
+  {
+    "title": "Keynotes Announced",
+    "description": "",
+    "date": "FEB 13, 2027",
+    "hidden": "false"
+  },
+  {
+    "title": "Call for Papers Close",
+    "description": "",
+    "date": "JAN 16, 2027",
+    "hidden": "false"
+  },
+  {
+    "title": "Students Scholarship Closes",
+    "description": "",
+    "date": "FEB 6, 2027",
+    "hidden": "false"
+  },
+  {
+    "title": "CFP Acceptance Notifications Sent",
+    "description": "We love our speakers!",
+    "date": "FEB 14, 2027",
+    "hidden": "false"
+  },
+  {
+    "title": "Tentative Agenda Announced",
+    "description": "",
+    "date": "FEB 23, 2027",
+    "hidden": "false"
+  },
+  {
+    "title": "Hotel Block Reservation Cutoff",
+    "description": "",
+    "date": "MAR 14, 2027",
+    "hidden": "false"
+  },
+  {
+    "title": "Pre-conference Training",
+    "description": "On-site training days (additional cost)",
+    "date": "APR 7-8, 2027",
+    "hidden": "false"
+  },
+  {
+    "title": "Conference Days",
+    "description": "Kernelcon 2027",
+    "date": "APR 9-10, 2027",
+    "hidden": "false"
+  }
+]

@@ -1,0 +1,565 @@
+@use "../../static/styles/base/base" as *;
+body.dark-mode {
+  div.highlight-boxes {
+    background-color: rgb(16, 23, 29);
+  }
+  @media only screen and (min-width: 780px) {
+    .twitter-dark {
+      display: block !important;
+      background-color: rgb(16, 23, 29);
+    }
+  }
+  .theme-description{
+    background-color: #27402f !important;
+    border: #705028 solid 10px !important;
+  }
+  .twitter-light {
+    display: none;
+  }
+  .reg-button {
+    color: #fff !important;
+    background: linear-gradient( to left, rgb(64, 154, 191) 25%, rgb(16, 23, 29) 75%) !important;
+    background-size: 400% 100% !important;
+    background-position: right bottom !important;
+  }
+  .reg-button:hover {
+    color: #fff !important;
+    background-position: left bottom !important;
+  }
+  div.font-punk {
+    color: $hollywood-cerise;
+    text-shadow: 2px 2px $starship;
+  }
+  div.sizzle-text-section {
+    background-color: rgba(0, 0, 0, 0.85);
+  }
+  div.sizzle-header, div.update-section, div.keynote-bkg {
+    background-color: rgba(0, 0, 0, 0.85) !important;
+  }
+  div.sizzle-text-title, h3.update-announcement {
+    color: $azure-radiance !important;
+  }
+  // .sizzle-bullet-item {
+  //   .sizzle-icon {
+  //     filter: invert(100%);
+  //   }
+  // }
+  .keynote-speaker-name {
+    font-size: 28px;
+    font-family: $font-science;
+    color: $madder-lake !important;
+    text-shadow: 2px 2px $turquoise-green !important;
+    font-weight: 900;
+  }
+
+  .update-announcement:before,
+  .update-announcement:after {
+    background: #ccc !important;
+  }
+
+  .dark-mode-show {
+    display: inline;
+  }
+
+  .light-mode-hide {
+    display: none;
+  }
+}
+
+.all-bright {
+  filter: invert(1) grayscale(1) brightness(1000);
+}
+
+.main-logo {
+  width: 100%;
+}
+
+
+.dark-mode-hide {
+  display: none;
+}
+
+.light-mode-show {
+  display: inline;
+}
+
+
+div.update-section {
+  margin: 20px;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #c1bbc7e8;
+
+  .centered {
+    text-align: center;
+  }
+
+  .update-text {
+    margin: 10px;
+  }
+
+  .updates {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .update-announcement {
+      font-size: 20px;
+      font-family: 'Jura', 'Montserrat', sans-serif;
+      text-align: center;
+      margin: 0px 10px;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      gap: 1em;
+    }
+    .update-announcement:before,
+    .update-announcement:after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #333;
+    }
+    
+    
+  
+
+    .keynote-section {
+      padding: 5px 0px 10px;
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      justify-content: space-around;
+
+      .keynote-anchor {
+        width: 31%;
+
+        .keynote {
+          padding:10px;
+          border-radius: 5px;
+
+          .update-keynote {
+            height: 100px; /* your desired height */
+            width: 100%; /* or whatever width you want */
+            object-fit: cover;
+          }
+
+          .keynote-name {
+            font-size: 14px;
+            font-family: $font-chalkboard;
+          }
+        }
+
+        .keynote-bkg {
+          background-color: #ddd;
+        }
+      }
+    }
+  }
+}
+
+.home-page {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+
+  /*overlay over hero*/
+  margin-top: -750px;
+  position: relative;
+  z-index: 1;
+
+  .sub-title{
+    font-size: $heading-base-size * pow($heading-scale-ratio, 3);
+    font-family: $font-science;
+    text-align: center;
+    color: $madder-lake;
+    text-shadow: 2px 2px $turquoise-green;
+    margin: 10px 20px;
+  }
+
+
+  div.font-punk {
+    font-size: 64px;
+    font-family: $font-punk;
+    // color: #ff00a2;
+    // text-shadow: 2px 2px #fffc76;
+    text-align: center;
+    // color: $azure-radiance;
+    color: $madder-lake;
+    // text-shadow: 2px 2px $hollywood-cerise;
+    text-shadow: 2px 2px $turquoise-green;
+    margin: 10px 20px;
+  }
+  img.punk-img {
+    display: flex;
+    flex-direction: row;
+    max-width: 100px;
+  }
+  div.sizzle {
+    display: flex;
+    flex-direction: column;
+    min-height: 100px;
+    margin: 40px;
+    // border: 2px solid $turquoise-green;
+    // border-left: 1px solid $turquoise-green;
+    // border-right: 1px solid $turquoise-green;
+    -moz-box-shadow: 0px 5px 5px 0px $slate-gray;
+    -webkit-box-shadow: 0px 5px 5px 0px $slate-gray;
+    box-shadow: 0px 5px 5px 0px $slate-gray;
+
+    color: #ddd;
+  }
+  div.sizzle-image {
+    margin: 2px;
+  }
+  div.sizzle-header {
+    background-color: rgba(21,85,115,0.9);
+    // height: 198px;
+  }
+  div.sizzle-text-title {
+    // margin: 10px 20px;
+    font-size: 30px;
+    text-align: center;
+    font-family: $font-science;
+    // color: $dm-punk-highlight;
+    color: #ccc;
+  }
+  div.sizzle-text-section {
+    padding: 10px 20px;
+    // margin-top: 3px;
+    background-color: rgba(21,85,115,0.9);
+    // -moz-box-shadow: 0px 15px 15px 0px cyan;
+    // -webkit-box-shadow: 0px 15px 15px 0px cyan;
+    // box-shadow: 0px 15px 15px 0px cyan;
+  }
+  .sizzle-bullet-item {
+    display: flex;
+    flex-direction: row;
+    padding: 15px 0px 0px;
+    .sizzle-icon {
+      min-width: 100px;
+      max-width: 100px;
+      display: inline-table;
+      img {
+        justify-content: center;
+        align-items: center;
+        max-width: 100%;
+        height: 100%;
+      }
+    }
+    .sizzle-bullet {
+      display: flex;
+      flex-direction: column;
+      padding-left: 20px;
+      .sizzle-bullet-title {
+        font-weight: 900;
+        color: #fff;
+      }
+      .sizzle-bullet-desc {
+        font-size: 12px;
+      }
+    }
+  }
+  .twitter-light {
+    background-color: aliceblue;
+  }
+
+  .theme-name-r {
+    font-family: "Faster One", system-ui;
+    font-style: italic;
+    margin-top: -10px;
+    font-size: 85px;
+    transform: rotate(0deg);
+    margin-right: 4px;
+  }
+  div.theme-name {
+    font-family: "Archivo", sans-serif;
+    //"Abel";
+    //"Edu AU VIC WA NT Hand", cursive;
+    // "Faster One", system-ui;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 80px;
+    color: #fff;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    text-transform: uppercase;
+  }
+  
+  .centered-top {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    margin: 0px 60px;
+  }
+  .col {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    /*flex: 1;*/
+  }
+  .order-button {
+    margin: 30px;
+  }
+  .reg-button {
+    display: block;
+    font-size: 16px;
+    font-weight: medium;
+    text-transform: uppercase;
+    font-family: Montserrat, sans-serif;
+    padding: 8px;
+    margin-bottom: 20px;
+    width: 90%;
+    height: 40px;
+    border-radius: 5px;
+    box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25), 0 8px 16px -8px rgba(0, 0, 0, 0.3), 0 -6px 16px -6px rgba(0, 0, 0, 0.025);
+    transition: all 0.5s;
+    border: solid 0px;
+    color: #fff;
+    background: linear-gradient(to left, skyblue 25%, aliceblue 75%);
+    background-size: 400% 100%;
+    background-position: right bottom;
+    font-weight: bold;
+    z-index: 3;
+    text-align: center;
+  }
+  .reg-button:hover {
+    color: rgb(64, 154, 191);
+    background-position: left bottom;
+  }
+  .reg-button:active {
+    margin-top: 5px;
+    margin-left: 5px;
+  }
+
+  .pop {
+    margin: 25px 40px;
+  }
+  .theme-description {
+    // credit - https://codepen.io/craigiswayne/pen/XmBzzq
+    h3 {
+      font-family: $font-chalkboard;
+      color: #E8E8E8;
+    }
+    p {
+      color: #E8E8E8;
+    }
+    .underline {
+      text-decoration: underline;
+    }
+
+    color: #E8E8E8;
+    font-family: $font-chalkboard;
+    display: block;
+    width: 100%;
+    min-height: auto;
+    margin: 0px auto 30px auto;
+    background-color: #497959;
+    padding: 20px 30px;
+    overflow-y: auto;
+    box-shadow: -1px 2px 2px 0px #555, inset 0 0 10px 0 #555;
+    -webkit-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    border-radius: 10px;
+    border: #B78240 solid 10px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+  }
+  .theme-description:after {
+    content: "";
+    display: block;
+    position: fixed;
+    -webkit-border-radius: 0.1em 0.1em 0 0.1em;
+    -khtml-border-radius: 0.1em 0.1em 0 0.1em;
+    -moz-border-radius: 0.1em 0.1em 0 0.1em;
+    -ms-border-radius: 0.1em 0.1em 0 0.1em;
+    -o-border-radius: 0.1em 0.1em 0 0.1em;
+    border-radius: 0.1em 0.1em 0 0.1em;
+    width: 50px;
+    height: 8px;
+    top: 80%;
+    margin-top: 75px;
+    margin-right: 60px;
+    right: 5%;
+  }
+
+
+  .button-left-margin {
+    margin-left: 10px;
+  }
+
+
+
+
+  .left {
+    flex: 1;
+    img {
+      width: 100%;
+      // margin-top: -180px;
+      // margin-left: -45px;
+      // margin-bottom: -60px;
+    }
+    .img-responsive {
+      width: 80%;
+    }
+    .twitter-zone {
+      width: 90%;
+      border-radius: 5px;
+      -webkit-box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25), 0 8px 16px -8px rgba(0, 0, 0, 0.3), 0 -6px 16px -6px rgba(0, 0, 0, 0.025);
+      box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25), 0 8px 16px -8px rgba(0, 0, 0, 0.3), 0 -6px 16px -6px rgba(0, 0, 0, 0.025);
+      -webkit-transition-property: color, background-color, -webkit-box-shadow, -webkit-transform;
+      transition-property: color, background-color, -webkit-box-shadow, -webkit-transform;
+      transition-property: color, background-color, box-shadow, transform;
+      transition-property: color, background-color, box-shadow, transform, -webkit-box-shadow, -webkit-transform;
+      -webkit-transition-duration: 0.15s;
+      transition-duration: 0.15s;
+    }
+    .twitter-dark {
+      display: none;
+    }
+    p.timeline-Tweet-text {
+      margin-block-end: 0px !important;
+      white-space: normal !important;
+      font-size: 12px;
+    }
+  }
+  .keynote {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    .keynote-header {
+      .keynote-title {
+        font-size: 16px;
+        text-transform: uppercase;
+        font-family: "Jura", "Montserrat", sans-serif;
+        font-weight: 700;
+        // color: $white;
+      }
+      .keynote-speaker {
+        .keynote-speaker-name {
+          font-size: 28px;
+          font-family: $font-science;
+          color: $madder-lake;
+          text-shadow: 2px 2px $turquoise-green;
+          font-weight: 900;
+        }
+        .keynote-speaker-info {
+          .keynote-image {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 50%;
+            margin-left: 10px;
+            float: right;
+          }
+          .keynote-para {
+            font-family: $font-stack;
+            font-size: 14px;
+            margin: 10px 0px;
+            text-align: justify;
+          }
+        }
+      }
+    }
+  }
+  @media only screen and (max-width: 779px) {
+    .theme-name-r {
+      font-size: 37px;
+      transform: rotate(0deg);
+      margin-right: 4px;
+    }
+    div.theme-name {
+      font-size: 30px;
+    }
+
+    .centered-top {
+      margin: 0px !important;
+    }
+
+    .col {
+      display: inline-block;
+      .reg-button {
+        width: 100%;
+        background: none !important;
+        background-color: rgb(64, 154, 191) !important;
+        color: #fff !important;
+      }
+    }
+    .twitter-zone {
+      display: none;
+    }
+    .left {
+      .sizzle-icon {
+        min-width: 0px;
+        display: none;
+      }
+    }
+    .right {
+      .highlight-box {
+        margin: 0px !important;
+      }
+    }
+  }
+  .right {
+    padding: 15px;
+    .reg-button {
+      width: 100% !important;
+      visibility: hidden; // Remove this when registration goes live //
+    }
+    flex: 1;
+    img {
+      width: 100% !important;
+    }
+    .photo-credit {
+      font-size: 12px;
+      color: #999;
+      margin: 0px;
+    }
+    .highlight-box {
+      margin-top: 20px;
+      font-size: 2.5em;
+      line-height: 1.2;
+      margin-left: 20px;
+      .vision-highlight {
+        font-size: 30px;
+        font-family: "Jura";
+        margin: 20px 0px;
+      }
+      .num-highlight {
+        font-family: Lato, Gotham, Arial;
+        font-weight: 900;
+        margin-right: 20px;
+      }
+      .highlight-spans {
+        text-transform: uppercase;
+        font-weight: 100;
+      }
+      .focus {
+        color: transparent;
+        text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+      }
+      .highlight-boxes {
+        background-color: aliceblue;
+        padding: 20px 20px 20px 50px;
+        border-radius: 5px;
+        box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25), 0 8px 16px -8px rgba(0, 0, 0, 0.3), 0 -6px 16px -6px rgba(0, 0, 0, 0.025);
+        transition-property: color, background-color, box-shadow, transform;
+        transition-duration: 0.15s;
+      }
+    }
+  }
+}
+
+// this is a stupid fix to make blurry text show up on certain versions of microsoft edge because why would we ever want every browser to render things the same way thats crazy lol
+_:-ms-lang(x),
+.focus {
+  color: rgba(0, 0, 0, 0.5) !important;
+}

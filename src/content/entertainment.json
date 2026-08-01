@@ -1,0 +1,44 @@
+[{
+  "title": "Kernel Panic Live",
+  "author": "",
+  "id": "panic",
+  "hidden": false,
+  "order": 1,
+  "logo": {
+    "dark_mode_support": false,
+    "image_name": "panic.svg",
+    "image_class": "callout-comic panic-live-logo",
+    "dark_mode_image_name": "",
+    "dark_mode_image_class": ""
+  },
+  "socials": {},
+  "music": {},
+  "dates": [{
+    "day": "Friday, April 4th"
+  }],
+  "description": "Wind down the conference chaos with Kernel Panic Live, our late-night mashup of music, mischief, and hacker hospitality. Expect a packed room, loud beats, and plenty of hallway-con energy as we celebrate another year of Kernelcon with friends old and new. Your ticket includes open bar and o'd horves, so come hungry, thirsty, and ready to panic in style."
+},{
+  "title": "Kernelcon Carnage",
+  "author": "PWP Live",
+  "id": "kcc",
+  "hidden": false,
+  "order": 2,
+  "logo": {
+    "dark_mode_support": false,
+    "image_name": "panic.png",
+    "image_class": "callout-comic",
+    "dark_mode_image_name": "",
+    "dark_mode_image_class": ""
+  },
+  "socials" : {
+    "patreon": "https://www.patreon.com/pwplive/about",
+    "tiktok": "https://www.tiktok.com/@pwplive",
+    "youtube": "https://www.youtube.com/@PWPLive",
+    "facebook": "https://www.facebook.com/PWPlive/"
+  },
+  "dates": [{
+    "day": "Thursday, April 4th"
+  }],
+  "description": "Back by popular demand, Kernelcon Carnage returns to Omaha for Round II of the championship belt. PWP Live once again transforms the conference into a full-on wrestling arena with title defenses, grudge matches, and crowd-favorite performers. Expect bigger spots, louder pops, and plenty of photo and autograph opportunities with the wrestlers before and after the show."
+}
+]
