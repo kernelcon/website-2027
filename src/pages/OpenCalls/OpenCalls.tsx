@@ -51,7 +51,7 @@ export default class OpenCalls extends Component<OpenCallsProps, OpenCallsState>
             </TabPanel>
             <TabPanel tabId="training">
             <div className='tab-title'>Call for Training Courses</div>
-            <p className='tab-paragraph'>Kernelcon 2027 — <em>Algo(Rhythm): Off the Grid</em> — is looking for hands-on training courses that match the energy of the conference. We want immersive, field-ready instruction that attendees can put to work the moment they unplug. Whether you're teaching low-power homelabs or advanced reverse engineering, bring it.</p>
+            <p className='tab-paragraph'>Kernelcon 2027 — <em>Algo(Rhythm)</em> — is looking for hands-on training courses that match the energy of the conference. We want immersive, skills-first instruction that attendees can put to work immediately. Whether you're teaching penetration testing tradecraft or advanced reverse engineering, bring it.</p>
 
             <p className='tab-heading'>Length and Cost</p>
             <p className='tab-paragraph'>We're looking for proposals that fit a full one-day or two-day format. Classes follow a standard daily schedule with short morning and afternoon breaks and a one-hour lunch break.</p>
@@ -61,20 +61,20 @@ export default class OpenCalls extends Component<OpenCallsProps, OpenCallsState>
             <p className='tab-paragraph'>Training proposals are due no later than November 14, 2026. Acceptance notifications go out by December 1, 2026. See <a href='/dates' className='text-highlight' rel='noopener noreferrer' target='_blank'>kernelcon.org/dates</a> for the most current schedule.</p>
 
             <p className='tab-heading'>What are we looking for?</p>
-            <p className='tab-paragraph'>Hands-on, immersive courses that go beyond the slide deck. Kernelcon students want to leave with practical skills they can use immediately — in the field, off the grid, or back at the lab. We especially welcome courses tied to the <em>Off the Grid</em> theme, though any strong security training is welcome. We are not interested in vendor pitches dressed as training.</p>
+            <p className='tab-paragraph'>Hands-on, immersive courses that go beyond the slide deck. Kernelcon students want to leave with practical skills they can use immediately — back at the lab, on the job, or in the next CTF. Any strong security training is welcome; we are not interested in vendor pitches dressed as training.</p>
 
             <p className='tab-heading'>Preferred Topics</p>
             <p className='tab-paragraph'>Anything where hands-on experience accelerates the learning. Examples well-suited to this year's theme:</p>
             <div className='tab-bullets'><ul>
-              <li>Offensive and defensive security in air-gapped or disconnected environments</li>
-              <li>Field communications: LoRa, Meshtastic, mesh networking, HF/VHF radio</li>
-              <li>Off-grid infrastructure: solar, battery, and low-power computing</li>
-              <li>Hardware hacking and embedded systems</li>
               <li>Penetration testing and red team operations</li>
-              <li>Incident response and threat hunting</li>
               <li>Reverse engineering and binary analysis</li>
-              <li>OSINT and operational security in hostile environments</li>
-              <li>Cryptography applied to real-world, resource-constrained systems</li>
+              <li>Hardware hacking and embedded systems</li>
+              <li>Exploit development and vulnerability research</li>
+              <li>Incident response and threat hunting</li>
+              <li>OSINT and operational security</li>
+              <li>Cryptography applied to real-world systems</li>
+              <li>AI and machine learning in offensive or defensive security</li>
+              <li>Network protocol analysis and wireless security</li>
             </ul></div>
           
             <p className='tab-heading'>What do I need to have ready for the training workshop submission?</p>
