@@ -14,23 +14,23 @@ const KEY_DATES = [
   { num: "07", date: "MAR 4–5",  title: "EXECUTE PAYLOAD",      sub: "Kernelcon 2027 Main Event", status: "finale" },
 ];
 
-const KEYNOTES = [
-  { name: "Casey Ellis",    org: "cje.io",      badge: "Keynote" },
-  { name: "Phillip Wylie",  org: "Suzu Labs",   badge: "Keynote" },
-];
+// const KEYNOTES = [
+//   { name: "Casey Ellis",    org: "cje.io",      badge: "Keynote" },
+//   { name: "Phillip Wylie",  org: "Suzu Labs",   badge: "Keynote" },
+// ];
 
-const PERFORMERS = [
-  { name: "Matt Scheurer",        track: '"Definitely Not Secure (DNS)"' },
-  { name: "Danny Quist",          track: '"Malware Reverse Engineering in a Post-C World"' },
-  { name: "f8al",                 track: '"All Keys Lost: An Adventure In Car Hacking"' },
-  { name: "Megan Benoit",         track: '"Dumb Ways to Die 2: Scary Stories"' },
-  { name: "Ickler & Drysdale",    track: '"Why You Got Hacked in 2026"' },
-  { name: "Jamieson & Weiss",     track: '"Why Integer Factorization is F****** Hard"' },
-  { name: "Andrew (DoctorEww)",   track: '"Ctrl + C = Control Me"' },
-  { name: "Ryan Bonner",          track: '"A Series Of Unfortunate Event (Listeners)"' },
-  { name: "FaultLine",            track: '"A Multi-Architecture Tool for Persistent PLT Hooking"' },
-  { name: "kn0ck0ut",             track: '"Bluetooth Warwalking"' },
-];
+// const PERFORMERS = [
+//   { name: "Matt Scheurer",        track: '"Definitely Not Secure (DNS)"' },
+//   { name: "Danny Quist",          track: '"Malware Reverse Engineering in a Post-C World"' },
+//   { name: "f8al",                 track: '"All Keys Lost: An Adventure In Car Hacking"' },
+//   { name: "Megan Benoit",         track: '"Dumb Ways to Die 2: Scary Stories"' },
+//   { name: "Ickler & Drysdale",    track: '"Why You Got Hacked in 2026"' },
+//   { name: "Jamieson & Weiss",     track: '"Why Integer Factorization is F****** Hard"' },
+//   { name: "Andrew (DoctorEww)",   track: '"Ctrl + C = Control Me"' },
+//   { name: "Ryan Bonner",          track: '"A Series Of Unfortunate Event (Listeners)"' },
+//   { name: "FaultLine",            track: '"A Multi-Architecture Tool for Persistent PLT Hooking"' },
+//   { name: "kn0ck0ut",             track: '"Bluetooth Warwalking"' },
+// ];
 
 const TRAININGS = [
   { num: "01", title: "Active Directory Security Hardening",   instructor: "Jordan Drysdale & Kent Ickler" },
@@ -1120,7 +1120,7 @@ export default class Home extends Component<object, HomeState> {
 
           <div className="rhythm-stripe" />
 
-          {/* ── HEADLINERS ── */}
+          {/* ── HEADLINERS ── (commented out until speakers are announced)
           <div className="rhythm-section headliners-section">
             <div className="rhythm-inner">
               <div className="rhythm-label">Keynote Speakers</div>
@@ -1150,6 +1150,7 @@ export default class Home extends Component<object, HomeState> {
           </div>
 
           <div className="rhythm-stripe" />
+          */}
 
           {/* ── SOUNDCHECK / TRAINING ── */}
           <div className="rhythm-section soundcheck-section">
