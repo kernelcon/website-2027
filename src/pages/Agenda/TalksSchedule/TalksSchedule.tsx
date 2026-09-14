@@ -311,7 +311,7 @@ export default class TalksSchedule extends Component<object, TalksScheduleState>
         <ul className='tabs'>
           {scheduleTabs}
         </ul>
-        <div className='schedule-heading'>{`Tentative ${dayOfWeek} Speaking Schedule`}</div>
+        <div className='schedule-heading'>{`${dayOfWeek} Speaking Schedule`}</div>
         <div className='tz-note'>Note: All times listed are in Central Time.</div>
       </>
     );
@@ -319,12 +319,12 @@ export default class TalksSchedule extends Component<object, TalksScheduleState>
 
     const trackHeaders = currentDay.roomsInfo.map((ele, index) => {
       let label = ele.roomName;
-      if (ele.roomName === 'Mountain') {
-        label = '🏔️ Mountain';
-      } else if (ele.roomName === 'Beach') {
-        label = '🏖️ Beach';
-      } else if (ele.roomName === 'Forest') {
-        label = '🌲 Forest';
+      if (ele.roomName === 'Tempo') {
+        label = '🥁 Tempo';
+      } else if (ele.roomName === 'Groove') {
+        label = '🎸 Groove';
+      } else if (ele.roomName === 'Pulse') {
+        label = '⚡ Pulse';
       }
       return (
         <div
@@ -352,7 +352,7 @@ export default class TalksSchedule extends Component<object, TalksScheduleState>
       const isLastSlotForThisTime = index + 1 >= currentDay.talks.length || currentDay.talks[index + 1].time !== ele.time;
       const rowComplete = gridColumnEnd - 1 >= totalCols || isLastSlotForThisTime;
       if (rowComplete) {
-        rows += ele.minutes >= 42 ? 2 : 1;
+        rows += rowSpan;
       }
       
       const authorsString = ele.authors

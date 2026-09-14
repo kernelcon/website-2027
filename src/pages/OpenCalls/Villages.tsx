@@ -7,35 +7,58 @@ export default class Villages extends Component {
   render() {
     return (
       <div>
-        {/* <p className='tab-heading'>The Call for Villages is now Open</p> */}
-        <h4 className='closed-text'>The 2023 Call for Villages has closed. See you next year!</h4>
-        <p className='tab-paragraph'>Last year we had a great time with 4 awesome villages!</p>
-        <p className='tab-paragraph'>If you are interested submitting to have a village present at Kernelcon 2023 Here are some things you should know up front:</p>
+        <p className='tab-paragraph'>
+          The Call for Villages is <strong>open</strong>! Kernelcon 2027 is looking for
+          community villages to help make the conference an immersive, hands-on experience.
+          Villages are a highlight of Kernelcon — interactive spaces where attendees can
+          learn, compete, and connect.
+        </p>
+        <p className='tab-paragraph' style={{fontFamily: "'Space Mono', monospace", fontSize: '0.78rem', letterSpacing: '0.08em', padding: '0.75rem 1rem', border: '1px solid rgba(255,230,0,0.4)', borderLeft: '4px solid #ffe600', background: 'rgba(255,230,0,0.05)', color: 'rgba(255,255,255,0.85)'}}>
+          ⚠ <strong>SPACE IS LIMITED.</strong> Village slots are allocated on a rolling basis — when the floor fills up, it fills up. There is no waitlist guarantee. Submit early.
+        </p>
+        <p className='tab-paragraph'>
+          If you are interested in running a Village at Kernelcon 2027 (March 4–5, Hilton
+          Downtown Omaha), here are some things to know up front:
+        </p>
         <div className='tab-bullets'>
           <ul>
-            <li>Villages are expected to be open Friday and Saturday, during conference hours.</li>
-            <li>Information provided about the village will be used for Art, Marketing, Announcements et al.</li>
-            <li>Space is limited and the one thing we cannot easily make more of.</li>
-            <li>If your village plans to sell any items, you must be aware of and comply with any sales tax laws.</li>
+            <li>Villages are expected to be open both Friday and Saturday, during conference hours.</li>
+            <li>Information provided about the village will be used for art, marketing, announcements, and the program.</li>
+            <li><strong>Space is physically limited</strong> — slots are first-come, first-allocated. The deadline is January 7, 2027, but don't wait on it.</li>
+            <li>If your village plans to sell any items, you must comply with applicable sales tax laws.</li>
           </ul>
         </div>
         <p className='tab-heading'>Submission Requirements</p>
-        <p className='tab-paragraph'>If you are interested in running a Village, email the <a href='mailto:villages@kernelcon.org' className='text-highlight' rel='noopener noreferrer'>villages@kernelcon.org</a> with the following form (submit one form per Village). Please be as detailed as possible so that our review board can best evaluate your submissions. All submissions are due by January 13, 2023.</p>
-        <p className='tab-paragraph'>After your submission is received, we will respond and let you know we got it. If you have not received confirmation of your submission after two business days, contact <a href='mailto:villages@kernelcon.org' className='text-highlight' rel='noopener noreferrer'>villages@kernelcon.org</a>.</p>
-        <p className='tab-paragraph'>Thank you and good luck!</p>
-        <p className='tab-heading'>Kernelcon 2023 Village Application must include:</p>
+        <p className='tab-paragraph'>
+          If you are interested in running a Village, email{' '}
+          <a href='mailto:villages@kernelcon.org' className='text-highlight' rel='noopener noreferrer'>
+            villages@kernelcon.org
+          </a>{' '}
+          with the following information (one form per Village). Please be as detailed as
+          possible so our review board can best evaluate your submission. All submissions
+          are due by <strong>January 7, 2027</strong>.
+        </p>
+        <p className='tab-paragraph'>
+          After your submission is received, we will respond and let you know we got it.
+          If you have not received confirmation after two business days, contact{' '}
+          <a href='mailto:villages@kernelcon.org' className='text-highlight' rel='noopener noreferrer'>
+            villages@kernelcon.org
+          </a>.
+        </p>
+        <p className='tab-heading'>Kernelcon 2027 Village Application must include:</p>
         <p className='tab-paragraph'>
           <ol className='tab-ordered-list'>
             <li>Village Name</li>
-            <li>Please provide a full description of your Village (used for Art, Marketing, Announcements, et al.)</li>
-            <li><em>For Kernelcon internal use only:</em> Instructor(s) name, email address, phone number (for emergency use only).</li>
-            <li><em>For Kernelcon website:</em> Instructor(s) name, twitter handle (if desired), and biography.</li>
-            <li>Please provide the official web address/URL for your Village if available</li>
-            <li>Please let us know if you are you planning to have talks, contests, or events.</li>
-            <li>Please cut and paste your submission into the body of an email as plain text, or attach it as a .docx, or a .txt file.</li>
+            <li>A full description of your Village (used for art, marketing, and announcements)</li>
+            <li><em>For Kernelcon internal use only:</em> Organizer name, email address, phone number (emergency use only)</li>
+            <li><em>For Kernelcon website:</em> Organizer name, social handle (if desired), and biography</li>
+            <li>Official web address/URL for your Village, if available</li>
+            <li>Whether you plan to have talks, contests, or events within the village</li>
+            <li>Any equipment or space requirements beyond standard tables and power</li>
+            <li>Submit as plain text in the email body, or attach as .docx or .txt</li>
           </ol>
         </p>
-        <p className='tab-paragraph'>Good luck!</p>
+        <p className='tab-paragraph'>Good luck — we can't wait to see what you're building!</p>
       </div>
     );
   }

@@ -6,11 +6,6 @@ render() {
 return (
 <div className="container">
   <div className="con-page">
-    <div className="venue-section">
-      <div className="cfp-closed-banner" aria-label="CFP status">
-        <span className="cfp-closed-sign">CFP closed</span>
-      </div>
-    </div>
     <div className="text-area">
     <div>
       {/* Opening */}
@@ -26,7 +21,7 @@ return (
 		</p>
       <p className="tab-paragraph">
         The Kernelcon Crew is soliciting presentations for the eighth annual Kernelcon,
-        held at the Hilton Downtown in Omaha, NE, April 9-10, 2027.
+        held at the Hilton Downtown in Omaha, NE, March 4-5, 2027.
       </p>
       <p className="tab-paragraph">
         Have you built an off‑grid homelab? Created stealthy, low‑power infrastructure

@@ -42,8 +42,8 @@ class Training extends Component {
   render() {
     // constants, can change from year to year.  Along with config update, should generate new training content.
     const baseUrl = 'training';
-    const dayOneTraining = 'Tuesday, April 7th';
-    const dayTwoTraining = 'Wednesday, April 8th';
+    const dayOneTraining = 'Monday, March 2nd';
+    const dayTwoTraining = 'Tuesday, March 3rd';
     const trainingYear = '2027';
 
     // course descriptions may require their own html (i.e. when instructors put bullets or multiple paragraphs)
@@ -177,7 +177,7 @@ class Training extends Component {
                   </div>
                   <div className='training-format'>
                     <div className='training-heading'>Date:</div>
-                    <div>Wednesday, April 8th, 2027</div>
+                    <div>Tuesday, March 3rd, 2027</div>
                   </div>
                   <div className='training-format'>
                     <div className='training-heading'>Pricing:</div>

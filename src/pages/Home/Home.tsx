@@ -1,225 +1,1300 @@
-import { Component } from "react";
+import { Component, useState, useRef, useEffect, useCallback } from "react";
 import BackGround from '../../components/BackGround/BackGround';
-
 import "./Home.scss";
 
-interface HomeState {
-  mode: string;
-  isOpen: boolean;
+// ── DATA ──────────────────────────────────────────────────────────────────────
+
+const KEY_DATES = [
+  { num: "01", date: "OCT 2026",  title: "Signal Detected",      sub: "Registration Opens",        status: "done"   },
+  { num: "02", date: "OCT 2026",  title: "Open Channel",         sub: "Call for Papers Opens",     status: "done"   },
+  { num: "03", date: "NOV 2026",  title: "Buffer Overflow",      sub: "Call for Training Closes",  status: "done"   },
+  { num: "04", date: "DEC 2026",  title: "Final Commit",         sub: "CFP Closes",                status: "done"   },
+  { num: "05", date: "FEB 2027",  title: "Headliners Drop",      sub: "Keynotes Announced",        status: "coming" },
+  { num: "06", date: "MAR 2–3",  title: "Pre-show Soundcheck",  sub: "Pre-conference Training",   status: "coming" },
+  { num: "07", date: "MAR 4–5",  title: "EXECUTE PAYLOAD",      sub: "Kernelcon 2027 Main Event", status: "finale" },
+];
+
+const KEYNOTES = [
+  { name: "Casey Ellis",    org: "cje.io",      badge: "Keynote" },
+  { name: "Phillip Wylie",  org: "Suzu Labs",   badge: "Keynote" },
+];
+
+const PERFORMERS = [
+  { name: "Matt Scheurer",        track: '"Definitely Not Secure (DNS)"' },
+  { name: "Danny Quist",          track: '"Malware Reverse Engineering in a Post-C World"' },
+  { name: "f8al",                 track: '"All Keys Lost: An Adventure In Car Hacking"' },
+  { name: "Megan Benoit",         track: '"Dumb Ways to Die 2: Scary Stories"' },
+  { name: "Ickler & Drysdale",    track: '"Why You Got Hacked in 2026"' },
+  { name: "Jamieson & Weiss",     track: '"Why Integer Factorization is F****** Hard"' },
+  { name: "Andrew (DoctorEww)",   track: '"Ctrl + C = Control Me"' },
+  { name: "Ryan Bonner",          track: '"A Series Of Unfortunate Event (Listeners)"' },
+  { name: "FaultLine",            track: '"A Multi-Architecture Tool for Persistent PLT Hooking"' },
+  { name: "kn0ck0ut",             track: '"Bluetooth Warwalking"' },
+];
+
+const TRAININGS = [
+  { num: "01", title: "Active Directory Security Hardening",   instructor: "Jordan Drysdale & Kent Ickler" },
+  { num: "02", title: "AI for Cyber Security Professionals",   instructor: "Joff Thyer & Derek Banks" },
+  { num: "03", title: "Harnessing LLMs for Application Security", instructor: "Seth Law & Ken Johnson" },
+  { num: "04", title: "Assembly & Reverse Engineering",        instructor: "Dr. Matt Miller" },
+  { num: "05", title: "Offensive Tooling for Operators",       instructor: "Chris Traynor" },
+];
+
+const STAGES = [
+  { icon: "🎫", name: "Badge Stage",     tag: "Badge Village",          desc: "Hardware quests and interactive badge challenges. Solve puzzles. Unlock achievements." },
+  { icon: "📻", name: "Analog Stage",    tag: "HAM Radio Village",      desc: "Old-school frequencies. The original wireless hacks. Before WiFi there was RF." },
+  { icon: "🔧", name: "Workshop Stage",  tag: "Hardware Hacking",       desc: "Embedded systems, IoT, and hardware exploitation. Build and break in equal measure." },
+  { icon: "🔐", name: "Pick & Roll",     tag: "Lockpicking Village",    desc: "Physical security, locks, vaults. The original social engineering is a tension wrench." },
+  { icon: "📡", name: "RF Stage",        tag: "Radio Hacking Outpost",  desc: "SDR, WiFi, signal exploitation. The airwaves are never safe when we're around." },
+  { icon: "💚", name: "Chill Room",      tag: "Mental Health Village",  desc: "Recharge between sets. Talk to humans. Rest is part of the craft." },
+  { icon: "🎨", name: "Art Stage",       tag: "Hack/Craft Village",     desc: "Screen printing, DTF, making things. Because hackers make art too." },
+];
+
+const EVENTS = [
+  {
+    date: "WEDNESDAY // MARCH 4TH // BY PWP LIVE",
+    name: "KERNELCON\nCARNAGE",
+    tagline: '"The mosh pit goes full contact."',
+    desc: "Pro wrestling at a hacker conference. Yes, really. PWP Live brings the body slams and submission holds to Omaha. The most unhinged crossover event since someone patched a kernel live on stage. Come for the chaos.",
+    accent: "green",
+  },
+  {
+    date: "THURSDAY // MARCH 5TH // CLOSING NIGHT",
+    name: "KERNEL\nPANIC LIVE",
+    tagline: '"The encore you\'ve been waiting for."',
+    desc: "The closing night party. Open bar, music, and that special hacker hospitality that only exists when hundreds of people who break things for fun are finally allowed to just… relax. Don't skip the encore.",
+    accent: "pink",
+  },
+];
+
+const BATTLES = [
+  {
+    tag: "Boss Fight Mode",
+    name: "Escape Room",
+    motto: '"Can you escape the AI-pocalypse?"',
+    desc: "By Falkor Security. 30 minutes. Team of 6. AI has gone rogue and you're locked in with it. This is the boss fight. Survive or be absorbed. Most teams don't make it out.",
+    color: "pink",
+  },
+  {
+    tag: "The Algo Mini-Game",
+    name: "Corn Cob Catcher",
+    motto: '"Nebraska\'s own rhythm game."',
+    desc: "Catch falling corn cobs. It's ridiculous. It's Nebraska. It's weirdly competitive. High score gets bragging rights and the respect of everyone watching you play it completely seriously.",
+    color: "yellow",
+  },
+  {
+    tag: "The Remix Battle",
+    name: "CTF",
+    motto: '"Remix the flags. Win eternal glory."',
+    desc: "The annual Capture the Flag. Web, reversing, crypto, pwn: every genre represented. Top performers win Eternal Kernel badges and the kind of respect that can't be bought. Only earned.",
+    color: "purple",
+  },
+];
+
+const FAQS = [
+  {
+    q: "Do I need security experience to attend?",
+    a: "Not even a little. Kernelcon welcomes everyone from first-timers to 20-year veterans. All you need is curiosity and a love of learning. The best shows are the ones where the crowd surprises you.",
+  },
+  {
+    q: "Is there WiFi? Is it safe?",
+    a: "Yes, there's WiFi. Semi-hostile. Treat it like a festival mosh pit (fun, but protective gear is recommended). Bring a VPN like a good roadie. Think of it as part of the experience.",
+  },
+  {
+    q: "What's the refund policy?",
+    a: "No refunds, but passes are fully transferable. Can't make it? Find someone who deserves your spot and hand it off. The show must go on.",
+  },
+  {
+    q: "What should I submit a talk about?",
+    a: "Anything in infosec is fair game. Offensive, defensive, hardware, cloud, research, war stories, philosophy. Original work preferred. Kernel puns in the title earn extra credit. We're serious about that.",
+  },
+  {
+    q: "Are sessions recorded or streamed?",
+    a: "Not streamed. Some recordings may go up afterward, but there's no guarantee. Some magic only happens live. If you want to catch the set, you have to be there.",
+  },
+  {
+    q: "Is there a dress code?",
+    a: "None. Come as you are. Rock star, hacker, or both. We've seen everything and judged nothing. Just show up with your brain and your badge.",
+  },
+];
+
+// ── STUDIO (Multi-instrument Web Audio) ──────────────────────────────────────
+
+const FREQS: Record<string, number> = {
+  'C3':130.81,'C#3':138.59,'D3':146.83,'D#3':155.56,
+  'E3':164.81,'F3':174.61,'F#3':185.00,'G3':196.00,
+  'G#3':207.65,'A3':220.00,'A#3':233.08,'B3':246.94,
+  'C4':261.63,'C#4':277.18,'D4':293.66,'D#4':311.13,
+  'E4':329.63,'F4':349.23,'F#4':369.99,'G4':392.00,
+  'G#4':415.30,'A4':440.00,'A#4':466.16,'B4':493.88,
+  'C5':523.25,
+};
+
+const WHITE_KEYS = ['C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4','A4','B4','C5'];
+const BLACK_KEYS = [
+  {note:'C#3',left:56},{note:'D#3',left:136},
+  {note:'F#3',left:296},{note:'G#3',left:376},{note:'A#3',left:456},
+  {note:'C#4',left:616},{note:'D#4',left:696},
+  {note:'F#4',left:856},{note:'G#4',left:936},{note:'A#4',left:1016},
+];
+const KB_MAP: Record<string,string> = {
+  q:'C3',w:'D3',e:'E3',r:'F3',t:'G3',y:'A3',u:'B3',
+  a:'C4',s:'D4',d:'E4',f:'F4',g:'G4',h:'A4',j:'B4',k:'C5',
+};
+const DRUM_KB: Record<string,string> = {z:'kick',x:'snare',c:'hihat',v:'tom',b:'clap',n:'cymbal'};
+const INSTRUMENTS = [
+  {id:'piano',name:'Piano',icon:'🎹',color:'#39ff14'},
+  {id:'synth',name:'Synth',icon:'◈', color:'#7b2fff'},
+  {id:'bass', name:'Bass', icon:'〰',color:'#ff006e'},
+  {id:'pad',  name:'Pad',  icon:'∿', color:'#ffe600'},
+  {id:'pluck',name:'Pluck',icon:'✦', color:'#00cfff'},
+  {id:'drums',  name:'Drums',  icon:'🥁',color:'#ff8800'},
+  {id:'guitar',   name:'Electric', icon:'🎸',color:'#ff4400'},
+  {id:'banjo',    name:'Banjo',    icon:'🪕',color:'#d4a050'},
+  {id:'organ',  name:'Organ',  icon:'⚙',  color:'#cc00ff'},
+  {id:'strings',name:'Strings',icon:'🎻',color:'#ffaaff'},
+];
+const DRUM_PADS = [
+  {id:'kick',  name:'KICK',  key:'Z',color:'#ff006e'},
+  {id:'snare', name:'SNARE', key:'X',color:'#ffe600'},
+  {id:'hihat', name:'HI-HAT',key:'C',color:'#00cfff'},
+  {id:'tom',   name:'TOM',   key:'V',color:'#7b2fff'},
+  {id:'clap',  name:'CLAP',  key:'B',color:'#39ff14'},
+  {id:'cymbal',name:'CYMBAL',key:'N',color:'#ff8800'},
+];
+const TRACK_COLORS = ['#39ff14','#7b2fff','#ff006e','#ffe600','#00cfff','#ff8800'];
+
+interface NoteEvent { note: string; t: number; }
+interface Track { id: number; inst: string; events: NoteEvent[]; dur: number; muted: boolean; }
+interface ExampleTrack { inst: string; events: NoteEvent[]; }
+interface Example { name: string; emoji: string; desc: string; dur: number; tracks: ExampleTrack[]; }
+
+// Generates repeated note events at regular intervals — used for drum patterns
+const seq = (note: string, s: number, e: number, step: number): NoteEvent[] =>
+  Array.from({length: Math.ceil((e - s) / step)}, (_, i) => ({note, t: s + i * step}));
+
+const EXAMPLES: Example[] = [
+  {
+    name: 'SYSTEM BREACH', emoji: '⚡', desc: 'Dark cyberpunk techno · C minor · 120 BPM · 24s',
+    dur: 24000,
+    tracks: [
+      { inst: 'drums', events: [
+        ...seq('kick',  0,     24000, 500),   // 4-on-the-floor kick (120 BPM)
+        ...seq('snare', 500,   24000, 1000),  // beats 2+4
+        ...seq('hihat', 8250,  16000, 250),   // section B 8th-note hihats (enter at 8s)
+        ...seq('hihat', 16125, 24000, 125),   // section C 16th-note frenzy (enter at 16s)
+        {note:'cymbal',t:0},{note:'cymbal',t:8000},{note:'cymbal',t:16000},
+        {note:'clap',t:4000},{note:'clap',t:6000},   // section A sparse claps
+        {note:'clap',t:20000},{note:'clap',t:22000}, // section C claps return
+      ]},
+      { inst: 'synth', events: [
+        // Synth enters at 8s (bar 5) — Cm arpeggio ascending/descending
+        {note:'C4',t:8000},{note:'D#4',t:8250},{note:'G4',t:8500},{note:'A#4',t:8750},
+        {note:'A#4',t:9000},{note:'G4',t:9250},{note:'D#4',t:9500},{note:'C4',t:9750},
+        {note:'F4',t:10000},{note:'A#4',t:10250},{note:'C5',t:10500},{note:'A#4',t:10750},
+        {note:'G4',t:11000},{note:'F4',t:11250},{note:'D#4',t:11500},{note:'C4',t:11750},
+        {note:'C4',t:12000},{note:'D#4',t:12250},{note:'G4',t:12500},{note:'A#4',t:12750},
+        {note:'C5',t:13000},{note:'A#4',t:13250},{note:'G4',t:13500},{note:'D#4',t:13750},
+        {note:'F4',t:14000},{note:'G4',t:14250},{note:'A#4',t:14500},{note:'C5',t:14750},
+        {note:'A#4',t:15000},{note:'G4',t:15250},{note:'D#4',t:15500},{note:'C4',t:15750},
+        // Section C (16s): wider leaps, more intensity
+        {note:'C4',t:16000},{note:'G4',t:16250},{note:'C5',t:16500},{note:'G4',t:16750},
+        {note:'D#4',t:17000},{note:'A#4',t:17250},{note:'D#4',t:17500},{note:'C4',t:17750},
+        {note:'F4',t:18000},{note:'C5',t:18250},{note:'A#4',t:18500},{note:'G4',t:18750},
+        {note:'F4',t:19000},{note:'D#4',t:19250},{note:'C4',t:19500},{note:'A#3',t:19750},
+        {note:'C4',t:20000},{note:'D#4',t:20250},{note:'F4',t:20500},{note:'G4',t:20750},
+        {note:'A#4',t:21000},{note:'C5',t:21250},{note:'A#4',t:21500},{note:'G4',t:21750},
+        {note:'F4',t:22000},{note:'D#4',t:22250},{note:'C4',t:22500},{note:'A#3',t:22750},
+        {note:'C4',t:23000},{note:'D#4',t:23250},{note:'G4',t:23500},{note:'A#4',t:23750},
+      ]},
+      { inst: 'bass', events: [
+        // Section A: driving Cm pulse (0-8s)
+        {note:'C3',t:0},{note:'G3',t:500},{note:'A#3',t:1000},{note:'G3',t:1500},
+        {note:'F3',t:2000},{note:'G3',t:2500},{note:'A#3',t:3000},{note:'G3',t:3500},
+        {note:'C3',t:4000},{note:'C3',t:4500},{note:'D#3',t:5000},{note:'G3',t:5500},
+        {note:'F3',t:6000},{note:'A#3',t:6500},{note:'G3',t:7000},{note:'C3',t:7500},
+        // Section B: color shifts (8-16s)
+        {note:'C3',t:8000},{note:'G3',t:8500},{note:'A#3',t:9000},{note:'D#3',t:9500},
+        {note:'F3',t:10000},{note:'G3',t:10500},{note:'A#3',t:11000},{note:'G3',t:11500},
+        {note:'C3',t:12000},{note:'C3',t:12500},{note:'G3',t:13000},{note:'A#3',t:13500},
+        {note:'G3',t:14000},{note:'F3',t:14500},{note:'A#3',t:15000},{note:'C4',t:15500},
+        // Section C: peak energy (16-24s)
+        {note:'C3',t:16000},{note:'D#3',t:16500},{note:'G3',t:17000},{note:'A#3',t:17500},
+        {note:'C4',t:18000},{note:'A#3',t:18500},{note:'G3',t:19000},{note:'F3',t:19500},
+        {note:'D#3',t:20000},{note:'F3',t:20500},{note:'G3',t:21000},{note:'A#3',t:21500},
+        {note:'C4',t:22000},{note:'G3',t:22500},{note:'D#3',t:23000},{note:'C3',t:23500},
+      ]},
+    ],
+  },
+  {
+    // 100 BPM · beat=600ms · 8th=300ms · bar=2400ms · 10 bars = 24s
+    // A blues scale (A C D D# E G) — original tune, not based on any existing song
+    name: 'ALGO BLUES', emoji: '🎸', desc: 'Electric blues · A blues scale · 100 BPM · 24s',
+    dur: 24000,
+    tracks: [
+      { inst: 'drums', events: [
+        ...seq('kick',  0,   24000, 1200), // beats 1+3
+        ...seq('snare', 600, 24000, 1200), // beats 2+4
+        ...seq('hihat', 300, 24000, 600),  // off-beats
+        {note:'cymbal',t:0},{note:'cymbal',t:12000},
+        {note:'clap',t:4800},{note:'clap',t:9600},{note:'clap',t:19200},
+      ]},
+      { inst: 'bass', events: [
+        // Walking A minor bass, 10 bars — root movement on beats 1+3
+        {note:'A3',t:0},    {note:'E3',t:600},
+        {note:'A3',t:1200}, {note:'G3',t:1800},
+        {note:'A3',t:2400}, {note:'C4',t:3000},
+        {note:'E4',t:3600}, {note:'D4',t:4200},
+        {note:'C4',t:4800}, {note:'A3',t:5400},
+        {note:'E3',t:6000}, {note:'G3',t:6600},
+        {note:'A3',t:7200}, {note:'A3',t:7800},
+        {note:'C4',t:8400}, {note:'D4',t:9000},
+        {note:'E4',t:9600}, {note:'E4',t:10200},
+        {note:'D4',t:10800},{note:'C4',t:11400},
+        {note:'A3',t:12000},{note:'E3',t:12600},
+        {note:'G3',t:13200},{note:'A3',t:13800},
+        {note:'A3',t:14400},{note:'C4',t:15000},
+        {note:'E4',t:15600},{note:'G4',t:16200},
+        {note:'A4',t:16800},{note:'G4',t:17400},
+        {note:'E4',t:18000},{note:'C4',t:18600},
+        {note:'A3',t:19200},{note:'E3',t:19800},
+        {note:'G3',t:20400},{note:'A3',t:21000},
+        {note:'A3',t:21600},{note:'C4',t:22200},
+        {note:'E4',t:22800},{note:'A3',t:23400},
+      ]},
+      { inst: 'guitar', events: [
+        // Guitar enters bar 4 (7200ms): A blues scale riff with blues flat-5 (D#4)
+        // Phrase 1 (7200-9600): Call
+        {note:'A3',t:7200},{note:'C4',t:7500},{note:'D4',t:7800},{note:'D#4',t:8100},
+        {note:'E4',t:8400},{note:'D4',t:8700},{note:'C4',t:9000},{note:'A3',t:9300},
+        // Phrase 2 (9600-12000): Response, climbs higher
+        {note:'A3',t:9600},{note:'C4',t:9900},{note:'E4',t:10200},{note:'G4',t:10500},
+        {note:'A4',t:10800},{note:'G4',t:11100},{note:'E4',t:11400},{note:'D4',t:11700},
+        // Phrase 3 (12000-14400): Peak + blue note bends
+        {note:'E4',t:12000},{note:'G4',t:12300},{note:'A4',t:12600},{note:'G4',t:12900},
+        {note:'E4',t:13200},{note:'D#4',t:13500},{note:'D4',t:13800},{note:'C4',t:14100},
+        // Phrase 4 (14400-16800): Low call + high answer
+        {note:'A3',t:14400},{note:'C4',t:14700},{note:'D4',t:15000},{note:'E4',t:15300},
+        {note:'G4',t:15600},{note:'E4',t:15900},{note:'D4',t:16200},{note:'C4',t:16500},
+        // Phrase 5 (16800-19200): Double-stop feel, push rhythm
+        {note:'A3',t:16800},{note:'E4',t:17100},{note:'A4',t:17400},{note:'E4',t:17700},
+        {note:'G4',t:18000},{note:'E4',t:18300},{note:'D4',t:18600},{note:'C4',t:18900},
+        // Phrase 6 (19200-21600): Rising climax
+        {note:'A3',t:19200},{note:'C4',t:19500},{note:'D4',t:19800},{note:'D#4',t:20100},
+        {note:'E4',t:20400},{note:'G4',t:20700},{note:'A4',t:21000},{note:'G4',t:21300},
+        // Phrase 7 (21600-24000): Resolution, settles on root
+        {note:'E4',t:21600},{note:'D4',t:21900},{note:'C4',t:22200},{note:'A3',t:22500},
+        {note:'G3',t:22800},{note:'A3',t:23100},{note:'C4',t:23400},{note:'A3',t:23700},
+      ]},
+    ],
+  },
+  {
+    // 80 BPM, D major pentatonic (D E F# A B), 8 bars = 24s
+    // Deliberate call-and-response phrases, builds from sparse to full then resolves
+    name: 'DRAGON GATE', emoji: '🐉', desc: 'Far Eastern koto · D pentatonic · call and response · 24s',
+    dur: 24000,
+    tracks: [
+      { inst: 'pluck', events: [
+        // Bar 1 (0-3000): Opening call — sparse, D ascending to peak
+        {note:'D4',t:0},{note:'F#4',t:1125},{note:'A4',t:1500},{note:'B4',t:2250},
+        // Bar 2 (3000-6000): Answer — B descends back to D
+        {note:'A4',t:3000},{note:'F#4',t:3750},{note:'E4',t:4125},{note:'D4',t:4875},
+        // Bar 3 (6000-9000): Second call — lower register contrast
+        {note:'A3',t:6000},{note:'D4',t:6750},{note:'F#4',t:7125},{note:'A4',t:7500},{note:'B4',t:8250},
+        // Bar 4 (9000-12000): Answer with ornament — slightly busier
+        {note:'A4',t:9000},{note:'F#4',t:9375},{note:'A4',t:9750},{note:'B4',t:10125},
+        {note:'A4',t:10500},{note:'F#4',t:10875},{note:'D4',t:11625},
+        // Bar 5 (12000-15000): Development — 8th note run, first real momentum
+        {note:'D4',t:12000},{note:'E4',t:12375},{note:'F#4',t:12750},{note:'A4',t:13125},
+        {note:'B4',t:13500},{note:'A4',t:14000},{note:'F#4',t:14375},{note:'E4',t:14750},
+        // Bar 6 (15000-18000): Ascending sweep to peak
+        {note:'D4',t:15000},{note:'F#4',t:15375},{note:'A4',t:15750},{note:'B4',t:16125},
+        {note:'A4',t:16500},{note:'F#4',t:16875},{note:'E4',t:17250},{note:'D4',t:17625},
+        // Bar 7 (18000-21000): Climax — high register, urgent 8ths
+        {note:'A4',t:18000},{note:'B4',t:18375},{note:'A4',t:18750},{note:'F#4',t:19125},
+        {note:'E4',t:19500},{note:'F#4',t:19875},{note:'A4',t:20250},{note:'B4',t:20625},
+        // Bar 8 (21000-24000): Resolution — long descent to root D
+        {note:'A4',t:21000},{note:'F#4',t:21375},{note:'E4',t:21750},{note:'D4',t:22125},
+        {note:'D4',t:22500},{note:'A3',t:23250},{note:'D4',t:23625},
+      ]},
+      { inst: 'strings', events: [
+        // Sustained pads that shift with the phrase structure
+        {note:'D3',t:0},{note:'A3',t:150},{note:'D4',t:300},       // bars 1-2: D open
+        {note:'B3',t:6000},{note:'D4',t:6150},{note:'F#4',t:6300}, // bars 3-4: Bm color
+        {note:'D3',t:12000},{note:'F#3',t:12150},{note:'A3',t:12300}, // bars 5-6: D fuller
+        {note:'E3',t:18000},{note:'A3',t:18150},{note:'D4',t:18300}, // bars 7-8: E tension → D resolve
+        {note:'D3',t:21000},{note:'A3',t:21150},
+      ]},
+      { inst: 'organ', events: [
+        // Temple bell: deep, sparse — one per phrase start, marks the sections
+        {note:'D3',t:200},
+        {note:'B3',t:6200},
+        {note:'D3',t:12200},
+        {note:'E3',t:18200},
+        {note:'D3',t:22200},
+      ]},
+      { inst: 'drums', events: [
+        // Taiko: "Don" (kick) on phrase beats, "Ka" (tom) fills entering bar 3
+        // Bars 1-2: just cymbal crash + sparse kick
+        {note:'cymbal',t:0},{note:'kick',t:0},{note:'kick',t:3000},
+        // Bars 3-4: Add tom fills
+        {note:'kick',t:6000},{note:'tom',t:7500},{note:'kick',t:9000},{note:'tom',t:10500},
+        // Bars 5-6: Driving — kick every bar + tom on upbeats
+        {note:'kick',t:12000},{note:'cymbal',t:12000},
+        {note:'kick',t:13500},{note:'tom',t:14250},
+        {note:'kick',t:15000},{note:'kick',t:16500},{note:'tom',t:17250},
+        // Bars 7-8: Climax energy then settle
+        {note:'kick',t:18000},{note:'cymbal',t:18000},
+        {note:'kick',t:18750},{note:'kick',t:19500},{note:'tom',t:20250},
+        {note:'kick',t:21000},{note:'tom',t:22500},
+      ]},
+    ],
+  },
+  {
+    // STALK OVERFLOW — G Dorian (G A Bb C D E F), 100 BPM, 8th=300ms, bar=2400ms, 10 bars=24s
+    // Banjo-driven folk melody meets synth pads — original composition
+    name: 'STALK OVERFLOW', emoji: '🌽', desc: 'G Dorian folk-electronic · banjo + synth · 100 BPM · 24s',
+    dur: 24000,
+    tracks: [
+      { inst: 'banjo', events: [
+        // Bars 1-2: Opening motif — G ascending, Bb (the Dorian blue note), back down
+        {note:'G4',t:0},   {note:'A4',t:300}, {note:'A#4',t:600},{note:'A4',t:900},
+        {note:'G4',t:1200},{note:'E4',t:1500},{note:'D4',t:1800},{note:'G4',t:2100},
+        {note:'D4',t:2400},{note:'E4',t:2700},{note:'G4',t:3000},{note:'A4',t:3300},
+        {note:'A#4',t:3600},{note:'A4',t:3900},{note:'G4',t:4200},{note:'D4',t:4500},
+        // Bars 3-4: Development — sweep to high C5, answer down through F4
+        {note:'G4',t:4800},{note:'A#4',t:5100},{note:'C5',t:5400},{note:'A#4',t:5700},
+        {note:'A4',t:6000},{note:'G4',t:6300},{note:'F4',t:6600},{note:'D4',t:6900},
+        {note:'G4',t:7200},{note:'A4',t:7500},{note:'G4',t:7800},{note:'E4',t:8100},
+        {note:'D4',t:8400},{note:'C4',t:8700},{note:'D4',t:9000},{note:'G3',t:9300},
+        // Bars 5-6: Synth joins — banjo climbs with it
+        {note:'G3',t:9600},{note:'D4',t:9900},{note:'G4',t:10200},{note:'A#4',t:10500},
+        {note:'A4',t:10800},{note:'G4',t:11100},{note:'E4',t:11400},{note:'G4',t:11700},
+        {note:'A4',t:12000},{note:'A#4',t:12300},{note:'A4',t:12600},{note:'G4',t:12900},
+        {note:'F4',t:13200},{note:'G4',t:13500},{note:'A4',t:13800},{note:'A#4',t:14100},
+        // Bars 7-8: Full ensemble peak — fast 8ths, wide range
+        {note:'G4',t:14400},{note:'A4',t:14700},{note:'A#4',t:15000},{note:'C5',t:15300},
+        {note:'A#4',t:15600},{note:'A4',t:15900},{note:'G4',t:16200},{note:'E4',t:16500},
+        {note:'D4',t:16800},{note:'E4',t:17100},{note:'G4',t:17400},{note:'A4',t:17700},
+        {note:'G4',t:18000},{note:'A#4',t:18300},{note:'A4',t:18600},{note:'G4',t:18900},
+        // Bars 9-10: Outro — wind down back to root
+        {note:'G4',t:19200},{note:'E4',t:19500},{note:'D4',t:19800},{note:'C4',t:20100},
+        {note:'D4',t:20400},{note:'G3',t:20700},{note:'G4',t:21000},{note:'A4',t:21300},
+        {note:'A#4',t:21600},{note:'A4',t:21900},{note:'G4',t:22200},{note:'D4',t:22500},
+        {note:'G3',t:22800},{note:'D4',t:23100},{note:'G4',t:23400},{note:'G3',t:23700},
+      ]},
+      { inst: 'synth', events: [
+        // Synth chords enter bar 5 — G Dorian harmony, sustained pads
+        {note:'G3',t:9600},{note:'D4',t:9750},{note:'A#3',t:9900},   // Gm
+        {note:'G3',t:12000},{note:'C4',t:12150},{note:'E4',t:12300}, // C major (Dorian IV)
+        {note:'G3',t:14400},{note:'A#3',t:14550},{note:'D4',t:14700},{note:'F4',t:14850}, // Gm7
+        {note:'A3',t:16800},{note:'E4',t:16950},{note:'G4',t:17100}, // Am
+        {note:'G3',t:19200},{note:'D4',t:19350},{note:'A#3',t:19500}, // Gm
+        {note:'C4',t:21600},{note:'G4',t:21750},{note:'E4',t:21900}, // C
+        {note:'G3',t:22800},{note:'D4',t:22950},{note:'G4',t:23100}, // G resolve
+      ]},
+      { inst: 'bass', events: [
+        // Bass enters bar 3, root-fifth pattern following G Dorian chords
+        {note:'G3',t:4800},{note:'D4',t:6000},
+        {note:'G3',t:7200},{note:'A3',t:8400},
+        {note:'G3',t:9600},{note:'D4',t:10800},
+        {note:'C4',t:12000},{note:'G3',t:13200},
+        {note:'G3',t:14400},{note:'D4',t:15600},
+        {note:'A3',t:16800},{note:'G3',t:18000},
+        {note:'G3',t:19200},{note:'C4',t:20400},
+        {note:'G3',t:21600},{note:'G3',t:22800},
+      ]},
+      { inst: 'drums', events: [
+        // Light folk groove — sparse intro, builds to full by bar 5
+        {note:'cymbal',t:0},
+        ...seq('kick',  0,    4800, 2400), // bars 1-2: just kick
+        ...seq('kick',  4800, 24000, 1200), // bars 3-10: full kick pattern
+        ...seq('snare', 5400, 24000, 1200), // snare enters bar 3
+        ...seq('hihat', 9600, 24000, 600),  // hihat enters bar 5
+        {note:'cymbal',t:9600},{note:'cymbal',t:19200},
+        {note:'tom',t:14400},{note:'tom',t:16800},{note:'tom',t:21000},
+      ]},
+    ],
+  },
+];
+
+function PianoSection() {
+  const [instrument, setInstrument] = useState('piano');
+  const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
+  const [tracks, setTracks] = useState<Track[]>([]);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [videoUrl, setVideoUrl] = useState<string|null>(null);
+
+  const audioCtxRef = useRef<AudioContext|null>(null);
+  const destRef = useRef<MediaStreamAudioDestinationNode|null>(null);
+  const isRecordingRef = useRef(false);
+  const recEventsRef = useRef<NoteEvent[]>([]);
+  const recInstRef = useRef('piano');
+  const recStartRef = useRef(0);
+  const loopTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const loopIntervalRef = useRef<ReturnType<typeof setInterval>|null>(null);
+  const loopDurRef = useRef(4000);
+  const trackIdRef = useRef(0);
+  const canvasRef = useRef<HTMLCanvasElement|null>(null);
+  const activeNoteVizRef = useRef('');
+  const activeInstVizRef = useRef('piano');
+  const particlesRef = useRef<{x:number;y:number;vy:number;life:number;color:string}[]>([]);
+  const chunksRef = useRef<Blob[]>([]);
+
+  const getCtx = useCallback(() => {
+    if (!audioCtxRef.current) {
+      audioCtxRef.current = new (window.AudioContext ||
+        (window as unknown as {webkitAudioContext:typeof AudioContext}).webkitAudioContext)();
+    }
+    if (audioCtxRef.current.state === 'suspended') audioCtxRef.current.resume();
+    return audioCtxRef.current;
+  }, []);
+
+  const getDest = useCallback(() => {
+    const ctx = getCtx();
+    if (!destRef.current) destRef.current = ctx.createMediaStreamDestination();
+    return destRef.current;
+  }, [getCtx]);
+
+  const makeDrum = useCallback((padId: string) => {
+    const ctx = getCtx();
+    const dest = getDest();
+    const t = ctx.currentTime;
+    const wire = (n: AudioNode) => { n.connect(ctx.destination); n.connect(dest); };
+
+    const noise = (dur: number, filter: 'highpass'|'bandpass', freq: number, vol: number) => {
+      const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      const filt = ctx.createBiquadFilter();
+      filt.type = filter; filt.frequency.value = freq;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      src.connect(filt); filt.connect(g); wire(g);
+      src.start(t); src.stop(t + dur);
+    };
+
+    const tone = (f0: number, f1: number, vol: number, dur: number) => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.frequency.setValueAtTime(f0, t);
+      if (f1 !== f0) o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      o.connect(g); wire(g); o.start(t); o.stop(t + dur);
+    };
+
+    if (padId === 'kick')   { tone(150, 45, 1.0, 0.45); }
+    if (padId === 'snare')  { noise(0.18, 'highpass', 1200, 0.8); tone(220, 220, 0.4, 0.12); }
+    if (padId === 'hihat')  { noise(0.06, 'highpass', 8000, 0.55); }
+    if (padId === 'tom')    { tone(110, 55, 0.7, 0.35); }
+    if (padId === 'clap')   { [0, 0.012, 0.024].forEach(d => {
+      const buf = ctx.createBuffer(1, ctx.sampleRate * 0.08, ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+      const src = ctx.createBufferSource(); src.buffer = buf;
+      const filt = ctx.createBiquadFilter(); filt.type = 'bandpass'; filt.frequency.value = 1400;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.7, t + d);
+      g.gain.exponentialRampToValueAtTime(0.001, t + d + 0.08);
+      src.connect(filt); filt.connect(g); wire(g); src.start(t + d); src.stop(t + d + 0.08);
+    }); }
+    if (padId === 'cymbal') { noise(0.8, 'highpass', 6000, 0.45); }
+  }, [getCtx, getDest]);
+
+  const playNote = useCallback((note: string, inst: string, record = true) => {
+    const ctx = getCtx();
+    const dest = getDest();
+    const t = ctx.currentTime;
+    const wire = (src: AudioNode) => { src.connect(ctx.destination); src.connect(dest); };
+    const mk = (type: OscillatorType, f: number, vol: number, dec: number) => {
+      const o = ctx.createOscillator(); const g = ctx.createGain();
+      o.type = type; o.frequency.setValueAtTime(f, t);
+      g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dec);
+      o.connect(g); wire(g); o.start(t); o.stop(t + dec);
+    };
+
+    if (inst === 'drums') {
+      makeDrum(note);
+    } else {
+      const freq = FREQS[note];
+      if (!freq) return;
+      if (inst === 'piano') {
+        // Piano: hammer thump + 3 detuned strings (triple stringing) + harmonic partials
+        const dur = 2.6;
+        const hLen = Math.floor(ctx.sampleRate * 0.009);
+        const hBuf = ctx.createBuffer(1, hLen, ctx.sampleRate);
+        const hd = hBuf.getChannelData(0);
+        for (let i = 0; i < hLen; i++) hd[i] = (Math.random()*2-1) * Math.exp(-i / hLen * 7);
+        const hs = ctx.createBufferSource(); hs.buffer = hBuf;
+        const hg = ctx.createGain(); hg.gain.value = 0.18;
+        hs.connect(hg); wire(hg); hs.start(t);
+        // Three strings per note (piano has 2-3 strings per key, slightly detuned)
+        [-5, 0, 5].forEach(det => {
+          const o = ctx.createOscillator(); const g = ctx.createGain();
+          o.type = 'sine'; o.frequency.setValueAtTime(freq, t); o.detune.setValueAtTime(det, t);
+          g.gain.setValueAtTime(0.32, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+          o.connect(g); wire(g); o.start(t); o.stop(t + dur);
+        });
+        mk('sine', freq*2, 0.09, dur*0.65);
+        mk('sine', freq*3, 0.04, dur*0.40);
+      }
+      else if (inst === 'synth') {
+        const o = ctx.createOscillator(); const g = ctx.createGain();
+        o.type = 'sawtooth'; o.frequency.setValueAtTime(freq, t);
+        g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.3, t+0.02);
+        g.gain.exponentialRampToValueAtTime(0.001, t+1.8);
+        o.connect(g); wire(g); o.start(t); o.stop(t+1.8);
+      }
+      else if (inst === 'bass') { mk('sine', freq/2, 0.55, 2.0); mk('sine', freq/4, 0.2, 1.5); }
+      else if (inst === 'pad') {
+        [-8,0,8].forEach(det => {
+          const o = ctx.createOscillator(); const g = ctx.createGain();
+          o.type = 'sine'; o.frequency.setValueAtTime(freq, t); o.detune.setValueAtTime(det, t);
+          g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.15, t+0.3);
+          g.gain.setValueAtTime(0.15, t+1.2); g.gain.exponentialRampToValueAtTime(0.001, t+2.8);
+          o.connect(g); wire(g); o.start(t); o.stop(t+2.8);
+        });
+      }
+      else if (inst === 'pluck') { mk('triangle', freq, 0.6, 0.4); mk('triangle', freq*1.5, 0.3, 0.15); }
+      else if (inst === 'guitar') {
+        // Blues/rock electric: tanh soft-clip (tube saturation, not digital hard clip)
+        // No power chord — root note with chorus detune like a real single-coil pickup
+        const dur = 1.0;
+        const ws = ctx.createWaveShaper();
+        const N = 512; const crv = new Float32Array(N);
+        const drive = 6; // moderate overdrive — warm not harsh
+        for (let i = 0; i < N; i++) {
+          const x = (i * 2 / (N - 1)) - 1;
+          crv[i] = Math.tanh(x * drive) / Math.tanh(drive);
+        }
+        ws.curve = crv; ws.oversample = '4x';
+        // Presence peak at 2.8kHz — the "cut through the mix" frequency of a Telecaster
+        const presence = ctx.createBiquadFilter();
+        presence.type = 'peaking'; presence.frequency.value = 2800; presence.gain.value = 9; presence.Q.value = 0.8;
+        // Cabinet sim: LP removes harshness, HP removes mud
+        const tone = ctx.createBiquadFilter(); tone.type = 'lowpass'; tone.frequency.value = 7200;
+        const hp2 = ctx.createBiquadFilter(); hp2.type = 'highpass'; hp2.frequency.value = 90;
+        const out = ctx.createGain(); out.gain.value = 0.34;
+        ws.connect(presence); presence.connect(tone); tone.connect(hp2); hp2.connect(out); wire(out);
+        // Three slightly detuned strings → natural chorus without a chorus pedal
+        [[0, 0.7], [14, 0.45], [-10, 0.35]].forEach(([det, vol]) => {
+          const o = ctx.createOscillator(); const g = ctx.createGain();
+          o.type = 'sawtooth'; o.frequency.setValueAtTime(freq, t); o.detune.setValueAtTime(det, t);
+          g.gain.setValueAtTime(0, t);
+          g.gain.linearRampToValueAtTime(vol, t + 0.005); // fast pick attack
+          g.gain.exponentialRampToValueAtTime(vol * 0.5, t + 0.08); // initial string bloom decay
+          g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+          o.connect(g); g.connect(ws); o.start(t); o.stop(t + dur);
+        });
+        // High-freq pick click (the "tick" of a pick on a wound string)
+        const pLen = Math.floor(ctx.sampleRate * 0.005);
+        const pBuf = ctx.createBuffer(1, pLen, ctx.sampleRate);
+        const pd = pBuf.getChannelData(0);
+        for (let i = 0; i < pLen; i++) pd[i] = (Math.random() * 2 - 1) * Math.exp(-i / pLen * 10);
+        const ps = ctx.createBufferSource(); ps.buffer = pBuf;
+        const pf = ctx.createBiquadFilter(); pf.type = 'bandpass'; pf.frequency.value = 4500; pf.Q.value = 1.5;
+        const pg = ctx.createGain(); pg.gain.value = 0.22;
+        ps.connect(pf); pf.connect(pg); wire(pg); ps.start(t);
+      }
+      else if (inst === 'banjo') {
+        // Banjo: sawtooth (all harmonics, bright/metallic) + drum-head resonance + loud pick attack
+        const dur = 0.65;
+        const ringFilt = ctx.createBiquadFilter();
+        ringFilt.type = 'peaking'; ringFilt.frequency.value = 3200; ringFilt.gain.value = 14; ringFilt.Q.value = 2.2;
+        const hpFilt = ctx.createBiquadFilter(); hpFilt.type = 'highpass'; hpFilt.frequency.value = 180;
+        const outGain = ctx.createGain(); outGain.gain.value = 0.42;
+        hpFilt.connect(ringFilt); ringFilt.connect(outGain); wire(outGain);
+        // Sawtooth (NOT triangle) — sawtooth has all harmonics giving that bright metallic ring
+        const oSaw = ctx.createOscillator(); const gSaw = ctx.createGain();
+        oSaw.type = 'sawtooth';
+        oSaw.frequency.setValueAtTime(freq * 1.020, t); // 2% sharp on attack
+        oSaw.frequency.exponentialRampToValueAtTime(freq, t + 0.012); // snap to pitch
+        gSaw.gain.setValueAtTime(0.45, t); gSaw.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        oSaw.connect(gSaw); gSaw.connect(hpFilt); oSaw.start(t); oSaw.stop(t + dur);
+        // 2nd harmonic body tone (fretboard resonance)
+        const oBody = ctx.createOscillator(); const gBody = ctx.createGain();
+        oBody.type = 'sine'; oBody.frequency.setValueAtTime(freq * 2 * 1.02, t);
+        oBody.frequency.exponentialRampToValueAtTime(freq * 2, t + 0.012);
+        gBody.gain.setValueAtTime(0.22, t); gBody.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.55);
+        oBody.connect(gBody); gBody.connect(hpFilt); oBody.start(t); oBody.stop(t + dur * 0.55);
+        // Loud metallic pick attack (the distinctive banjo snap)
+        const pickLen = Math.floor(ctx.sampleRate * 0.007);
+        const pickBuf = ctx.createBuffer(1, pickLen, ctx.sampleRate);
+        const pd = pickBuf.getChannelData(0);
+        for (let i = 0; i < pickLen; i++) pd[i] = (Math.random()*2-1) * Math.exp(-i / pickLen * 9);
+        const ps = ctx.createBufferSource(); ps.buffer = pickBuf;
+        const pg = ctx.createGain(); pg.gain.value = 0.45; // very loud — this IS the banjo attack
+        const pf = ctx.createBiquadFilter(); pf.type = 'highpass'; pf.frequency.value = 5500;
+        ps.connect(pf); pf.connect(pg); wire(pg); ps.start(t);
+      }
+      else if (inst === 'organ') {
+        // Hammond drawbar: harmonics at 1x 2x 3x 4x 6x 8x with drawbar-style volumes
+        const drawbars = [[1,0.7],[2,0.8],[3,0.45],[4,0.5],[6,0.25],[8,0.18]];
+        drawbars.forEach(([mult, vol]) => {
+          const o = ctx.createOscillator(); const g = ctx.createGain();
+          o.type = 'sine'; o.frequency.setValueAtTime(freq*mult, t);
+          g.gain.setValueAtTime(vol*0.22, t);
+          g.gain.setValueAtTime(vol*0.22, t+1.8);
+          g.gain.exponentialRampToValueAtTime(0.001, t+2.2);
+          o.connect(g); wire(g); o.start(t); o.stop(t+2.2);
+        });
+        // Rotary cabinet chorus
+        [-6,6].forEach(det => {
+          const o = ctx.createOscillator(); const g = ctx.createGain();
+          o.type = 'sine'; o.frequency.setValueAtTime(freq, t); o.detune.setValueAtTime(det, t);
+          g.gain.setValueAtTime(0.08, t); g.gain.exponentialRampToValueAtTime(0.001, t+2.2);
+          o.connect(g); wire(g); o.start(t); o.stop(t+2.2);
+        });
+      }
+      else if (inst === 'strings') {
+        // Strings: 5 detuned voices + delayed vibrato LFO (bowed string characteristic)
+        const dur = 3.4;
+        const detunes = [-14, -7, 0, 7, 14];
+        detunes.forEach((det, i) => {
+          const o = ctx.createOscillator(); const g = ctx.createGain();
+          o.type = 'sine'; o.frequency.setValueAtTime(freq, t); o.detune.setValueAtTime(det, t);
+          // Vibrato: LFO kicks in after 400ms (as a real player would)
+          const lfo = ctx.createOscillator(); const lfoG = ctx.createGain();
+          lfo.frequency.value = 5.2 + i * 0.15; // slight per-voice variation
+          lfoG.gain.setValueAtTime(0, t); lfoG.gain.linearRampToValueAtTime(freq * 0.007, t + 0.7);
+          lfo.connect(lfoG); lfoG.connect(o.frequency);
+          lfo.start(t); lfo.stop(t + dur);
+          g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.13 - i*0.01, t+0.5);
+          g.gain.setValueAtTime(0.11, t+1.8); g.gain.exponentialRampToValueAtTime(0.001, t+dur);
+          o.connect(g); wire(g); o.start(t); o.stop(t+dur);
+          // Octave shimmer
+          const o2 = ctx.createOscillator(); const g2 = ctx.createGain();
+          o2.type = 'sine'; o2.frequency.setValueAtTime(freq*2, t); o2.detune.setValueAtTime(det*0.5, t);
+          g2.gain.setValueAtTime(0, t); g2.gain.linearRampToValueAtTime(0.035, t+0.9);
+          g2.gain.exponentialRampToValueAtTime(0.001, t+dur*0.9);
+          o2.connect(g2); wire(g2); o2.start(t); o2.stop(t+dur*0.9);
+        });
+      }
+    }
+
+    const display = inst === 'drums'
+      ? (DRUM_PADS.find(p => p.id === note)?.name ?? note)
+      : note;
+    activeNoteVizRef.current = display;
+    activeInstVizRef.current = inst;
+    setTimeout(() => { activeNoteVizRef.current = ''; }, 500);
+
+    const instData = INSTRUMENTS.find(i => i.id === inst);
+    const col = instData?.color ?? '#39ff14';
+    for (let i = 0; i < 8; i++) {
+      particlesRef.current.push({
+        x: 40 + Math.random() * 1120, y: 50 + Math.random() * 60,
+        vy: -0.6 - Math.random() * 2.5, life: 1, color: col,
+      });
+    }
+
+    if (record && isRecordingRef.current) {
+      recEventsRef.current.push({ note, t: Date.now() - recStartRef.current });
+    }
+  }, [getCtx, getDest, makeDrum]);
+
+  // Waveform canvas
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx2d = canvas.getContext('2d');
+    if (!ctx2d) return;
+    let frame = 0;
+
+    const draw = () => {
+      const W = canvas.width, H = canvas.height;
+      ctx2d.fillStyle = '#060610';
+      ctx2d.fillRect(0, 0, W, H);
+
+      ctx2d.font = '11px "Space Mono", monospace';
+      ctx2d.fillStyle = '#5a2acc';
+      ctx2d.fillText('⬡ ALGO(RHYTHM) 2027  ·  KERNELCON', 16, 18);
+
+      const note = activeNoteVizRef.current;
+      const instId = activeInstVizRef.current;
+      const instData = INSTRUMENTS.find(i => i.id === instId);
+      const col = instData?.color ?? '#39ff14';
+      const amp = note ? 28 : 4;
+      const now = Date.now() / 1000;
+
+      // Waveform
+      ctx2d.strokeStyle = col; ctx2d.lineWidth = 2;
+      ctx2d.shadowBlur = note ? 14 : 3; ctx2d.shadowColor = col;
+      ctx2d.globalAlpha = 0.85;
+      ctx2d.beginPath();
+      for (let x = 0; x < W; x++) {
+        const y = H/2 + Math.sin(x*0.018 + now*3.1)*amp*0.8
+          + Math.sin(x*0.031 + now*2.2)*amp*0.5
+          + Math.sin(x*0.007 + now*1.4)*amp*0.3;
+        x === 0 ? ctx2d.moveTo(x, y) : ctx2d.lineTo(x, y);
+      }
+      ctx2d.stroke();
+      ctx2d.shadowBlur = 0; ctx2d.globalAlpha = 1;
+
+      // Note + inst label
+      if (note) {
+        ctx2d.shadowBlur = 28; ctx2d.shadowColor = col;
+        ctx2d.fillStyle = col;
+        ctx2d.font = 'bold 54px "Bebas Neue", sans-serif';
+        ctx2d.fillText(note, 40, H/2 + 20);
+        ctx2d.shadowBlur = 0;
+        ctx2d.fillStyle = 'rgba(255,255,255,0.45)';
+        ctx2d.font = '10px "Space Mono", monospace';
+        ctx2d.fillText(instData?.name ?? '', 40, H/2 + 36);
+      }
+
+      // Particles
+      particlesRef.current = particlesRef.current
+        .map(p => ({...p, y: p.y + p.vy, life: p.life - 0.02}))
+        .filter(p => p.life > 0);
+      particlesRef.current.forEach(p => {
+        ctx2d.globalAlpha = p.life;
+        ctx2d.fillStyle = p.color; ctx2d.shadowBlur = 8; ctx2d.shadowColor = p.color;
+        ctx2d.beginPath(); ctx2d.arc(p.x, p.y, 3, 0, Math.PI*2); ctx2d.fill();
+        ctx2d.shadowBlur = 0; ctx2d.globalAlpha = 1;
+      });
+
+      frame = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  // Keyboard events
+  useEffect(() => {
+    const instRef = {current: instrument};
+    instRef.current = instrument;
+    const down = (e: KeyboardEvent) => {
+      if (e.repeat) return;
+      if (instRef.current === 'drums') {
+        const pad = DRUM_KB[e.key.toLowerCase()];
+        if (!pad) return;
+        setPressedKeys(p => new Set([...p, pad]));
+        playNote(pad, 'drums');
+      } else {
+        const note = KB_MAP[e.key.toLowerCase()];
+        if (!note) return;
+        setPressedKeys(p => new Set([...p, note]));
+        playNote(note, instRef.current);
+      }
+    };
+    const up = (e: KeyboardEvent) => {
+      const pad = DRUM_KB[e.key.toLowerCase()];
+      const note = KB_MAP[e.key.toLowerCase()];
+      const key = pad || note;
+      if (!key) return;
+      setPressedKeys(p => { const s = new Set(p); s.delete(key); return s; });
+    };
+    window.addEventListener('keydown', down);
+    window.addEventListener('keyup', up);
+    return () => { window.removeEventListener('keydown', down); window.removeEventListener('keyup', up); };
+  }, [playNote, instrument]);
+
+  const press   = (key: string) => { setPressedKeys(p => new Set([...p, key])); playNote(key, instrument); };
+  const release = (key: string) => setPressedKeys(p => { const s = new Set(p); s.delete(key); return s; });
+
+  const scheduleTrack = useCallback((tr: Track) => {
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    tr.events.forEach(({note, t}) => {
+      timers.push(setTimeout(() => playNote(note, tr.inst, false), Math.max(0, t)));
+    });
+    return timers;
+  }, [playNote]);
+
+  const stopAll = useCallback(() => {
+    loopTimersRef.current.forEach(clearTimeout);
+    loopTimersRef.current = [];
+    if (loopIntervalRef.current) { clearInterval(loopIntervalRef.current); loopIntervalRef.current = null; }
+    setIsPlaying(false);
+  }, []);
+
+  const playAll = useCallback((trs: Track[]) => {
+    stopAll();
+    const active = trs.filter(tr => !tr.muted && tr.events.length > 0);
+    if (!active.length) return;
+    const maxDur = Math.max(...active.map(tr => tr.dur), 1000);
+    loopDurRef.current = maxDur;
+    const fire = () => active.forEach(tr => loopTimersRef.current.push(...scheduleTrack(tr)));
+    setIsPlaying(true);
+    fire();
+    loopIntervalRef.current = setInterval(() => { loopTimersRef.current.forEach(clearTimeout); loopTimersRef.current = []; fire(); }, maxDur);
+  }, [stopAll, scheduleTrack]);
+
+  const loadExample = (ex: Example) => {
+    stopAll();
+    let id = trackIdRef.current;
+    setTracks(ex.tracks.map(tr => ({
+      id: ++id, inst: tr.inst, events: tr.events, dur: ex.dur, muted: false,
+    })));
+    trackIdRef.current = id;
+    loopDurRef.current = ex.dur;
+  };
+
+  const startRecord = () => {
+    recEventsRef.current = []; recInstRef.current = instrument;
+    recStartRef.current = Date.now(); isRecordingRef.current = true;
+    setIsRecording(true);
+    if (tracks.length > 0) playAll(tracks);
+  };
+
+  const stopRecord = () => {
+    const dur = Date.now() - recStartRef.current;
+    isRecordingRef.current = false; setIsRecording(false); stopAll();
+    if (!recEventsRef.current.length) return;
+    setTracks(prev => [...prev, {
+      id: ++trackIdRef.current, inst: recInstRef.current,
+      events: [...recEventsRef.current], dur: Math.max(dur, 500), muted: false,
+    }]);
+  };
+
+  const captureVideo = () => {
+    const canvas = canvasRef.current;
+    if (!canvas || !tracks.some(tr => !tr.muted)) return;
+    const dest = getDest();
+    const combined = new MediaStream([
+      ...canvas.captureStream(30).getVideoTracks(),
+      ...dest.stream.getAudioTracks(),
+    ]);
+    const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')
+      ? 'video/webm;codecs=vp9,opus' : 'video/webm';
+    const recorder = new MediaRecorder(combined, {mimeType: mime});
+    chunksRef.current = [];
+    recorder.ondataavailable = e => { if (e.data.size > 0) chunksRef.current.push(e.data); };
+    recorder.onstop = () => setVideoUrl(URL.createObjectURL(new Blob(chunksRef.current, {type: 'video/webm'})));
+    recorder.start();
+    tracks.filter(tr => !tr.muted).forEach(tr => loopTimersRef.current.push(...scheduleTrack(tr)));
+    setTimeout(() => {
+      recorder.stop();
+      loopTimersRef.current.forEach(clearTimeout); loopTimersRef.current = [];
+    }, loopDurRef.current + 400);
+  };
+
+  const tweetLoop = () => {
+    const text = encodeURIComponent('I just composed a loop at Kernelcon 2027 Algo(Rhythm)! 🎵 #KernelCon2027 #AlgoRhythm @_kernelcon_');
+    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent('https://kernelcon.org')}`, '_blank');
+  };
+  const linkedInShare = () => {
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://kernelcon.org')}`, '_blank');
+  };
+
+  return (
+    <div className="rhythm-section piano-section">
+      <div className="rhythm-inner">
+        <div className="rhythm-label">Interactive // Compose a Beat</div>
+        <h2 className="rhythm-title">PLAY THE <span className="accent-green">SYSTEM</span></h2>
+        <p className="piano-tagline">
+          Every conference has a soundtrack. This one has yours. Layer instruments, build a loop,
+          and record something no algorithm could predict. Load a demo to start, or start from silence.
+          Either way, you're composing at Kernelcon.
+        </p>
+        <p className="piano-subtitle">
+          {instrument === 'drums'
+            ? '♪ Z=Kick  X=Snare  C=Hi-Hat  V=Tom  B=Clap  N=Cymbal  |  Click pads to play'
+            : '♪ Q-U = C3-B3 | A-K = C4-C5 | Click or tap | Layer instruments'}
+        </p>
+
+        {/* Example loops */}
+        <div className="example-strip">
+          <span className="example-strip-label">▶ DEMO LOOPS</span>
+          {EXAMPLES.map(ex => (
+            <button key={ex.name} className="example-card" onClick={() => loadExample(ex)}>
+              <span className="example-emoji">{ex.emoji}</span>
+              <span className="example-info">
+                <span className="example-name">{ex.name}</span>
+                <span className="example-desc">{ex.desc}</span>
+                <span className="example-insts">
+                  {ex.tracks.map(tr => INSTRUMENTS.find(i => i.id === tr.inst)?.icon).join(' ')}
+                </span>
+              </span>
+            </button>
+          ))}
+        </div>
+
+        {/* Instrument selector */}
+        <div className="inst-selector">
+          {INSTRUMENTS.map(inst => (
+            <button key={inst.id}
+              className={`inst-btn ${instrument === inst.id ? 'active' : ''}`}
+              style={{'--inst-color': inst.color} as React.CSSProperties}
+              onClick={() => setInstrument(inst.id)}>
+              <span className="inst-icon">{inst.icon}</span>
+              <span className="inst-name">{inst.name}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Waveform canvas */}
+        <canvas ref={canvasRef} className="piano-canvas" width={1200} height={110} />
+
+        {/* Drum pads OR keyboard */}
+        {instrument === 'drums' ? (
+          <div className="drum-pads">
+            {DRUM_PADS.map(pad => (
+              <button key={pad.id}
+                className={`drum-pad ${pressedKeys.has(pad.id) ? 'active' : ''}`}
+                style={{'--pad-color': pad.color} as React.CSSProperties}
+                onMouseDown={() => press(pad.id)} onMouseUp={() => release(pad.id)}
+                onTouchStart={e => { e.preventDefault(); press(pad.id); }} onTouchEnd={() => release(pad.id)}>
+                <span className="pad-name">{pad.name}</span>
+                <span className="pad-key">{pad.key}</span>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className="piano-keyboard-wrapper">
+            <div className="piano-keyboard">
+              {WHITE_KEYS.map(note => (
+                <div key={note} className={`piano-white-key ${pressedKeys.has(note) ? 'pressed' : ''}`}
+                  onMouseDown={() => press(note)} onMouseUp={() => release(note)} onMouseLeave={() => release(note)}
+                  onTouchStart={e => { e.preventDefault(); press(note); }} onTouchEnd={() => release(note)}>
+                  <span className="key-label">{note}</span>
+                  <span className="key-kb">{Object.entries(KB_MAP).find(([,v]) => v === note)?.[0]?.toUpperCase() ?? ''}</span>
+                </div>
+              ))}
+              {BLACK_KEYS.map(({note, left}) => (
+                <div key={note} className={`piano-black-key ${pressedKeys.has(note) ? 'pressed' : ''}`}
+                  style={{left: `${left}px`}}
+                  onMouseDown={e => { e.stopPropagation(); press(note); }} onMouseUp={() => release(note)} onMouseLeave={() => release(note)}
+                  onTouchStart={e => { e.preventDefault(); e.stopPropagation(); press(note); }} onTouchEnd={() => release(note)}>
+                  <span className="key-label">{note.replace(/\d/g,'').replace('#','♯')}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Track manager */}
+        {tracks.length > 0 && (
+          <div className="track-manager">
+            <div className="track-manager-label">▶ TRACKS</div>
+            {tracks.map((tr, i) => {
+              const inst = INSTRUMENTS.find(ii => ii.id === tr.inst);
+              return (
+                <div key={tr.id} className={`studio-track ${tr.muted ? 'muted' : ''}`}
+                  style={{'--track-color': TRACK_COLORS[i % TRACK_COLORS.length]} as React.CSSProperties}>
+                  <span className="studio-track-icon">{inst?.icon}</span>
+                  <span className="studio-track-name">{inst?.name}</span>
+                  <span className="studio-track-events">{tr.events.length} events · {(tr.dur/1000).toFixed(1)}s</span>
+                  <button className="studio-track-btn" onClick={() => setTracks(p => p.map(t => t.id === tr.id ? {...t, muted: !t.muted} : t))}>
+                    {tr.muted ? '🔇' : '🔊'}
+                  </button>
+                  <button className="studio-track-btn delete" onClick={() => { stopAll(); setTracks(p => p.filter(t => t.id !== tr.id)); }}>✕</button>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Transport controls */}
+        <div className="piano-controls">
+          {!isRecording
+            ? <button className="piano-btn rec" onClick={startRecord}>⏺ Record</button>
+            : <button className="piano-btn stop-rec" onClick={stopRecord}>⏹ Stop Recording</button>}
+          {tracks.length > 0 && !isRecording && (
+            <>
+              {!isPlaying
+                ? <button className="piano-btn play" onClick={() => playAll(tracks)}>▶ Play Loop</button>
+                : <button className="piano-btn stop-play" onClick={stopAll}>⏸ Stop</button>}
+              <button className="piano-btn capture" onClick={captureVideo} disabled={isPlaying || isRecording}>🎬 Capture Video</button>
+            </>
+          )}
+        </div>
+
+        {/* Video player */}
+        {videoUrl && (
+          <div className="piano-video-section">
+            <video src={videoUrl} controls loop className="piano-video" />
+          </div>
+        )}
+
+        {/* Share strip — always visible */}
+        <div className="piano-share-strip">
+          <div className="share-strip-message">
+            <span className="share-strip-label">🎵 DROP YOUR BEAT</span>
+            <span className="share-strip-body">
+              Built something that hits? Share it. Kernelcon is listening, and the beats that
+              impress us most might just earn some serious recognition: prizes, swag, maybe even
+              a free pass to the conference. Tag&nbsp;<strong>@_kernelcon_</strong> and let the community
+              decide what slaps.
+            </span>
+          </div>
+          <div className="share-strip-actions">
+            {videoUrl && (
+              <button className="piano-btn download" onClick={() => {
+                const a = document.createElement('a'); a.href = videoUrl;
+                a.download = 'kernelcon-algo-rhythm-loop.webm'; a.click();
+              }}>⬇ Download Loop</button>
+            )}
+            <button className="piano-btn tweet" onClick={tweetLoop}>𝕏 Tweet to Kernelcon</button>
+            <button className="piano-btn linkedin" onClick={linkedInShare}>in Share on LinkedIn</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
+
+// ── FAQ ACCORDION ─────────────────────────────────────────────────────────────
+
+function FaqSection() {
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+  const toggle = (i: number) => setOpenIdx(prev => prev === i ? null : i);
+
+  return (
+    <div className="rhythm-section faq-section">
+      <div className="rhythm-inner faq-inner">
+        <div className="faq-header">
+          <div className="rhythm-label">Help Desk</div>
+          <h2 className="rhythm-title">LINER<br /><span className="accent-yellow">NOTES</span></h2>
+          <p className="faq-desc">Read the fine print before the show starts.</p>
+        </div>
+        <div className="faq-list">
+          {FAQS.map((item, i) => (
+            <div key={i} className={`faq-item ${openIdx === i ? 'open' : ''}`}>
+              <button className="faq-question" onClick={() => toggle(i)}>
+                <span className="faq-q-text">{item.q}</span>
+                <span className="faq-icon">{openIdx === i ? '−' : '+'}</span>
+              </button>
+              <div className="faq-answer" style={{ maxHeight: openIdx === i ? '300px' : '0' }}>
+                <div className="faq-answer-inner">{item.a}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── HOME PAGE ─────────────────────────────────────────────────────────────────
+
+interface HomeState { mode: string; }
 
 export default class Home extends Component<object, HomeState> {
   static displayName = "Home";
 
-  toggleModal = () => {
-    this.setState({
-      isOpen: !this.state.isOpen,
-    });
-  };
-
-  getRandomPic(lengthOfArray: number, indexToExclude: number, secondLastKernelIndex: number) {
-    // This function just grabs a random index that wasn't one of the last two.
-    // Obviously, due to math, you need to send in at least an array of length 3.
-    let rand: number | null = null;
-
-    while (rand === null || rand === indexToExclude || rand === secondLastKernelIndex) {
-      rand = Math.round(Math.random() * (lengthOfArray - 1));
-    }
-    return rand;
-  }
-
-
   constructor(props: object) {
     super(props);
-    this.state = {
-      mode: "",
-      isOpen: false,
-    };
+    this.state = { mode: "" };
   }
 
   render() {
     return (
-      <div id='main_hero' className='hero'>
+      <div id="main_hero" className="hero">
         <BackGround />
-        <div className="container">
-          <div className="home-page">
-            <div className="centered-top">
-            </div>
 
-            {/* <div className="col left">
-              <div className="sizzle">
-                <div className="sizzle-header">
-                  <div className="sizzle-text-title">
-                    Welcome to Kernelcon
-                  </div>
+        <div className="home-rhythm-sections">
+
+          {/* ── TRACKLIST ── */}
+          <div className="rhythm-section tracklist-section">
+            <div className="rhythm-inner">
+              <div className="section-header">
+                <div>
+                  <div className="rhythm-label">Schedule</div>
+                  <h2 className="rhythm-title">THE <span className="accent-yellow">TRACKLIST</span></h2>
                 </div>
-                <div className="sizzle-text-section">
-                  <div className="sizzle-text">
-                    Rev up and put the pedal to the metal at one of the midwest's premier information security conferences.
-                  </div>
-                  <div className="sizzle-bullets">
-                    <div className='sizzle-bullet-item'>
-                      <div className='sizzle-icon'>
-                        <img src={Speakers} alt="speaker-logo"/>
-                      </div>
-                      <div className='sizzle-bullet'>
-                        <div className='sizzle-bullet-title'>
-                          Excellent Speakers
-                        </div>
-                        <div className='sizzle-bullet-desc'>
-                          We are speeding in some of information security's top talents from the midwest and across the nation. Come learn from and network with our speakers!
-                        </div>
-                      </div>
-                    </div>
-                    <div className='sizzle-bullet-item'>
-                      <div className='sizzle-icon'>
-                        <img src={Training} alt="training-logo"/>
-                      </div>
-                      <div className='sizzle-bullet'>
-                        <div className='sizzle-bullet-title'>
-                          Professional Training
-                        </div>
-                        <div className='sizzle-bullet-desc'>
-                          Some of the industry's leading trainers descend on Omaha, Nebraska to lead two days of intensive coursework for attendees. This training is often offered at a FRACTION of costs at large hacker conferences.
-                        </div>
-                      </div>
-                    </div>
-                    <div className='sizzle-bullet-item'>
-                      <div className='sizzle-icon'>
-                        <img src={Garage} alt="hands-on-logo"/>
-                      </div>
-                      <div className='sizzle-bullet'>
-                        <div className='sizzle-bullet-title'>
-                          Hands-On Villages
-                        </div>
-                        <div className='sizzle-bullet-desc'>
-                        Enter the garage and we'll have all the tools - including classics like Hardware Hacking and Radio Hacking. Got an idea for a fun village? Reach out!
-                        </div>
-                      </div>
-                    </div>
-                    <div className='sizzle-bullet-item'>
-                      <div className='sizzle-icon'>
-                        <img src={CarRace} alt="competitions-logo"/>
-                      </div>
-                      <div className='sizzle-bullet'>
-                        <div className='sizzle-bullet-title'>
-                          Challenging Competitions
-                        </div>
-                        <div className='sizzle-bullet-desc'>
-                          Race to the finish line, our Capture-the-Flag event is always a big hit and last year's Side Quests helped find the most well-rounded hacker. This year promises not to disappoint - join us in a race to win an eternal kernel aka lifetime entry to Kernelcon!
-                        </div>
-                      </div>
-                    </div>
-                    <div className='sizzle-bullet-item'>
-                      <div className='sizzle-icon'>
-                        <img src={DriverCelebrate} alt="activities-logo"/>
-                      </div>
-                      <div className='sizzle-bullet'>
-                        <div className='sizzle-bullet-title'>
-                          Fun Activities
-                        </div>
-                        <div className='sizzle-bullet-desc'>
-                          Come chill out with us at the Race pit.  Our raging party / social event, Kernel Panic, is always an attendee favorite!
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <div className="now-playing">▶ EXECUTING MAR 4–5 · OMAHA, NE</div>
               </div>
-
-
-            </div>
-
-
-            <div className="col right">
-
-              <span className='centered-top'>
-                <div className='order-button'>
-                  <a
-                    className="cybr-btn btn-bottom"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="https://www.eventzilla.net/e/kernelcon-2025-2138626943">
-                    Register Now
-                    <span aria-hidden className="cybr-btn__glitch">
-                    Register Now
-                    </span>
-                  </a>
-                </div>
-              </span>
-
-              <div className='update-section'>
-                <h2 className='centered'>Kernelcon Updates</h2>
-                <p className='update-text'>As we continue to tinker in the garage, please check back here for updates and announcements. Click on each update to be taken to their individual pages for more details.</p>
-                <div className='updates'>
-                                    <h3 className='update-announcement'>New Keynotes Announced</h3>
-                  <div className='keynote-section'>
-                    <a className='keynote-anchor'
-                      href="https://kernelcon.org/agenda">
-                      <div className='keynote keynote-bkg'>
-                        <img
-                          src={Gabrielle}
-                          className="update-keynote"
-                          alt="Gabrielle Hempel"
-                        />
-                        <div className="keynote-name">Gabrielle Hempel</div>
-                      </div>
-                    </a>
-                    <a className='keynote-anchor'
-                      href="https://kernelcon.org/agenda">
-                    <div className='keynote keynote-bkg'>
-                      <img
-                        src={JaysonStreet}
-                        className="update-keynote"
-                        alt="Jayson Street"
-                      />
-                      <div className="keynote-name">Jayson Street</div>
+              <div className="track-list">
+                {KEY_DATES.map((d) => (
+                  <div key={d.num} className={`track-item track-${d.status}`}>
+                    <div className="track-num">{d.num}</div>
+                    <div className="track-date">{d.date}</div>
+                    <div className="track-names">
+                      <div className="track-title">{d.title}</div>
+                      <div className="track-sub">{d.sub}</div>
                     </div>
-                    </a>
-                    <a className='keynote-anchor'
-                      href="https://kernelcon.org/agenda">
-                    <div className='keynote keynote-bkg'>
-                        <img
-                          src={JeffMan}
-                          className="update-keynote"
-                          alt="Jeff Man"
-                        />
-                        <div className="keynote-name">Jeff Man</div>
-                      </div>   
-                    </a>  
-                  </div>
-                  <h3 className='update-announcement'>New Entertainment Announced</h3>
-                  <div className='keynote-section'>
-                    <a className='keynote-anchor'
-                      href="https://kernelcon.org/agenda">
-                      <div className='keynote keynote-bkg'>
-                        <img
-                          src={YTCracker}
-                          className="update-keynote"
-                          alt="ytcracker"
-                        />
-                        <div className="keynote-name">YTCracker</div>
-                      </div>
-                    </a>
-                    <a className='keynote-anchor'
-                      href="https://kernelcon.org/agenda">
-                    <div className='keynote keynote-bkg'>
-                      <img
-                        src={DualCore}
-                        className="update-keynote"
-                        alt="DualCore"
-                      />
-                      <div className="keynote-name">int eighty of Dual Core</div>
+                    <div className={`track-status status-${d.status}`}>
+                      {d.status === "done" ? "EXECUTED" : d.status === "finale" ? "★ EXECUTE" : "PENDING"}
                     </div>
-                    </a> 
                   </div>
-                </div>
+                ))}
               </div>
-            </div> */}
-
-
-
+            </div>
           </div>
+
+          <div className="rhythm-stripe" />
+
+          {/* ── HEADLINERS ── */}
+          <div className="rhythm-section headliners-section">
+            <div className="rhythm-inner">
+              <div className="rhythm-label">Keynote Speakers</div>
+              <h2 className="rhythm-title">HEAD<span className="accent-pink">LINERS</span></h2>
+
+              <div className="headliner-grid">
+                {KEYNOTES.map((k) => (
+                  <div key={k.name} className="headliner-card">
+                    <div className="headliner-badge">★ {k.badge}</div>
+                    <div className="headliner-name">{k.name}</div>
+                    <div className="headliner-org">{k.org}</div>
+                    <div className="headliner-bg-text">K/N</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="performers-label">♪ Featured Performers</div>
+              <div className="performers-grid">
+                {PERFORMERS.map((p) => (
+                  <div key={p.name} className="performer-card">
+                    <div className="performer-name">{p.name}</div>
+                    <div className="performer-track">{p.track}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="rhythm-stripe" />
+
+          {/* ── SOUNDCHECK / TRAINING ── */}
+          <div className="rhythm-section soundcheck-section">
+            <div className="rhythm-inner soundcheck-inner">
+              <div className="soundcheck-header">
+                <div className="rhythm-label">Training // March 2-3</div>
+                <h2 className="rhythm-title">SOUND<br /><span className="accent-yellow">CHECK</span></h2>
+                <p className="soundcheck-desc">
+                  Before the main show, sharpen your skills in our intensive master classes.
+                  Two full days of hands-on workshops with elite instructors.
+                  These fill up fast. Book early.
+                </p>
+                <div className="soundcheck-meta">
+                  ♪ MARCH 2–3, 2027<br />
+                  ♪ HILTON OMAHA<br />
+                  ♪ SEPARATE TICKET REQUIRED<br />
+                  ♪ LIMITED CAPACITY
+                </div>
+              </div>
+              <div className="workshop-list">
+                {TRAININGS.map((t) => (
+                  <div key={t.num} className="workshop-item">
+                    <div className="workshop-num">{t.num}</div>
+                    <div>
+                      <div className="workshop-title">{t.title}</div>
+                      <div className="workshop-instructor">{t.instructor}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="rhythm-stripe" />
+
+          {/* ── THE STAGES ── */}
+          <div className="rhythm-section stages-section">
+            <div className="rhythm-inner">
+              <div className="rhythm-label">Villages &amp; Areas</div>
+              <h2 className="rhythm-title">THE <span className="accent-purple">STAGES</span></h2>
+              <div className="stages-grid">
+                {STAGES.map((s) => (
+                  <div key={s.name} className="stage-card">
+                    <span className="stage-icon">{s.icon}</span>
+                    <div className="stage-name">{s.name}</div>
+                    <div className="stage-tag">{s.tag}</div>
+                    <div className="stage-desc">{s.desc}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="rhythm-stripe" />
+
+          {/* ── MAIN STAGE / EVENTS ── */}
+          <div className="rhythm-section main-stage-section">
+            <div className="rhythm-inner">
+              <div className="rhythm-label">Entertainment</div>
+              <h2 className="rhythm-title">MAIN <span className="accent-green">STAGE</span></h2>
+              <div className="events-grid">
+                {EVENTS.map((ev) => (
+                  <div key={ev.name} className={`event-card event-${ev.accent}`}>
+                    <div className="event-date">{ev.date}</div>
+                    <div className="event-name">{ev.name.split('\n').map((line, i) => <span key={i}>{line}<br /></span>)}</div>
+                    <div className="event-tagline">{ev.tagline}</div>
+                    <div className="event-desc">{ev.desc}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="rhythm-stripe" />
+
+          {/* ── BATTLE MODE ── */}
+          <div className="rhythm-section battle-section">
+            <div className="rhythm-inner">
+              <div className="rhythm-label">Competitions</div>
+              <h2 className="rhythm-title">BATTLE<br /><span className="accent-pink">MODE</span></h2>
+              <div className="battle-grid">
+                {BATTLES.map((b) => (
+                  <div key={b.name} className={`battle-card battle-${b.color}`}>
+                    <div className="battle-tag">{b.tag}</div>
+                    <div className="battle-name">{b.name}</div>
+                    <div className="battle-motto">{b.motto}</div>
+                    <div className="battle-desc">{b.desc}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="rhythm-stripe" />
+
+          {/* ── PLAY THE SYSTEM (Piano) ── */}
+          <PianoSection />
+
+          <div className="rhythm-stripe" />
+
+          {/* ── REGISTER CTA ── */}
+          <div className="rhythm-section cta-section">
+            <div className="rhythm-inner cta-inner">
+              <div className="cta-content">
+                <div className="rhythm-label">Join the Frequency</div>
+                <h2 className="rhythm-title">GET YOUR <span className="accent-green">PASS</span></h2>
+                <p className="cta-desc">
+                  Secure your spot at the Midwest's most electric cybersecurity event.
+                  Registration is live. Slots are finite. The show doesn't wait.
+                </p>
+                <ul className="cta-perks">
+                  <li>Group discounts available for 10 or more</li>
+                  <li>Kids under 14 free with a paid adult</li>
+                  <li>Cash at the door. No excuses.</li>
+                  <li>Passes are transferable (no refunds)</li>
+                  <li>Training sold separately. Mar 2-3.</li>
+                </ul>
+                <a href="/register" className="cta-button">▶ Register at Kernelcon.org</a>
+              </div>
+              <div className="cta-details">
+                <div className="cta-detail-title">SIGNAL DETAILS</div>
+                <ul className="cta-detail-list">
+                  <li>Hilton Omaha, Omaha, Nebraska</li>
+                  <li>Training: March 2–3, 2027</li>
+                  <li>Conference: March 4–5, 2027</li>
+                  <li>Hotel block available. Book early.</li>
+                  <li>Student discounts available</li>
+                  <li>Community-driven pricing</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="rhythm-stripe" />
+
+          {/* ── FAQ / LINER NOTES ── */}
+          <FaqSection />
+
+          {/* ── EQ FOOTER STRIP ── */}
+          <div className="rhythm-eq-footer">
+            {Array.from({ length: 48 }).map((_, i) => (
+              <div key={i} className="footer-eq-bar" />
+            ))}
+          </div>
+
         </div>
       </div>
     );

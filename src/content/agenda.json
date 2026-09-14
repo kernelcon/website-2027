@@ -1,1437 +1,553 @@
 [
   {
     "dayOfWeek": "Thursday",
-    "date": "9",
+    "date": "4",
     "roomsInfo": [
-      {
-        "roomName": "Mountain"
-      },
-      {
-        "roomName": "Beach"
-      },
-      {
-        "roomName": "Forest"
-      }
+      { "roomName": "Tempo" },
+      { "roomName": "Groove" },
+      { "roomName": "Pulse" }
     ],
     "talks": [
       {
         "time": "0730",
-        "minutes": "80",
-        "roomIndex": [
-          0,
-          1,
-          2
-        ],
+        "minutes": 80,
+        "roomIndex": [0, 1, 2],
         "talkTitle": "Registration Opens",
-        "talkDescription": "Doors open for registration at 7:30 AM. The Kernelcon Store opens with limited-edition swag and conference merchandise - get there early for the best selection. Grab your badge, a bite, and a seat for the keynotes!",
+        "talkDescription": "Doors open for registration at 7:30 AM. Grab your badge, a bite, and a seat.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": true
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "0850",
-        "minutes": "10",
-        "roomIndex": [
-          0,
-          1,
-          2
-        ],
-        "talkTitle": "Opening Remarks",
-        "talkDescription": "We kick off Kernelcon 2027 with a few words from the Kernelcon Crew.",
+        "minutes": 50,
+        "roomIndex": [0],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Kernelcon Crew",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": true
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "0900",
-        "minutes": "60",
-        "roomIndex": [
-          0,
-          1,
-          2
-        ],
-        "talkTitle": "Keynote",
-        "talkDescription": "Keynote presentation by Casey Ellis. Casey is the founder of Bugcrowd and co-founder of The disclose.io Project, and a longtime leader in crowdsourced security and vulnerability disclosure.",
+        "time": "0850",
+        "minutes": 50,
+        "roomIndex": [1],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Casey Ellis",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1000",
-        "minutes": "30",
-        "roomIndex": [
-          0,
-          1,
-          2
-        ],
-        "talkTitle": "Break (30 min room switch) · Villages Open · Book signing: TBA",
-        "talkDescription": "Track room configuration will change. Villages Open: all villages officially open for demos, contests, and hacking. Book signing: TBA – check on-site signage near registration for author, location, and exact time.",
+        "time": "0850",
+        "minutes": 50,
+        "roomIndex": [2],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": true
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1030",
-        "minutes": "60",
-        "roomIndex": [
-          0
-        ],
-        "talkTitle": "Definitely Not Secure (DNS)",
-        "talkDescription": "In a cybersecurity world always hyper-focused on \"the new hotness\", why is that vanity protocol making internet addressing human-friendly so often overlooked? Everybody attending this conference uses the Domain Name System (DNS), and daily, but relatively few understand how it all works. Yet the security ramifications are huge! After physical access, those who control the flow of network packets win. This holds true for offensive security practitioners, tech defenders, and threat actors alike.\n\nThis talk starts with DNS basics and then ventures into DNS vulnerabilities, attacks, and defensive security strategies. In addition to an overview of DNS basics, the presenter covers DNS security including live demos on a variety of DNS attacks. DNS security topics covered include abuse, command & control (C2), data exfiltration, hijacking, information leakage, spoofing, takeover, tunneling, and more. Attendee takeaways include methods for tightening DNS security, detecting attack traffic patterns, and overall awareness of the DNS related cyber-attacks happening today.",
+        "time": "0950",
+        "minutes": 50,
+        "roomIndex": [0],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Matt Scheurer",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1030",
-        "minutes": "60",
-        "roomIndex": [
-          1
-        ],
-        "talkTitle": "BeeScout: Enabling Peripheral Introspection on Android",
-        "talkDescription": "In this talk we will present our tooling, BeeScout, used to instrument the kernel of an Android phone using extended Berkeley Packet Filter(eBPF) to examine communications with peripherals on the phone.  We'll cover the challenges of inspecting data being passed back and forth from the kernel to peripherals, detail several approaches for capturing it, and conclude with a demo extracting incoming SMS messages on a Pixel 6 phone from the baseband processor driver in kernelspace, and using that to detect SMS botnet command-and-control messages.  You'll leave the talk with an understanding of how peripherals communicate on Android, and we're relasing our BeeScout toolkit that leverages eBPF to trace, inspect, and dump data from within kernel functions.",
+        "time": "0950",
+        "minutes": 50,
+        "roomIndex": [1],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Sean Carrick",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1030",
-        "minutes": "60",
-        "roomIndex": [
-          2
-        ],
-        "talkTitle": "A Multi-Architecture tool for Persistent PLT Hooking and Runtime Process Monitoring in Linux: Aether",
-        "talkDescription": "Process injection on Linux is often treated as a solved problem. Yet, many modern tools remain architecture-locked or are easily flagged by basic heuristic analysis. This session introduces Aether, a Linux process injection framework designed for today’s landscape. We will deep-dive into the technical hurdles of building a tool that handles both 32-bit and 64-bit processes seamlessly. Aether utilizes ptrace for attachment and PLT (Procedure Linkage Table) hooking for precise function interception.\n\nThe talk goes beyond the basics by exploring a \"Polyglot\" approach to offensive tooling. We will demonstrate how wrapping a performance-heavy C/C++ injection core within a Rust-based FFI (Foreign Function Interface) tunnel creates a \"safe\" but powerful parasite. This hybrid architecture increases exploit stability. It also complicates the work of reverse engineers by fragmenting the call stack across language boundaries. Attendees will walk away with a functional understanding of Linux runtime code modification, the state of modern PLT hooking, and a roadmap for \"oxidizing\" legacy C++ tools to stay ahead of evolving detection engines.",
+        "time": "0950",
+        "minutes": 50,
+        "roomIndex": [2],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "FaultLine",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1130",
-        "minutes": "30",
-        "roomIndex": [
-          0
-        ],
-        "talkTitle": "Bluetooth Warwalking: Hacking the Airwaves with Your Phone and a Pair of Sneakers",
-        "talkDescription": "What if the most vulnerable access point in a business isn't a Wi-Fi network or phishing email but a Bluetooth speaker hidden behind the counter? In this talk, I'll walk you through the overlooked attack surface of open and misconfigured Bluetooth devices, discovered while warwalking through urban environments. Starting with hands-on demonstrations of hijacking retail devices, from receipt printers to public TVs, I'll then show how I scaled this research using Kismet, GPS, and data science to analyze hundreds of thousands of Bluetooth devices across multiple cities. Beyond just device exploitation, I'll reveal how the constant broadcast of MAC addresses and device names creates a surveillance goldmine for tracking individuals as they move through public spaces. This session combines live exploitation demos with real warwalking data to expose just how vulnerable our wireless infrastructure, and our privacy, really is.",
+        "time": "1050",
+        "minutes": 50,
+        "roomIndex": [0],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "kn0ck0ut",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1130",
-        "minutes": "30",
-        "roomIndex": [
-          1
-        ],
-        "talkTitle": "A Series Of Unfortunate Event (Listeners)",
-        "talkDescription": "Modern web applications are intricate chains of events and listeners, a single insecure listener is all it takes.\n\nThis talk dives into client-side exploit chains, each starting from one simple mistake: a bad event listener. We'll walk through real bug bounty findings, showing how a postMessage listener with bad origin validation becomes full data exfiltration, and how these \"low severity\" gadgets chain together into critical payouts.\n\nYou'll learn how to find vulnerable listeners in the wild, bypass the origin validation mistakes developers actually make. Whether you're hunting bugs for bounties or trying to keep your own applications secure, understanding how these chains work is essential.\n\nThis isn't a theoretical deep-dive. It's a practical guide to finding and exploiting client-side vulnerabilities that actually pay. \n\nCome for the Lemony Snicket references. Stay for the exploit chains.",
+        "time": "1050",
+        "minutes": 50,
+        "roomIndex": [1],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Ryan Bonner",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1130",
-        "minutes": "30",
-        "roomIndex": [
-          2
-        ],
-        "talkTitle": "Red Team Hacks: Physical Locks -> Cyber Backdoors",
-        "talkDescription": "Penetration testing is common for internal security but often excludes real-world attacks like physical intrusion. This talk shares experiences: forged IDs to bypass entry, malicious hardware, Slack-based C2 with steganography, supply-chain style malware, and GitHub tampering. It covers both office intrusion and network intrusion, including employee/security surveys, hardware setup, detention risks, file exfiltration, evasion malware, and repository attacks.",
+        "time": "1050",
+        "minutes": 50,
+        "roomIndex": [2],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Satoki Tsuji",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "1200",
-        "minutes": "60",
-        "roomIndex": [
-          0,
-          1,
-          2
-        ],
-        "talkTitle": "Lunch (on your own)",
-        "talkDescription": "Get outside and touch grass. Use this time to visit villages, try your hand at a CTF challenge or the escape room, or take a break from all-day talks.",
+        "minutes": 60,
+        "roomIndex": [0, 1, 2],
+        "talkTitle": "Lunch",
+        "talkDescription": "Take a break, refuel, and connect with fellow attendees.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": true
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "1300",
-        "minutes": "60",
-        "roomIndex": [
-          0
-        ],
-        "talkTitle": "Windows Projected File System - The Reality Stone",
-        "talkDescription": "Windows Projected File System (ProjFS), a free built-in feature, allows you to create virtual placeholder files that appear real to applications but only provides content when accessed, making it excellent for deception. We can present what appears to be a large collection of interesting files without actually storing them. Further when an attacker attempts to access these files, ProjFS can log and alert on access attempts while also returning dynamic or fake content based on the request properties–Process, User, time of day, etc. This is easily done without requiring significant storage space for the fake files and has minimal system performance impact. You can see details about interactions with these from User Mode not in the Kernel making this feature easy to deploy at scale. In December 2024, our team built and released an Open Source Canarytoken called Windows Fake File System. We allow teams to quickly deploy and monitor fake files. This talk will showcase what a Projected File System is, why it is reliable, and how you can use it to build Deception Frameworks. We hope this talk drives interest and innovation in this space. We think it can be a powerful Defender primitive.",
+        "minutes": 50,
+        "roomIndex": [0],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Casey Smith",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "1300",
-        "minutes": "60",
-        "roomIndex": [
-          1
-        ],
-        "talkTitle": "Never a Better Time to Be a HAM: Time to get your Amateur Radio License",
-        "talkDescription": "An Amateur Radio License is a key to a whole world of experimenting and communication.  Amateur Radio operators are critical to support communications during natural disasters: such as tornadoes, fires, and others when Cellular networks might be unavailable.  Amateur Radio launched their first satellite Oscar 1 in 1961.  \n\nThere has never been a better time to get your Amateur Radio license.  Radios are cheaper, better, and more hackable than ever before.  This talk will help people learn about the process to get their amateur radio license (technician class).  It will talk about some of the amazing radios available nowadays:  Quansheng, Bao Feng and others are making very nice, very inexpensive radios. We'll introduce DMR (Digital Mode Radio) radios.  \n\nWe'll discuss some of the great open source software that exists to support amateur radio.\n\nAttendees will leave with the resources to make a start towards joining the Amateur Radio community.",
+        "minutes": 50,
+        "roomIndex": [1],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Aaron Grothe (KCOWIH)",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "1300",
-        "minutes": "60",
-        "roomIndex": [
-          2
-        ],
-        "talkTitle": "A Persona-Driven Approach to Secure AI Adoption",
-        "talkDescription": "As AI adoption accelerates, organizations face the dual challenge of enabling innovation while maintaining security and compliance. This session introduces a persona-driven framework that helps security and business leaders speak the same language, aligning AI initiatives with business value, risk management, and Zero Trust principles. By understanding the motivations and pain points of different personas, as well as recognizing how biases can distort risk perception and decision-making, we can design guardrails that enable responsible AI use instead of restricting it.\n\nJoin us to explore how a persona-based approach transforms security from a gatekeeper into a strategic enabler, helping your organization move confidently from risk to reward in the age of AI.",
+        "minutes": 50,
+        "roomIndex": [2],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
-        "talkId": "apersonadrivenapproachtosecureaiadoption",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Rob LaMagna-Reiter",
-            "speakerId": "roblamagnareiter",
-            "company": "WoodmenLife",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "https://www.linkedin.com/in/robertlamagnareiter",
-            "image": "Robert_LaMagaReiter.jpg",
-            "bio": "Robert LaMagna-Reiter, CISO of WoodmenLife, leads enterprise security strategy, risk management, architecture, and operations. With 20+ years in security leadership across transportation, government communications, retail, SaaS, and insurance, he aligns strategy to zero-trust principles to drive business value. He also serves as a Team8 Villager, President of the SOFTwarfare Advisory Board, Zero Trust Initiative Leader for CyberTheory, and CSA expert committee member.",
-            "hidden": false
-          },
-          {
-            "name": "Chris Vermilya",
-            "speakerId": "chrisvermilya",
-            "company": "Loom Security",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "https://www.linkedin.com/in/chrisvermilya/",
-            "image": "",
-            "bio": "Chris Vermilya is an accomplished cybersecurity executive specializing in IAM, GRC, and security program strategy. As VP of Services at Loom Security, he shapes and leads the company’s professional and managed services, driving innovation and identity-focused solutions. Chris excels at helping organizations tackle complex challenges and building high-impact teams. He is also a commercial pilot and flight instructor, bringing precision and focus to his leadership.",
-            "hidden": false
-          }
-        ]
+        "talkId": "",
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "1400",
-        "minutes": "60",
-        "roomIndex": [
-          0
-        ],
-        "talkTitle": "Security CTF to Challenge Series - Bringing Hands-On Hacking to Developer Conferences",
-        "talkDescription": "In 2023, the organizers of GopherCon began exploring ways to add more engaging, hands-on experiences to the conference. Benji was serving as a programming chair at the time, had spoken the prior year on application security, and had been active in the Go community for several years. When Benji joined the content committee, he proposed a practical experiment: run a CTF –style event that could deliver security training directly to working developers. Although Neil and I are application-security practitioners, we have long been skeptical of traditional CTFs. Many reward niche knowledge, rely on contrived puzzles or obscure “gotchas,” or require time-consuming reverse-engineering detours and is similar to the engineering interview process. That model does not align with how working engineers learn—or how developer conferences operate. Instead, we designed and delivered a developer-first, progressive security challenge optimized for realistic problems, fast initial wins, and practical takeaways. What began as a one-off conference experiment evolved into a multi-day event and, ultimately, a repeatable Challenge Series that now serves as a sustained learning platform for the community.",
+        "minutes": 50,
+        "roomIndex": [0],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Benji Vesterby",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          },
-          {
-            "name": "Neil Primmer",
-            "speakerId": "neilprimmer",
-            "company": "CodePros",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "https://www.linkedin.com/in/neilprimmer/",
-            "image": "",
-            "bio": "Neil is an experienced software, security, and platform engineer, with a history spanning numerous industries from mobile gaming and web hosting to film & television and agricultural technology. While his most recent focus has been on the safe implementation of LLMs and LLM-derived tooling into engineering workflows, he has spent time in both large enterprises in the financial services space, as well as small startups in numerous fields.  Neil's professional software experience includes Go, Python, Node, Ruby, Groovy, Java, and Perl; while he's also spent time building and managing cloud-native infrastructure and CI/CD pipelines of varying sizes.  Neil currently lives in Southwest Florida, with his wife, three children, one dog, and three cats.",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "1400",
-        "minutes": "60",
-        "roomIndex": [
-          1
-        ],
-        "talkTitle": "Ham Radio Isn't Magic: Preppers, Sad Hams, and Practical Off-Grid Communications",
-        "talkDescription": "Every hacker has seen the post: someone asks what radio will let them \"reliably talk 500 miles to family when the cell network goes down.\" The replies quickly devolve into bad advice, magical thinking, and dismissive gatekeeping. The result is confusion, wasted money, and false confidence about off-grid communications.\n\nThis talk is the antidote.\n\nWe'll cut through the mythology and explain what amateur radio can actually do for personal and family communication during major disruptions — and what it cannot. Starting at a 101 level, we'll cover realistic ranges, basic propagation, equipment tradeoffs, digital modes, licensing myths, and why distance is usually the wrong requirement.\n\nRather than dunking on preppers or policing fun like a sad ham, this talk reframes the problem the way hackers do: understanding constraints, failure modes, and human factors. \n\nWe'll focus on practical off-grid communication strategies that work in the real world — coordination, redundancy, and low-bandwidth messaging — not fantasy continent-spanning voice links.",
+        "minutes": 50,
+        "roomIndex": [1],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Andrew Ohnstad",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "1400",
-        "minutes": "170",
-        "roomIndex": [
-          2
-        ],
-        "talkTitle": "Kernelcon Carnage II Setup",
-        "talkDescription": "Room setup — not a session.",
-        "setupSlot": true,
+        "minutes": 50,
+        "roomIndex": [2],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": true
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "1500",
-        "minutes": "30",
-        "roomIndex": [
-          0,
-          1
-        ],
-        "talkTitle": "Break (snacks)",
-        "talkDescription": "Afternoon break. Snacks available.",
+        "minutes": 50,
+        "roomIndex": [0],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": true
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1530",
-        "minutes": "60",
-        "roomIndex": [
-          0
-        ],
-        "talkTitle": "Off-Grid Computation: AGI, Shannon-Limit Compression, and Post-Quantum Unbreakable Encryption",
-        "talkDescription": "As our systems extend beyond the cloud into hostile or disconnected environments, security and efficiency must reach their theoretical limits. This talk introduces a unifying framework where theory, programming, and execution collapse into one layer — enabling breakthroughs in three critical areas:\n\nArtificial General Intelligence (AGI): not as hype, but as executable theory grounded in information structures.\n\nCompression at the Shannon Limit: reaching maximal efficiency for storage and communication, even under constrained off-grid conditions.\n\nPost-Quantum Unbreakable Encryption: architectures designed to remain secure against adversaries with quantum capabilities.\n\nThe talk will not reveal private algorithms, but will instead outline the theoretical scaffolding and operational design that make these goals possible. Attendees will leave with a roadmap for integrating AGI-level reasoning, provably tight compression, and future-proof cryptography into resilient, off-grid infrastructures.",
+        "time": "1500",
+        "minutes": 50,
+        "roomIndex": [1],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Francesco Pedulli",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1530",
-        "minutes": "60",
-        "roomIndex": [
-          1
-        ],
-        "talkTitle": "DIY Satellite Tracking for Ham Radio",
-        "talkDescription": "Ever wonder what it takes to talk to the International Space Station? Satellite communication for ham radio is a challenging endeavor, and the presenter shares the struggle of juggling all the tasks to get it done! Discover how to conquer these difficulties with open-source firmware, 3d prints, and custom hardware solutions. This talk is for curious people and tinkerers interested in the ultimate DIY radio project. Could there be a live demo perhaps?!",
+        "time": "1500",
+        "minutes": 50,
+        "roomIndex": [2],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Tyler Rosonke",
-            "speakerId": "",
-            "company": "Contrast Security",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "Tyler Rosonke is the Manager of Security Research at Contrast Security. His career began within a Fortune 500 company's internal security team, providing a robust foundation in enterprise security. Tyler then transitioned into AppSec consulting and penetration testing, gaining extensive experience \"hacking the planet\" across various industry sectors. This hands-on expertise ultimately led him to Contrast Security, captivated by their IAST, RASP, & ADR technologies.",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1630",
-        "minutes": "20",
-        "roomIndex": [
-          0
-        ],
-        "talkTitle": "Analog Choices for Digital Grids",
-        "talkDescription": "Since the dawn of the digital age we have been told we have only binary choices. Permit or deny, on or off, one or zero. People often capitulate to \"the only way to win is not to play.\" Lets discuss ways to engage with our adversaries using options that are more than permit or deny. Lets use some analog analogues to shape the grid, catalyze our digital exhaust, and stack the deck in our favor. After all; we are hackers. We can shape and extend the grid to work for us.",
+        "time": "1600",
+        "minutes": 50,
+        "roomIndex": [0],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "SynMac",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1630",
-        "minutes": "20",
-        "roomIndex": [
-          1
-        ],
-        "talkTitle": "All Keys Lost: An Adventure In Car Hacking",
-        "talkDescription": "All Keys Lost: An Adventure in Car Hacking is a practical, no-fluff journey into what happens when modern vehicles lose every key—and how security researchers, locksmiths, and attackers alike can bring them back to life. This talk walks through a real-world “all keys lost” scenario, starting off-vehicle on the bench by safely powering and connecting a DME and CAS module outside the car. From there, we’ll cover extracting the vehicle’s Internal Serial Number (ISN) directly from the DME, then pivot to the CAS by dumping its EEPROM flash using probes and hands-on hardware techniques.\n\nOnce the data is in hand, we’ll explore how key data is identified and written directly into the binary, what can go wrong when you get it wrong, and why tiny mistakes can brick expensive modules. Finally, we’ll close the loop by flashing the modified binary back onto the CAS via EEPROM and returning the vehicle to a functional, key-present state.\n\nThis session focuses on methodology, tooling, and tradecraft—bridging automotive electronics, hardware hacking, and real-world vehicle security—while highlighting why “all keys lost” is as much a security problem as it is a convenience one.",
+        "time": "1600",
+        "minutes": 50,
+        "roomIndex": [1],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "f8al",
-            "speakerId": "",
-            "company": "SecurityShrimp LTD",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "skip.jpg",
-            "bio": "Skip Cruse is a red-team leader, hardware tinkerer, and professional breaker-of-things with a background in offensive security, adversary simulation, and creative problem-solving. Known online as SecurityShrimp and f8al, he blends deep technical chops with hands-on curiosity—whether that's tearing apart smart devices, building tools, or translating complex security concepts into practical, memorable takeaways.",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1650",
-        "minutes": "70",
-        "roomIndex": [
-          0,
-          1
-        ],
-        "talkTitle": "Open Bar / Appetizers & Hors d'oeuvres",
-        "talkDescription": "Wind down with the community: an open bar, good bites, and conversation before Kernel Panic.",
+        "time": "1600",
+        "minutes": 50,
+        "roomIndex": [2],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": true
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
+      },
+      {
+        "time": "1700",
+        "minutes": 50,
+        "roomIndex": [0],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
+        "talkTechLevel": "",
+        "talkId": "",
+        "authors": [{ "name": "", "hidden": true }]
+      },
+      {
+        "time": "1700",
+        "minutes": 50,
+        "roomIndex": [1],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
+        "talkTechLevel": "",
+        "talkId": "",
+        "authors": [{ "name": "", "hidden": true }]
+      },
+      {
+        "time": "1700",
+        "minutes": 50,
+        "roomIndex": [2],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
+        "talkTechLevel": "",
+        "talkId": "",
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "1800",
-        "minutes": "150",
-        "roomIndex": [
-          0,
-          1,
-          2
-        ],
+        "minutes": 120,
+        "roomIndex": [0, 1, 2],
         "talkTitle": "Kernel Panic",
-        "talkDescription": "Join us for Kernel Panic! An evening of community, entertainment, and fun.",
+        "talkDescription": "",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": true
-          }
-        ]
+        "authors": [{ "name": "Kernelcon Crew", "hidden": true }]
       }
     ]
   },
   {
     "dayOfWeek": "Friday",
-    "date": "10",
+    "date": "5",
     "roomsInfo": [
-      {
-        "roomName": "Mountain"
-      },
-      {
-        "roomName": "Beach"
-      },
-      {
-        "roomName": "Forest"
-      }
+      { "roomName": "Tempo" },
+      { "roomName": "Groove" },
+      { "roomName": "Pulse" }
     ],
     "talks": [
       {
         "time": "0730",
-        "minutes": "80",
-        "roomIndex": [
-          0,
-          1,
-          2
-        ],
+        "minutes": 80,
+        "roomIndex": [0, 1, 2],
         "talkTitle": "Registration Opens",
-        "talkDescription": "Doors open for registration at 7:30 AM. The Kernelcon Store opens with limited-edition swag and conference merchandise - get there early for the best selection. Grab your badge, a bite, and a seat for the keynotes!",
+        "talkDescription": "Doors open for registration at 7:30 AM.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": true
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "0850",
-        "minutes": "10",
-        "roomIndex": [
-          0,
-          1,
-          2
-        ],
-        "talkTitle": "Opening Remarks",
-        "talkDescription": "We kick off day 2 of Kernelcon 2027 with a few words from the Kernelcon Crew.",
+        "minutes": 50,
+        "roomIndex": [0],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Kernelcon Crew",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": true
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "0900",
-        "minutes": "60",
-        "roomIndex": [
-          0,
-          1,
-          2
-        ],
-        "talkTitle": "Keynote",
-        "talkDescription": "Keynote presentation by Phillip Wylie. Phillip is an offensive security professional, concept creator and co-author of The Pentester Blueprint, and host of The Phillip Wylie Show.",
+        "time": "0850",
+        "minutes": 50,
+        "roomIndex": [1],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Phillip Wylie",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1000",
-        "minutes": "30",
-        "roomIndex": [
-          0,
-          1,
-          2
-        ],
-        "talkTitle": "Break (30 min room switch) · Villages Open · Book signing: TBA",
-        "talkDescription": "Track room configuration will change. Villages Open: all villages officially open for more hands-on chaos. Book signing: TBA – watch the schedule and hallway signage for author, location, and exact time.",
+        "time": "0850",
+        "minutes": 50,
+        "roomIndex": [2],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": true
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1030",
-        "minutes": "60",
-        "roomIndex": [
-          0
-        ],
-        "talkTitle": "Broken Mirrors Shatter the Soul: A Deep Dive into Kerberos Reflection Attacks and the SPN/DNS Phenomena",
-        "talkDescription": "Recent Kerberos reflection attacks have reshaped assumptions about Windows authentication. This talk dissects Kerberos relay-to-self attacks and why risk remains even after patches for CVE-2025-33073 and CVE-2025-58726 (SMB Server privilege escalation via reflective auth). I will cover prerequisites: SPN registration, default DNS permissions, and TGS-REQ/TGS-REP reflection flows, then demonstrate an end-to-end path from a standard user to SMB exploitation. Defenders will get actionable playbooks: detect anomalous SPN lookups and TGS requests, monitor DNS record creation, and correlate Windows Event ID 4769 to spot self-issued tickets and abnormal SPN patterns. Includes live demos and hardening guidance for enterprise environments.",
+        "time": "0950",
+        "minutes": 50,
+        "roomIndex": [0],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Darryl G. Baker",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1030",
-        "minutes": "60",
-        "roomIndex": [
-          1
-        ],
-        "talkTitle": "Malware Reverse Engineering in a Post-C World: What to do When Everything Breaks",
-        "talkDescription": "Malware written in C is coming to an end. Modern implants and malware written in Go, Rust, Nim, and even the abomination NodeJS are now tragic realities here to break your tools. Each language globs on the syntactic sugar and compiler gimmicks that cause tools like IDA Pro, Binary Ninja, and Ghidra flailing wildly. Compounding the problem obfuscation techniques are being used to hide code functionality, strings, and cause library and symbol identification to fail spectacularly. This talk will go through some strategies for countering zero context code. You will learn how to counter missing and garbled imports, using binary diffing in 2026, and what to do when everything breaks.",
+        "time": "0950",
+        "minutes": 50,
+        "roomIndex": [1],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Danny Quist",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1030",
-        "minutes": "60",
-        "roomIndex": [
-          2
-        ],
-        "talkTitle": "Let's Chat: Hacking Live Chat systems for fun, profit",
-        "talkDescription": "Live chat systems power customer support portals, internal help desks, and AI driven assistants across the internet, yet they are rarely treated as a serious attack surface. A few lines of JavaScript are often all it takes to deploy a chat widget, but behind that widget sits authentication logic, session handling, APIs, and long lived message stores full of sensitive data.\n\nIn this talk, I present research into how real world live chat systems fail in practice. I will walk through multiple classes of vulnerabilities found in production environments, including misconfigured authentication flows that allow attackers to impersonate users and retrieve private chat histories, as well as systemic issues in third party chat platforms that expose entire conversation datasets due to missing or broken authorization controls.",
+        "time": "0950",
+        "minutes": 50,
+        "roomIndex": [2],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Rojan Rijal",
-            "speakerId": "",
-            "company": "Ophion Security",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "Rojan Rijal is a security researcher with over seven years of experience uncovering vulnerabilities across open source projects, SaaS platforms, and cloud environments. His research has been recognized by organizations including Netflix, Zoom, Google, GitHub, the United States Air Force, and the United Kingdom's Ministry of Defence. He is a co-founder of Ophion Security, an offensive security research and attack surface management company.",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1130",
-        "minutes": "30",
-        "roomIndex": [
-          0
-        ],
-        "talkTitle": "Dealing with Layoffs",
-        "talkDescription": "There have been just over 122,000 layoffs in 2025 within the tech industry alone. What is the IT job market been like over the past 3 years, where is it going, what should you do if you are laid off, and what to say (or not say) to peers or family members that are laid off.",
+        "time": "1050",
+        "minutes": 50,
+        "roomIndex": [0],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Eric Lee",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1130",
-        "minutes": "30",
-        "roomIndex": [
-          1
-        ],
-        "talkTitle": "Dumb Ways to Die 2: Scary Stories to Tell in the Dark",
-        "talkDescription": "Last year we talked about some of my least favorite dumb ways to die, and this year we're going to visit a few more, because what you can't see can hurt you.  Forget lions, tigers, and bears, we've got poorly deployed EDR, developers making bad decisions, and cloud environments running amok.  Grab a flashlight and a blanket and find out how you can avoid some more of my worst practices.",
+        "time": "1050",
+        "minutes": 50,
+        "roomIndex": [1],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Megan Benoit",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1130",
-        "minutes": "30",
-        "roomIndex": [
-          2
-        ],
-        "talkTitle": "Ctrl + C = Control Me",
-        "talkDescription": "Your threat model trusts your eyes. Your tooling trusts your clipboard. Your workflow\nassumes those two agree.\n\nThey don't.\n\nThis talk introduces a never-before-presented class of \"evil font\" attacks that operate\nentirely in the space between what a human sees and what a machine actually\nprocesses. Fonts are treated as a harmless presentation layer, yet they routinely cross\ntrust boundaries, are shared between systems, and almost never inspected by security\ntooling.\nBy abusing this overlooked layer, attackers can create mismatches between visual\nreality and machine reality, leading targets to compromise themselves while\neverything \"looks normal.\"\nIn this interactive session, I demonstrate three evil font attacks to consider during a red\nteam engagement.\nClipboard deception in modern browsers: JavaScript-free pastejacking using\nmalicious fonts.\nDocument-based misdirection: Weaponized docx and pdfs that trick employees into\nrunning malicious code.\nAI‑era submission manipulation: Exploiting AI summary features and plagiarism\ncheckers with evil fonts.\n\nIf you trust your eyes, this talk is for you.",
+        "time": "1050",
+        "minutes": 50,
+        "roomIndex": [2],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Andrew (DoctorEww)",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "1200",
-        "minutes": "60",
-        "roomIndex": [
-          0,
-          1,
-          2
-        ],
-        "talkTitle": "Lunch (on your own)",
-        "talkDescription": "Get outside and touch grass. Use this time to visit villages, try your hand at a CTF challenge or the escape room, or take a break from all-day talks.",
+        "minutes": 60,
+        "roomIndex": [0, 1, 2],
+        "talkTitle": "Lunch",
+        "talkDescription": "Take a break, refuel, and connect with fellow attendees.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": true
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "1300",
-        "minutes": "60",
-        "roomIndex": [
-          0
-        ],
-        "talkTitle": "The Drone Renaissance 2: #DronesForGood",
-        "talkDescription": "When disasters knock out internet, cellular, and power, disaster responders and small businesses need comms that are fast, cheap, and independent. This talk proposes a practical, Off-Grid, open-source approach that marries two accessible technologies: 3D-printable, payload-capable FPV drones carrying small, ruggedized payloads that can deploy GPS-enabled, text-based LoRa mesh nodes and solar-backed repeaters to restore basic situational awareness, triage, and coordination within hours, not days.\n\nWhy now? Rapid innovation in hobbyist drones and proven wartime/off-grid adaptations have dropped costs and expanded capabilities; meanwhile, Meshtastic’s open ecosystem makes low-bit-rate messaging and GPS location sharing viable for community groups. Attendees will learn how to choose frames/components, navigate high-level legal/ethical boundaries, design resilient meshes, and deliver waterproof/fire-resistant handheld nodes to victims and responders. We’ll cover antenna elevation strategies (balloon, arborist lines, tall structures, perch-and-stare) and pre-incident solar repeater placements in high-risk regions.",
+        "minutes": 50,
+        "roomIndex": [0],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Evan Kirstein (BracdaBareBones)",
-            "speakerId": "evankirsteinbracdabarebones",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          },
-          {
-            "name": "Luke Canfield",
-            "speakerId": "lukecanfield",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "1300",
-        "minutes": "60",
-        "roomIndex": [
-          1
-        ],
-        "talkTitle": "MCP-PT: Building a Practical AI MCP Toolkit to Automate Offensive Tradecraft",
-        "talkDescription": "Let’s be real: AI-driven automation in penetration testing isn’t coming - it’s already here. If you’re still doing external recon and service enumeration manually, you’re burning hours on tasks that machines can do faster, cheaper, and with fewer typos. In this talk, I’ll walk through how I built an AI MCP (Model Context Protocol) server to automate most of the external network pentest workflow.\n\nThis isn’t a perfect framework, it's a real-world, working setup designed by a pentester for pentesters. This talk is ideal for individual testers, small consultancies, or overloaded teams looking to scale external recon and triage without building a full offensive pipeline.\n\nWhat I will show you:\n\n- My way of setting this up (not necessarily the “best”/most “efficient”)\n- The tools required\n- How to customize based on your own needs\n- Live demo of the tooling\n- How to secure the setup\n- Other ways of setting it up if time allows\n\nWhat I do not claim to know/will not show you:\n\n- Cutting edge AI security research\n- Everything there is to know about AI/LLMs\n- Penetration testing \"how-to\" in general\n- Silver bullet “one-size-fits-all” solution",
+        "minutes": 50,
+        "roomIndex": [1],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Joe Sarkisian (GonzoSec)",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "1300",
-        "minutes": "60",
-        "roomIndex": [
-          2
-        ],
-        "talkTitle": "Kernelcoin: A Deep Dive into Cryptocurrency Forking, Mining Infrastructure",
-        "talkDescription": "In 2013, a pivotal moment in cryptocurrency history occurred when the community finally documented the steps to fork Litecoin and create custom altcoins. While the source code was always open, the technique to mine the first genesis block remained shrouded in mystery until someone broke the silence. The community's reaction was swift disapproval, but the damage was done: a flood of new cryptocurrencies emerged. This presentation chronicles a modern recreation of that journey, building Kernelcoin from the ground up using contemporary tools, and explores the technical challenges, security implications, and ecosystem complexities that define cryptocurrency development in 2026.\n\nKernelcoin exists as an educational artifact, symbolizing innovation, collaboration, and the power of the hacker community. Kernelcoin is proof that understanding these systems requires building them. Attendees will leave with practical knowledge of cryptocurrency internals, hands on familiarity with mining infrastructure, and a deeper appreciation for the complexity hiding behind seemingly simple \"magic internet money\".",
+        "minutes": 50,
+        "roomIndex": [2],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Mike Kunz",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "1400",
-        "minutes": "60",
-        "roomIndex": [
-          0
-        ],
-        "talkTitle": "Comms smuggling! The Hardest Way Possible",
-        "talkDescription": "Have you ever looked at a device and wondered if its doing exactly what it is advertised to do and nothing more.  Come to the lab with us as enable a disposable nicotine vaporizer [vape] device that would have become landfill material into a malleable covert comms smuggling and fault tolerant network device through sheer grit and sweat. All while keeping the original functionality and appearance.  We will also break down how to find and catch them.",
+        "minutes": 50,
+        "roomIndex": [0],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Andrew Quill",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          },
-          {
-            "name": "Jake Knowlton",
-            "speakerId": "jakeknowlton",
-            "company": "Mandiant (Google)",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "Jake Knowlton is a Principal Security Consultant for Mandiant (Google). He specializes in leading incident response and forensic investigations. Past experience includes private sector security analyst work, active duty flying operations out of Offutt Air Force Base, and working on the board of directors for a 501c3 non-profit called VetSec.",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "1400",
-        "minutes": "60",
-        "roomIndex": [
-          1
-        ],
-        "talkTitle": "Why Integer Factorization is F****** Hard: a History",
-        "talkDescription": "Integer factorization (breaking down whole numbers into prime factors) is something computers do constantly, yet it's surprisingly hard. Have you ever considered why this is the case?\n\nThis talk traces integer factorization from Fermat's 17th-century breakthrough to today's General Number Field Sieve (GNFS). We'll demystify how this mathematical monster works without drowning in theory, and we'll explore notable moments in cryptographic history and the relationship between factorization algorithms and cybersecurity. Although the GNFS is an absurdly complex mathematical topic, this talk will make it accessible to everyone.\n\nFair warning: there WILL be mathematics in this talk... but there will also be history, hacking, and horseplay. No prior math experience required—just a healthy respect for algorithms and some patience. I promise this will be way cooler than your high school algebra class (and yes, I realize how low that bar might already be).",
+        "minutes": 50,
+        "roomIndex": [1],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Jessie Jamieson (ringer)",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          },
-          {
-            "name": "Robert Weiss",
-            "speakerId": "robertweiss",
-            "company": "Warcollar",
-            "twitter": "pwcrack",
-            "github": "",
-            "linkedIn": "https://www.linkedin.com/in/pwcrack",
-            "image": "",
-            "bio": "Principal Security Engineer at Warcollar.  CFP and Speaker Operations Lead Goon for DEF CON.  Long-time member of NoVaHackers and Unallocated Space. Crypto fanboy.",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "1400",
-        "minutes": "60",
-        "roomIndex": [
-          2
-        ],
-        "talkTitle": "Get on My Frequency: A look at radio for fun, emergency",
-        "talkDescription": "This presentation is a look at using radios for activities like hiking, camping, hunting. Radios are also an important part of emergency planning in both urban and rural environments, whether they are full ham shack rigs or a portable HT or anything in between. We will also look at using a Raspberry Pi 4 as a portable radio receiver for emergency information in remote locations or as a fun camping radio. We will also touch on the importance of being a licensed ham in survival or emergency situations and how radio is an important consideration in those situations.",
+        "minutes": 50,
+        "roomIndex": [2],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Radar3389",
-            "speakerId": "radar3389",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
         "time": "1500",
-        "minutes": "30",
-        "roomIndex": [
-          0,
-          1,
-          2
-        ],
-        "talkTitle": "Break (snacks)",
-        "talkDescription": "Afternoon break. Snacks available.",
+        "minutes": 50,
+        "roomIndex": [0],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": true
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1530",
-        "minutes": "60",
-        "roomIndex": [
-          0
-        ],
-        "talkTitle": "",
-        "talkDescription": "",
-        "emptySlot": true,
+        "time": "1500",
+        "minutes": 50,
+        "roomIndex": [1],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": true
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1530",
-        "minutes": "60",
-        "roomIndex": [
-          1
-        ],
-        "talkTitle": "AI-Augmented XR Interfaces for Human Decision-Making in Space Cybersecurity",
-        "talkDescription": "Satellite constellations and space infrastructure face escalating cyber threats, from jamming to spoofing. This talk introduces an AI-augmented extended reality (XR) interface enabling operators to visualize real-time space cyber threats, simulate attacks on orbital assets, and make rapid decisions. Leveraging AI for anomaly detection in telemetry (e.g., integrating PUF-like authentication and noise-based secure channels), the XR environment overlays electromagnetic side-channels, quantum risks, and mitigation strategies. Demos showcase immersive training for defending wide-bandgap device vulnerabilities in space power systems. Attendees gain insights into human-AI symbiosis for off-world ops, with open-source tools for replication.",
+        "time": "1500",
+        "minutes": 50,
+        "roomIndex": [2],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Christiana Chamon Garcia",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1530",
-        "minutes": "60",
-        "roomIndex": [
-          2
-        ],
-        "talkTitle": "Bypassing Browser PDF Security: Using Embedded JavaScript Forms for Social Engineering",
-        "talkDescription": "What if an attacker doesn't need a phishing link or malware, just a PDF?\n\nI will present a technique that leverages embedded PDF forms to harvest user credentials within trusted browser environments like Chrome and Edge. By mimicking common workflows and using native PDF features, attackers can create seamless, and legitimate-looking interactions.\n\nThis method bypasses traditional phishing defenses by exploiting what users trust most: their own applications and browsers.",
+        "time": "1600",
+        "minutes": 50,
+        "roomIndex": [0],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Jordan Bonagura",
-            "speakerId": "jordanbonagura",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": false
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1630",
-        "minutes": "50",
-        "roomIndex": [
-          1
-        ],
-        "talkTitle": "Own the Con",
-        "talkDescription": "Own the Con activity.",
+        "time": "1600",
+        "minutes": 50,
+        "roomIndex": [1],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "Kernelcon Crew",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": true
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
       },
       {
-        "time": "1720",
-        "minutes": "40",
-        "roomIndex": [
-          0,
-          1,
-          2
-        ],
-        "talkTitle": "",
-        "talkDescription": "",
-        "emptySlot": true,
+        "time": "1600",
+        "minutes": 50,
+        "roomIndex": [2],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
         "talkTechLevel": "",
         "talkId": "",
-        "postCon": {
-          "pdfLink": "",
-          "videoLink": ""
-        },
-        "authors": [
-          {
-            "name": "",
-            "speakerId": "",
-            "company": "",
-            "twitter": "",
-            "github": "",
-            "linkedIn": "",
-            "image": "",
-            "bio": "",
-            "hidden": true
-          }
-        ]
+        "authors": [{ "name": "", "hidden": true }]
+      },
+      {
+        "time": "1700",
+        "minutes": 50,
+        "roomIndex": [0],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
+        "talkTechLevel": "",
+        "talkId": "",
+        "authors": [{ "name": "", "hidden": true }]
+      },
+      {
+        "time": "1700",
+        "minutes": 50,
+        "roomIndex": [1],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
+        "talkTechLevel": "",
+        "talkId": "",
+        "authors": [{ "name": "", "hidden": true }]
+      },
+      {
+        "time": "1700",
+        "minutes": 50,
+        "roomIndex": [2],
+        "talkTitle": "TBD",
+        "talkDescription": "Speaker and talk details coming soon.",
+        "talkTechLevel": "",
+        "talkId": "",
+        "authors": [{ "name": "", "hidden": true }]
       }
     ]
   }

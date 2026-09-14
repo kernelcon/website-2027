@@ -1,48 +1,81 @@
-@use '../../static/styles/base/colors' as *;
-@use '../../static/styles/base/variables' as *;
+// ── Sponsors — Algo(Rhythm) 2027 design system ────────────────────────────
+
+$green:   #39ff14;
+$purple:  #7b2fff;
+$pink:    #ff006e;
+$yellow:  #ffe600;
+$cyan:    #00cfff;
+$bg:      #0d0520;
+
+// ── Always-dark logo handling ─────────────────────────────────────────────
+.light-mode-logo { display: none !important; }
+.dark-mode-logo  { display: inline-block !important; }
+
+// ── Intro text blocks ──────────────────────────────────────────────────────
+
 .sponsors {
-  div {
-    margin-bottom: 30px;
+  div { margin-bottom: 30px; }
+
+  .text-block {
+    p {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 1rem;
+    }
+
+    h4 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 0.75rem;
+    }
+
+    .tab-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.6);
+      margin-top: 0.5rem;
+
+      a {
+        color: $cyan;
+        &:hover { color: $green; text-decoration: underline; }
+      }
+    }
   }
 }
 
+// ── Sponsor logos section ─────────────────────────────────────────────────
+
 .spons-page {
   margin-top: 30px;
+
   .spons-groups {
     text-align: center;
     padding-bottom: 50px !important;
+
     .spons-block {
       padding-top: 30px;
+      border-top: 1px solid rgba(123,47,255,0.2);
       display: flex;
       flex-direction: column;
+      align-items: center;
+
       .spons-title {
-        font-family: 'Montserrat', sans-serif;
+        font-family: 'Bebas Neue', sans-serif;
         margin-bottom: 30px;
-        font-weight: 900;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
       }
-      h2 {
-        font-size: calc(4vh + 4vw);
-      }
-      h3 {
-        font-size: calc(3.5vh + 3.5vw);
-      }
-      h4 {
-        font-size: calc(2.5vh + 2.5vw);
-      }
-      h5 {
-        font-size: calc(2vh + 2vw);
-      }
-      h6 {
-        font-size: calc(1.75vh + 1.75vw);
-      }
-      .two-line {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-evenly;
-        padding: 0vw 5vw;
-      }
+
+      h2 { font-size: clamp(2rem, 5vw, 3.5rem); }
+      h3 { font-size: clamp(1.6rem, 4vw, 2.8rem); }
+      h4 { font-size: clamp(1.3rem, 3vw, 2.2rem); }
+      h5 { font-size: clamp(1.1rem, 2.5vw, 1.8rem); }
+      h6 { font-size: clamp(1rem, 2vw, 1.5rem); }
+
       .spons-img {
         max-width: 100%;
         margin-bottom: 50px;
@@ -50,45 +83,32 @@
         height: auto;
         width: auto;
       }
-      // Diamond - Largest (both width and height boundaries)
+
       .plat-spons {
         max-width: 90%;
         width: calc(30vh + 30vw);
         height: auto;
       }
-      // Gold - Large (but smaller than Diamond)
       .gold-spons {
         max-width: 380px;
         max-height: 140px;
         width: auto;
         height: auto;
       }
-      .half-gold-spons {
-        max-width: calc(10vh + 10vw);
-      }
-      // Silver - Medium
+      .half-gold-spons { max-width: calc(10vh + 10vw); }
       .silver-spons {
         max-width: 320px;
         max-height: 180px;
         width: auto;
         height: auto;
       }
-      // Bronze/Other - Smaller
       .other-spons {
         max-width: 200px;
         max-height: 110px;
         width: auto;
         height: auto;
       }
-      .spons-text-block {
-        font-size: calc(1vh + 1vw);
-        .party-text {
-          font-family: 'Jura', 'Montserrat', sans-serif;
-          font-size: calc(1.2vh + 1.2vw);
-          color: $text-highlight;
-          font-weight: 500;
-        }
-      }
+
       .foodbev-spons {
         display: flex;
         flex-direction: row;
@@ -97,8 +117,8 @@
         .single-foodbev-spons {
           display: flex;
           flex-direction: column;
+          align-items: center;
           width: 50%;
-          // Food/Beverage/Coffee - Smallest
           .fdbev-spons {
             max-width: 200px;
             max-height: 110px;
@@ -108,36 +128,23 @@
           }
         }
       }
-      // .toool-logo {
-      //   max-height: 210px;
-      // }
     }
   }
 }
 
-.platinum {
-  color: $platinum;
-}
+// ── Sponsor tier colors ───────────────────────────────────────────────────
 
-.diamond {
-  color: #34ebc9;
-}
-
-.gold {
-  color: goldenrod;
-}
-
-.silver {
-  color: silver;
-}
-
-.bronze {
-  color: #c9992b;
-}
-
+.platinum { color: #e5e4e2; }
+.diamond  { color: $cyan; text-shadow: 0 0 16px rgba(0,207,255,0.4); }
+.gold     { color: $yellow; text-shadow: 0 0 16px rgba(255,230,0,0.4); }
+.silver   { color: #c0c0c0; }
+.bronze   { color: #c9992b; }
 .ctf-spons {
-  color: $dm-highlight;
+  color: $green;
+  text-shadow: 0 0 12px rgba(57,255,20,0.4);
 }
+
+// ── CTF logo sizing ───────────────────────────────────────────────────────
 
 .ctf-spons-logo {
   max-width: 640px;
@@ -147,165 +154,97 @@
   transform: scale(1.5);
 }
 
-.all-dark {
-  filter: brightness(0);
-}
+// ── Image filters ─────────────────────────────────────────────────────────
 
-.all-bright {
-  filter: invert(1) grayscale(1) brightness(1000);
-}
+.all-dark   { filter: brightness(0); }
+.all-bright { filter: invert(1) grayscale(1) brightness(1000); }
 
-.sub-party-spons {
-  width: auto; 
-  height: calc(4vh + 6vw); 
-  object-fit: contain;
-  max-width: 100%; 
-}
+// ── Logo-specific sizing ──────────────────────────────────────────────────
 
-.sub-party-logos {
-  display: flex;
-  justify-content: center; 
-  align-items: center;
-  width: 100%;
-  flex-wrap: nowrap; 
-  gap: 20px; 
-}
+.gp-logo       { margin-bottom: 0 !important; }
+.cribl-logo    { transform: scale(1.6); }
+.crowdstrike-logo { transform: scale(2.2); }
 
-.gp-logo {
-  margin-bottom: 0px !important;
-}
-
-.cribl-logo {
-  transform: scale(1.6);
-}
-
-.crowdstrike-logo {
-  transform: scale(2.2);
-}
+// ── Past sponsors bar ─────────────────────────────────────────────────────
 
 .past-sponsors {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 15px;
+  gap: 12px;
   margin: 20px 0;
   flex-wrap: wrap;
-  
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+
   .sponsors-label {
-    font-weight: 600;
-    margin-right: 10px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
-  
-  .sponsor-year {
-    a {
-      text-decoration: none;
-      color: inherit;
-      font-weight: 500;
-      
-      &:hover {
-        text-decoration: underline;
-        color: $text-highlight;
-      }
-    }
+
+  .sponsor-year a {
+    color: $cyan;
+    text-decoration: none;
+    font-weight: 500;
+    &:hover { color: $green; text-decoration: underline; }
   }
-  
+
   .sponsor-separator {
-    color: #666;
+    color: rgba(255,255,255,0.2);
     font-weight: 300;
-    margin: 0 5px;
   }
 }
 
-// Mobile responsive adjustments
+// ── Sub-party helpers ─────────────────────────────────────────────────────
+
+.sub-party-spons {
+  width: auto;
+  height: calc(4vh + 6vw);
+  object-fit: contain;
+  max-width: 100%;
+}
+
+.sub-party-logos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-wrap: nowrap;
+  gap: 20px;
+}
+
+// ── Mobile ────────────────────────────────────────────────────────────────
+
 @media only screen and (max-width: 768px) {
-  .spons-page {
-    .spons-groups {
-      .spons-block {
-        .spons-img {
-          margin-bottom: 30px;
-        }
-        // Diamond - Largest on mobile (both width and height boundaries)
-        .plat-spons {
-          max-width: 90vw;
-          width: calc(25vh + 25vw);
-          height: auto;
-        }
-        // Gold - Smaller than Diamond
-        .gold-spons {
-          max-width: 50vw;
-          max-height: 8vh;
-          width: auto;
-          height: auto;
-        }
-        .silver-spons {
-          max-width: 55vw;
-          max-height: 24vh;
-          width: auto;
-          height: auto;
-        }
-        .other-spons {
-          max-width: 40vw;
-          max-height: 16vh;
-          width: auto;
-          height: auto;
-        }
-        .ctf-spons-logo {
-          max-width: 80vw;
-          max-height: 32vh;
-          width: auto;
-          height: auto;
-        }
-        .foodbev-spons {
-          .single-foodbev-spons {
-            width: 100%;
-            margin-bottom: 20px;
-            .fdbev-spons {
-              max-width: 40vw;
-              max-height: 16vh;
-              width: auto;
-              height: auto;
-            }
-          }
-        }
-      }
+  .spons-page .spons-groups .spons-block {
+    .spons-img    { margin-bottom: 30px; }
+    .plat-spons   { max-width: 90vw; width: calc(25vh + 25vw); }
+    .gold-spons   { max-width: 50vw; max-height: 8vh; }
+    .silver-spons { max-width: 55vw; max-height: 24vh; }
+    .other-spons  { max-width: 40vw; max-height: 16vh; }
+    .ctf-spons-logo { max-width: 80vw; max-height: 32vh; }
+    .foodbev-spons .single-foodbev-spons {
+      width: 100%;
+      margin-bottom: 20px;
+      .fdbev-spons { max-width: 40vw; max-height: 16vh; }
     }
   }
 }
 
-// Tablet adjustments
+// ── Tablet ────────────────────────────────────────────────────────────────
+
 @media only screen and (min-width: 769px) and (max-width: 1024px) {
-  .spons-page {
-    .spons-groups {
-      .spons-block {
-        .plat-spons {
-          max-width: 85vw;
-          width: calc(28vh + 28vw);
-        }
-        .gold-spons {
-          max-width: 40vw;
-          max-height: 15vh;
-        }
-        .silver-spons {
-          max-width: 55vw;
-          max-height: 26vh;
-        }
-        .other-spons {
-          max-width: 35vw;
-          max-height: 18vh;
-        }
-        .ctf-spons-logo {
-          max-width: 70vw;
-          max-height: 36vh;
-        }
-        .foodbev-spons {
-          .single-foodbev-spons {
-            .fdbev-spons {
-              max-width: 35vw;
-              max-height: 18vh;
-            }
-          }
-        }
-      }
+  .spons-page .spons-groups .spons-block {
+    .plat-spons     { max-width: 85vw; width: calc(28vh + 28vw); }
+    .gold-spons     { max-width: 40vw; max-height: 15vh; }
+    .silver-spons   { max-width: 55vw; max-height: 26vh; }
+    .other-spons    { max-width: 35vw; max-height: 18vh; }
+    .ctf-spons-logo { max-width: 70vw; max-height: 36vh; }
+    .foodbev-spons .single-foodbev-spons .fdbev-spons {
+      max-width: 35vw;
+      max-height: 18vh;
     }
   }
 }

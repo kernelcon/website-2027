@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { Tabs, Tab, TabPanel, TabList } from '../../components/ui/Tabs';
 import MediaQuery from 'react-responsive';
-// import Villages from './Villages';
+import Villages from './Villages';
 import './OpenCalls.scss';
 // import Stickers from '../../static/images/sticker-sheet-proof.png';
 
@@ -32,14 +32,13 @@ export default class OpenCalls extends Component<OpenCallsProps, OpenCallsState>
 
   getTabs(vert: boolean) {
     return (
-      <div className="container">
-        <Tabs defaultTab={this.state.defaultTab}
+      <Tabs defaultTab={this.state.defaultTab}
           onChange={(tabId) => { this.changeTab(tabId) }}
           vertical={vert}>
           <TabList vertical>
             <Tab tabFor="papers">Papers</Tab>
-            {/* <Tab tabFor="villages">Villages</Tab> */}
             <Tab tabFor="training">Training</Tab>
+            <Tab tabFor="villages">Villages</Tab>
             {/* <Tab tabFor="competitions">Competitions</Tab>
             <Tab tabFor="stickers">Stickers</Tab> */}
           </TabList>
@@ -47,28 +46,36 @@ export default class OpenCalls extends Component<OpenCallsProps, OpenCallsState>
             <TabPanel tabId="papers">
               <div className='tab-title-wrapper'>
                 <div className='tab-title'>Call for Papers</div>
-                <span className='closed-tag'>Closed</span>
               </div>
               <CFP />
             </TabPanel>
             <TabPanel tabId="training">
             <div className='tab-title'>Call for Training Courses</div>
-            <div className='tab-closed-banner'>Training Submission Window is CLOSED for 2027</div>
-            <p className='tab-paragraph'>The Kernelcon Trainings offer attendees in-person technical courses on topics from the information security field. These will be hands-on courses that help expand attendees' skill sets and knowledge.</p>
-            
+            <p className='tab-paragraph'>Kernelcon 2027 — <em>Algo(Rhythm): Off the Grid</em> — is looking for hands-on training courses that match the energy of the conference. We want immersive, field-ready instruction that attendees can put to work the moment they unplug. Whether you're teaching low-power homelabs or advanced reverse engineering, bring it.</p>
+
             <p className='tab-heading'>Length and Cost</p>
-            <p className='tab-paragraph'>The Kernelcon Crew is looking for training proposals that can fit into a full one-day or two-day format. Classes should typically follow a standard daily schedule, with short morning and afternoon breaks, and a one hour break for lunch.</p>
-            <p className='tab-paragraph'>All one-day training courses will be offered to attendees at $500 all two-day courses will be offered at $1000.</p>
-          
+            <p className='tab-paragraph'>We're looking for proposals that fit a full one-day or two-day format. Classes follow a standard daily schedule with short morning and afternoon breaks and a one-hour lunch break.</p>
+            <p className='tab-paragraph'>One-day courses are offered to attendees at $500; two-day courses at $1,000.</p>
+
             <p className='tab-heading'>Proposal Due Date</p>
-            <p className='tab-paragraph'>Training proposals are due no later than September 30, 2025. Instructors will be notified of Acceptance/Rejections by the end of the day, October 10th, 2025. See important dates at <a href='/dates' className='text-highlight' rel='noopener noreferrer' target='_blank'>kernelcon.org/dates</a> for official and updated dates.</p>
-          
+            <p className='tab-paragraph'>Training proposals are due no later than November 14, 2026. Acceptance notifications go out by December 1, 2026. See <a href='/dates' className='text-highlight' rel='noopener noreferrer' target='_blank'>kernelcon.org/dates</a> for the most current schedule.</p>
 
             <p className='tab-heading'>What are we looking for?</p>
-            <p className='tab-paragraph'>We are looking for general cybersecurity and hacking training. Typically, this full one or two-day course will include significant hands-on experience. Classes can range from basic entry-level material to highly technical. We know that there is a wide variety of training readily available and Kernelcon prefers to provide highly interactive, immersive, and in general, any teaching technique that doesn't purely lecture. That said, mixing traditional lecture with hands-on components is something that can work well. Don't hesitate to submit your training summary and we can work with anyone.</p>
-          
-            <p className='tab-heading'>What are some preferred training workshop topics?</p>
-            <p className='tab-paragraph'>Anything in the cybersecurity field that could benefit from hands-on experience. Specialized penetration and vulnerability testing, cybersecurity incident response simulation, cutting your teeth on reverse engineering with IDA Pro, and threat hunting 101, are all examples of plausible training. We are not looking for simple vendor pitches disguised as training and our attendees like classes where the student can take away enough from the training to return to home or work and immediately make use of their new skills.</p>
+            <p className='tab-paragraph'>Hands-on, immersive courses that go beyond the slide deck. Kernelcon students want to leave with practical skills they can use immediately — in the field, off the grid, or back at the lab. We especially welcome courses tied to the <em>Off the Grid</em> theme, though any strong security training is welcome. We are not interested in vendor pitches dressed as training.</p>
+
+            <p className='tab-heading'>Preferred Topics</p>
+            <p className='tab-paragraph'>Anything where hands-on experience accelerates the learning. Examples well-suited to this year's theme:</p>
+            <div className='tab-bullets'><ul>
+              <li>Offensive and defensive security in air-gapped or disconnected environments</li>
+              <li>Field communications: LoRa, Meshtastic, mesh networking, HF/VHF radio</li>
+              <li>Off-grid infrastructure: solar, battery, and low-power computing</li>
+              <li>Hardware hacking and embedded systems</li>
+              <li>Penetration testing and red team operations</li>
+              <li>Incident response and threat hunting</li>
+              <li>Reverse engineering and binary analysis</li>
+              <li>OSINT and operational security in hostile environments</li>
+              <li>Cryptography applied to real-world, resource-constrained systems</li>
+            </ul></div>
           
             <p className='tab-heading'>What do I need to have ready for the training workshop submission?</p>
             <p className='tab-paragraph'>The workshop does not need to be completely developed at the time of the submission. However, for evaluation, we do need to have very formal workflow and timing of the training you are proposing. (Detailed section below)</p>
@@ -136,6 +143,10 @@ export default class OpenCalls extends Component<OpenCallsProps, OpenCallsState>
             <p className='tab-paragraph'>We will communication with you throughout this process. If we think more information or clarification is needed, we will reach out to you. When a decision is made, we will promptly let you know if you are accepted or denied. If you have any questions, please reach out to <a href='mailto:training@kernelcon.org' className='text-highlight' rel='noopener noreferrer'>training@kernelcon.org</a>.</p>
             <p className='tab-paragraph'>Good luck and we cannot wait to see what you have in store for us!</p> 
             </TabPanel>
+            <TabPanel tabId="villages">
+              <div className='tab-title'>Call for Villages</div>
+              <Villages />
+            </TabPanel>
             {/* <TabPanel tabId="competitions">
               <div className='tab-title'>Call for Competitions</div>
               <p className='tab-paragraph'>Interested in hosting a competition? We are extremely interested in hosting competitions from the community. Some examples of competitions that were hosted last year:</p>
@@ -167,16 +178,20 @@ export default class OpenCalls extends Component<OpenCallsProps, OpenCallsState>
             </TabPanel> */}
           </span>
         </Tabs>
-      </div>
     );
   }
 
   render() {
     return (
       <div className="container">
-				<div className='venue-section'>
+        <div className='venue-section'>
           <div className='open-calls'>
-            <h3>Open Calls</h3>
+            <div className='page-header'>
+              <span className='page-pre-label'>Submissions Open</span>
+              <h1>Open <span>Calls</span></h1>
+              <div className='page-sub'>Submit your talk, training, or village proposal for Kernelcon 2027</div>
+              <div className='page-rule' />
+            </div>
             <MediaQuery minWidth={761}>
               {this.getTabs(true)}
             </MediaQuery>

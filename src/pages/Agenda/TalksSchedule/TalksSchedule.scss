@@ -1,90 +1,52 @@
-@use '../../../static/styles/base/base' as *;
-.schedule {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
+// ── TalksSchedule — Algo(Rhythm) 2027 design system ─────────────────────────
+
+$green:   #39ff14;
+$purple:  #7b2fff;
+$pink:    #ff006e;
+$yellow:  #ffe600;
+$cyan:    #00cfff;
+$bg:      #0d0520;
+$bg-card: rgba(13, 5, 32, 0.75);
+
+// Panic special colors
+$panic-bg: #0a1f0a;
+$panic-green: #388e3c;
+$panic-text: #d8f0d8;
 
 .schedule-heading {
-  font-size: 32px;
-  font-family: $font-science;
+  font-size: 2.2rem;
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.08em;
   text-align: center;
-  margin: 10px 20px;
-  color: $dm-theme-highlight;
-  text-shadow: 2px 2px $dm-theme-highlight-alt !important;
-}
-
-body.dark-mode {
-  .schedule-heading {
-    color: $dm-theme-highlight-alt !important;
-    // text-shadow: 2px 2px #ccc !important;
-    text-shadow: 2px 2px $dm-theme-highlight !important;
-  }
-  .schedule-talks{
-    .tabs label:hover {
-      // background: #eee;
-      // color: $dm-punk-highlight;
-      color: $dm-theme-highlight;
-    }
-    .tabs [id^="tab"]:checked+label {
-      background: $dm-theme-highlight;
-      color: #fff;
-    }
-    .box {
-      border-left: solid 8px $dm-theme-highlight;
-      .talk-time {
-        color: $dm-theme-highlight;
-      }
-      .talk-separator {
-        color: #333;
-        font-weight: 900;
-      }
-      .talk-authors {
-        color: $dm-theme-highlight;
-      }
-    }
-    .schedule-slot-setup .box {
-      background-color: #3a3a3a;
-      color: #666;
-      border-left-color: #555;
-    }
-    .schedule-slot-setup .talk-time {
-      color: #666;
-    }
-    .schedule-talk-panic .box {
-      background-color: #0a1f0a;
-      background-image: repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(0, 0, 0, 0.2) 2px, rgba(0, 0, 0, 0.2) 4px), repeating-linear-gradient(90deg, transparent 0, transparent 2px, rgba(0, 0, 0, 0.15) 2px, rgba(0, 0, 0, 0.15) 4px), linear-gradient(180deg, #163318 0%, #0f2210 35%, #0c1a0e 50%, #050a06 100%);
-      color: #d8f0d8;
-      border-left-color: #388e3c;
-      .talk-time {
-        color: #a5d6a7;
-      }
-    }
-  }
-}
-.sched-btn {
-  border: none;
-
-  &:hover {
-    cursor: pointer;
-  }
+  margin: 14px 20px 4px;
+  color: $green;
+  text-shadow: 0 0 20px rgba(57,255,20,0.4);
 }
 
 .tz-note {
-  font-size: 12px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  margin-bottom: 4px;
 }
 
 .schedule-talks {
-  font-family: Lato, Gotham, Arial;
+  font-family: 'Space Mono', monospace;
+
   /*************************************/
   /************ Tab Headers ************/
   /*************************************/
   .tabs {
     display: flex;
     justify-content: center;
+    list-style: none;
+    gap: 2px;
+    margin-bottom: 6px;
   }
   .tabs li {
-    float: left;
+    float: none;
     width: 40%;
     display: block;
   }
@@ -93,93 +55,61 @@ body.dark-mode {
   }
   .tabs label {
     display: block;
-    padding: 25px 0;
-    font-weight: normal;
+    padding: 18px 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     text-align: center;
-    background: #d9d9d6;
-    color: #707372;
+    background: rgba(123,47,255,0.12);
+    border: 1px solid rgba(123,47,255,0.25);
+    color: rgba(255,255,255,0.5);
     cursor: pointer;
-    position: relative;
-    -moz-transition: all 0.2s ease-in-out;
-    -o-transition: all 0.2s ease-in-out;
-    -webkit-transition: all 0.2s ease-in-out;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease;
+
+    span {
+      display: block;
+      font-size: 3.5rem;
+      line-height: 1;
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.06em;
+    }
   }
   .tabs label:hover {
-    background: #eee;
-    color: $light-highlight;
-  }
-  .tabs label span {
-    display: block;
-    font-size: 6em;
-    line-height: 1;
-    font-weight: 900;
-  }
-  .tabs .tab-content {
-    z-index: 2;
-    display: none;
-    overflow: hidden;
-    width: 100%;
-    font-size: 17px;
-    line-height: 25px;
-    padding: 25px;
-    position: absolute;
-    top: 184px;
-    left: 0;
-    background: #ffffff;
+    background: rgba(57,255,20,0.08);
+    border-color: rgba(57,255,20,0.3);
+    color: $green;
   }
   .tabs [id^="tab"]:checked+label {
-    background: $light-highlight;
-    color: #ffffff;
+    background: rgba(57,255,20,0.12);
+    border-color: $green;
+    color: $green;
+    text-shadow: 0 0 10px rgba(57,255,20,0.4);
   }
   .tabs [id^="tab"]:checked+label:after {
     content: '';
     position: absolute;
     bottom: 0;
-    left: calc(50% - 20px);
-    border: 20px solid transparent;
-    border-bottom-color: #fff;
+    left: calc(50% - 10px);
+    border: 10px solid transparent;
+    border-bottom-color: $bg;
   }
-  .tabs [id^="tab"]:checked~[id^="tab-content"] {
-    display: block;
-  }
-  table {
-    width: 100%;
-  }
-  tr:nth-of-type(even) {
-    background-color: #ffffff;
-  }
-  tr:first-of-type {
-    padding-top: 50px;
-  }
-  td {
-    border: 0;
-    width: 75%;
-    vertical-align: top;
-    padding: 15px;
-  }
-  td:nth-of-type(2n+1) {
-    width: 25%;
-    text-align: right;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
+
   /*************************************/
   /************ Talks Grid *************/
   /*************************************/
   .grid-wrapper {
-    margin-top: 20px;
+    margin-top: 16px;
     display: grid;
-    grid-gap: 10px;
-    color: #444;
+    grid-gap: 6px;
+    color: rgba(255,255,255,0.85);
     padding-bottom: 30px;
-    font-size: 14px;
+    font-size: 13px;
+
     a, button.schedule-talk-trigger {
       text-decoration: none;
-      &:hover {
-        cursor: pointer;
-      }
+      &:hover { cursor: pointer; }
     }
     button.schedule-talk-trigger {
       border: none;
@@ -188,8 +118,11 @@ body.dark-mode {
       font: inherit;
       text-align: left;
       width: 100%;
+      transition: transform 0.1s;
+      &:hover { transform: translateY(-1px); }
     }
   }
+
   .track {
     display: flex;
     justify-content: center;
@@ -198,51 +131,52 @@ body.dark-mode {
     width: 100%;
     text-align: center;
     text-transform: uppercase;
-    font-family: $font-science;
-    font-size: calc(.6vw + .6vh);
-    color: #fff;
-    background: $dm-highlight;
-    .track-label {
-      letter-spacing: 0.06em;
-    }
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: calc(.7vw + .5vh);
+    letter-spacing: 0.12em;
+    color: #000;
+    background: $green;
+    .track-label { letter-spacing: 0.1em; }
   }
+
   .schedule-slot-empty {
     background: transparent;
     border: none;
     min-height: 100%;
     pointer-events: none;
   }
+
   .schedule-slot-setup {
     min-height: 100%;
     pointer-events: none;
     .box {
-      background-color: #9b9b9b;
-      color: #777;
-      border-left: solid 8px #636363;
+      background-color: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.3);
+      border-left: solid 5px rgba(255,255,255,0.1);
       font-style: italic;
     }
-    .talk-time {
-      color: #888;
-    }
+    .talk-time { color: rgba(255,255,255,0.25); }
   }
+
   .box {
-    background-color: #eee;
-    color: #333;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-    border-left: solid 8px $light-highlight;
+    background-color: $bg-card;
+    color: rgba(255,255,255,0.85);
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-left: solid 5px $purple;
     padding: 5px 10px;
     display: flex;
     flex-direction: row;
     align-items: baseline;
     height: 100%;
     overflow: hidden;
-    -webkit-box-shadow: 0px 1px 2px 0px rgba(199, 199, 199, 1);
-    -moz-box-shadow: 0px 1px 2px 0px rgba(199, 199, 199, 1);
-    box-shadow: 0px 1px 2px 0px rgba(199, 199, 199, 1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.45);
+    transition: border-left-color 0.15s, box-shadow 0.15s;
+
     .talk-time {
-      color: $dm-theme-highlight;
+      color: $green;
       font-size: 10px;
+      font-family: 'Space Mono', monospace;
       width: 45px !important;
       min-width: 45px;
       margin-right: 10px;
@@ -256,11 +190,11 @@ body.dark-mode {
       font-size: 11px;
     }
     .talk-separator {
-      color: #333;
+      color: rgba(255,255,255,0.3);
       font-weight: 900;
     }
     .talk-authors {
-      color: $dm-theme-highlight;
+      color: $cyan;
     }
     .talk-title-logo-icon {
       height: 2em;
@@ -274,20 +208,14 @@ body.dark-mode {
     .talk-description {
       font-size: 10px;
       line-height: 1.3;
-      color: inherit;
-      opacity: 0.9;
+      color: rgba(255,255,255,0.6);
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
-    .truncate-overflow-1 {
-      --max-lines: 2;
-      word-break: normal;
-    }
-    .truncate-overflow-4 {
-      --max-lines: 4;
-    }
+    .truncate-overflow-1 { --max-lines: 2; word-break: normal; }
+    .truncate-overflow-4 { --max-lines: 4; }
     .truncate-overflow {
       position: relative;
       max-height: calc(var(--lh) * var(--max-lines));
@@ -295,27 +223,30 @@ body.dark-mode {
     }
   }
 
-  // Kernel Panic agenda item: darker gradient + green pixel look (panic poster style)
+  button.schedule-talk-trigger:hover .box {
+    border-left-color: $green;
+    box-shadow: 0 0 12px rgba(57,255,20,0.15), 0 2px 8px rgba(0,0,0,0.45);
+  }
+
+  // Kernel Panic: dark green matrix style
   .schedule-talk-panic .box {
-    background-color: #0a1f0a;
-    background-image: repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(0, 0, 0, 0.2) 2px, rgba(0, 0, 0, 0.2) 4px), repeating-linear-gradient(90deg, transparent 0, transparent 2px, rgba(0, 0, 0, 0.15) 2px, rgba(0, 0, 0, 0.15) 4px), linear-gradient(180deg, #163318 0%, #0f2210 35%, #0c1a0e 50%, #050a06 100%);
-    color: #d8f0d8;
-    border-left-color: #388e3c;
-    .talk-time {
-      color: #a5d6a7;
-    }
-    .talk-title,
-    .talk-description {
-      color: inherit;
-    }
+    background-color: $panic-bg;
+    background-image:
+      repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(0,0,0,0.2) 2px, rgba(0,0,0,0.2) 4px),
+      repeating-linear-gradient(90deg, transparent 0, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px),
+      linear-gradient(180deg, #163318 0%, #0f2210 35%, #0c1a0e 50%, #050a06 100%);
+    color: $panic-text;
+    border-left-color: $panic-green;
+    .talk-time { color: #a5d6a7; }
+    .talk-title, .talk-description { color: inherit; }
   }
 
   @media all and (max-width: 599px) {
-    .box {
-      flex-direction: column;
-    }
+    .box { flex-direction: column; }
   }
 }
+
+// ── Speaker bio modal ────────────────────────────────────────────────────────
 
 .speaker-bio-modal {
   .speaker-bio-meta {
@@ -323,14 +254,13 @@ body.dark-mode {
     gap: 1rem;
     margin-bottom: 1rem;
   }
-  .speaker-bio-image-wrap {
-    flex-shrink: 0;
-  }
+  .speaker-bio-image-wrap { flex-shrink: 0; }
   .speaker-bio-image {
     width: 80px;
     height: 80px;
     object-fit: cover;
     border-radius: 6px;
+    border: 2px solid rgba(57,255,20,0.3);
   }
   .speaker-bio-meta-text {
     display: flex;
@@ -340,71 +270,59 @@ body.dark-mode {
     min-width: 0;
   }
   .speaker-bio-name {
-    font-weight: 700;
-    font-size: 1rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.06em;
+    color: #fff;
     margin: 0;
   }
   .speaker-bio-company {
-    font-size: 14px;
-    color: #555;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    font-family: 'Space Mono', monospace;
   }
   .speaker-bio-socials {
     display: flex;
     gap: 0.5rem;
     align-items: center;
-    a {
-      display: inline-flex;
-    }
+    margin-top: 4px;
+    a { display: inline-flex; }
   }
   .speaker-bio-social-icon {
     width: 22px;
     height: 22px;
     display: block;
   }
-  .speaker-bio-socials .dark-mode-logo {
-    display: none;
-  }
-  .speaker-bio-socials .light-mode-logo {
-    display: block;
-  }
+  .speaker-bio-socials .light-mode-logo { display: none; }
+  .speaker-bio-socials .dark-mode-logo  { display: block; }
+
   .speaker-bio-text {
     margin: 0 0 1rem;
-    line-height: 1.5;
+    line-height: 1.6;
     white-space: pre-wrap;
+    color: rgba(255,255,255,0.75);
+    font-size: 0.85rem;
   }
   .modal-back-to-talk {
     align-self: flex-start;
     padding: 0.4rem 0.75rem;
-    font-size: 14px;
-    border: 1px solid $dm-highlight;
+    font-size: 13px;
+    font-family: 'Space Mono', monospace;
+    border: 1px solid $purple;
     border-radius: 4px;
     background: transparent;
-    color: $dm-highlight;
+    color: $purple;
     cursor: pointer;
+    letter-spacing: 0.06em;
     &:hover {
-      background: rgba(0, 0, 0, 0.05);
+      background: rgba(123,47,255,0.1);
+      border-color: $green;
+      color: $green;
     }
   }
 }
 
-body.dark-mode .speaker-bio-modal {
-  .speaker-bio-company {
-    color: #aaa;
-  }
-  .speaker-bio-socials .light-mode-logo {
-    display: none;
-  }
-  .speaker-bio-socials .dark-mode-logo {
-    display: block;
-  }
-  .modal-back-to-talk {
-    border-color: $dm-highlight;
-    color: $dm-highlight;
-    &:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-  }
-}
+// ── Modal link/author styles ──────────────────────────────────────────────────
 
 .talk-title-logo-icon {
   height: 2em;
@@ -412,47 +330,28 @@ body.dark-mode .speaker-bio-modal {
   vertical-align: middle;
   display: inline-block;
 }
+.talk-title-carnage-icon { filter: saturate(0.55) opacity(0.88); }
 
-.talk-title-carnage-icon {
-  filter: saturate(0.55) opacity(0.88);
-}
-
-.backdrop .modal-title .talk-title-logo-icon {
-  height: 2.2em;
-}
+.backdrop .modal-title .talk-title-logo-icon { height: 2.2em; }
 
 .modal-author-link {
   background: none;
   border: none;
   padding: 0;
   font: inherit;
-  color: #111;
+  color: $cyan;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
+  &:hover { color: $green; text-decoration: underline; }
 }
 
-.modal-panic-poster {
-  margin-top: 1rem;
-}
-
+.modal-panic-poster { margin-top: 1rem; }
 .modal-panic-poster-img {
   display: block;
   max-width: 100%;
   height: auto;
   border-radius: 6px;
-}
-
-.backdrop .modal-author-link:hover {
-  color: $dm-highlight !important;
-}
-
-body.dark-mode .modal-author-link {
-  color: rgb(227, 227, 227);
-}
-
-body.dark-mode .backdrop .modal-author-link:hover {
-  color: $dm-highlight;
 }
 
 html {

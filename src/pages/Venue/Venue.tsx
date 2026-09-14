@@ -257,7 +257,12 @@ export default class Venue extends Component<LegacyRouteProps, VenueState> {
 			<div id="main_hero" className="">
 				<div className="container">
 					<div className="venue-section">
-						<h3 className="title">Venue</h3>
+						<div className="page-header">
+							<span className="page-pre-label">Kernelcon 2027</span>
+							<h1>The <span>Stage</span></h1>
+							<div className="page-sub">Hilton Omaha · Old Market · March 4-5, 2027</div>
+							<div className="page-rule" />
+						</div>
 						<MediaQuery minWidth={1000}>
 							{this.getTabs(true)}
 						</MediaQuery>

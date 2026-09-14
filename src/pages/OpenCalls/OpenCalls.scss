@@ -1,85 +1,151 @@
-@use '../../static/styles/base/colors' as *;
-.tab-bullets {
-    margin-left: 30px;
-    margin-bottom: 20px;
-}
+// ── Open Calls — Algo(Rhythm) 2027 design system ─────────────────────────
 
-.tab-sub-heading {
-    font-size: 20px;
-    font-weight: 900;
-    padding: 20px 0px;
-    font-family: 'Jura', 'Montserrat', sans-serif;
-}
+$green:   #39ff14;
+$purple:  #7b2fff;
+$pink:    #ff006e;
+$cyan:    #00cfff;
+$bg:      #0d0520;
 
-.fine-notes {
-    font-size: 12px;
-    font-weight: 700;
-    padding-bottom: 20px;
-}
-
-.stickers {
-    width: calc(100vw - 200px);
-    max-width: 700px;
-    margin-left: calc(2vw + 10vh);
-    margin-top: -10px;
-    margin-bottom: -80px;
-}
-
-.tab-ordered-list {
-    margin-left: 35px;
-    font-size: 14px;
-    ul>li {
-        margin-left: 30px;
-    }
-}
-
-.tab-note {
-    font-size: 14px;
-    font-style: italic;
-}
-
-.tab-heading {
-    font-weight: 700;
-}
+// ── Shared content typography ─────────────────────────────────────────────
 
 .tab-title {
-    font-family: 'Jura', 'Montserrat', sans-serif;
-    font-size: 24px;
-    font-weight: 500;
-    color: #409ABF;
-    display: block !important;
-}
-
-.tab-closed-banner {
-    font-family: 'Jura', 'Montserrat', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: #FFFFFF;
-    background-color: #FF6B6B;
-    padding: 15px 20px;
-    margin: 20px 0;
-    border-radius: 5px;
-    text-align: center;
-    display: block;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.08em;
+  color: $green;
+  text-shadow: 0 0 16px rgba(57,255,20,0.35);
+  display: block !important;
+  margin-bottom: 1rem;
 }
 
 .tab-title-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.tab-heading {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.9);
+  margin: 1.4rem 0 0.4rem;
+  display: block;
+
+  &::before {
+    content: '// ';
+    color: $purple;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85em;
+  }
+}
+
+.tab-sub-heading {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  color: rgba(255,255,255,0.75);
+  padding: 12px 0 4px;
+}
+
+.tab-paragraph {
+  margin-bottom: 1rem;
+  line-height: 1.7;
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.78);
+
+  a {
+    color: $cyan;
+    &:hover { color: $green; text-decoration: underline; }
+  }
+}
+
+.tab-note {
+  font-size: 0.82rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 0.75rem;
+}
+
+.fine-notes {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding-bottom: 20px;
+  color: rgba(255,255,255,0.45);
+}
+
+// ── Lists ──────────────────────────────────────────────────────────────────
+
+.tab-bullets {
+  margin: 0.25rem 0 1rem 1.5rem;
+
+  ul li {
+    margin-bottom: 0.35rem;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.78);
+    list-style-type: '▸  ';
+  }
+}
+
+.tab-ordered-list {
+  margin-left: 1.5rem;
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.78);
+  line-height: 1.7;
+
+  li {
+    margin-bottom: 0.5rem;
+  }
+
+  a {
+    color: $cyan;
+    &:hover { color: $green; }
+  }
+
+  em {
+    color: rgba(255,255,255,0.45);
+  }
+}
+
+// ── Status tags (kept for reference, currently unused) ─────────────────────
+
+.tab-closed-banner {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(255,0,110,0.15);
+  border: 1px solid rgba(255,0,110,0.4);
+  padding: 12px 20px;
+  margin: 12px 0 20px;
+  text-align: center;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .closed-tag {
-    font-family: 'Jura', 'Montserrat', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #FFFFFF;
-    background: linear-gradient(135deg, #FF6B6B 0%, #EE5A5A 100%);
-    padding: 6px 14px;
-    border-radius: 20px;
-    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
-    display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #fff;
+  background: rgba(255,0,110,0.25);
+  border: 1px solid rgba(255,0,110,0.5);
+  padding: 4px 12px;
+  display: inline-block;
+}
+
+// ── Page layout ────────────────────────────────────────────────────────────
+
+.open-calls {
+  padding-top: 0.5rem;
+}
+
+.open-calls-page {
+  min-height: 100vh;
+  background: $bg;
+  padding: 2.5rem 0 4rem;
 }

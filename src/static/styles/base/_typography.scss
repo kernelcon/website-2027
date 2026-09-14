@@ -69,9 +69,9 @@ input,
 textarea,
 option,
 select {
-  color: rgb(40, 40, 40);
+  color: rgba(255, 255, 255, 0.82);
   font-weight: $regular;
-  font-family: $font-stack;
+  font-family: 'Space Mono', monospace;
   line-height: $body-line-height;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
@@ -84,7 +84,7 @@ h1,
 h2,
 h3 {
   margin: 0;
-  font-family: 'Jura', 'Montserrat', sans-serif;
+  font-family: 'Bebas Neue', 'Space Mono', sans-serif;
 }
 
 p,

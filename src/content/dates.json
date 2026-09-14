@@ -1,73 +1,74 @@
-[{
-    "title": "Registration Open",
-    "description": "Sign up for the Con!",
-    "date": "AUG 25, 2026",
+[
+  {
+    "title": "Registration Opens",
+    "description": "Grab your pass. Early bird pricing available.",
+    "date": "OCT 1, 2026",
     "hidden": "false"
   },
   {
     "title": "Call for Papers Announced",
-    "description": "",
-    "date": "AUG 25, 2026",
+    "description": "Submissions open. Start drafting your talk.",
+    "date": "OCT 1, 2026",
     "hidden": "false"
   },
   {
     "title": "Call for Training Closes",
-    "description": "",
-    "date": "SEP 30, 2026",
+    "description": "Submit your training proposal before this date.",
+    "date": "NOV 14, 2026",
+    "hidden": "false"
+  },
+  {
+    "title": "Call for Papers Final Close",
+    "description": "Last chance to submit. No extensions.",
+    "date": "DEC 19, 2026",
     "hidden": "false"
   },
   {
     "title": "Training Announced",
-    "description": "",
-    "date": "OCT 27, 2026",
+    "description": "Pre-conference training courses revealed.",
+    "date": "DEC 1, 2026",
+    "hidden": "false"
+  },
+  {
+    "title": "Student Scholarship Applications Close",
+    "description": "Apply for a scholarship to attend.",
+    "date": "JAN 7, 2027",
+    "hidden": "false"
+  },
+  {
+    "title": "CFP Acceptance Notifications",
+    "description": "We love our speakers! Decisions sent to all submitters.",
+    "date": "JAN 14, 2027",
     "hidden": "false"
   },
   {
     "title": "Keynotes Announced",
-    "description": "",
-    "date": "FEB 13, 2027",
+    "description": "Find out who's dropping the first beat.",
+    "date": "JAN 27, 2027",
     "hidden": "false"
   },
   {
-    "title": "Call for Papers Close",
-    "description": "",
-    "date": "JAN 16, 2027",
-    "hidden": "false"
-  },
-  {
-    "title": "Students Scholarship Closes",
-    "description": "",
-    "date": "FEB 6, 2027",
-    "hidden": "false"
-  },
-  {
-    "title": "CFP Acceptance Notifications Sent",
-    "description": "We love our speakers!",
-    "date": "FEB 14, 2027",
-    "hidden": "false"
-  },
-  {
-    "title": "Tentative Agenda Announced",
-    "description": "",
-    "date": "FEB 23, 2027",
+    "title": "Tentative Agenda Released",
+    "description": "The full set list drops.",
+    "date": "FEB 3, 2027",
     "hidden": "false"
   },
   {
     "title": "Hotel Block Reservation Cutoff",
-    "description": "",
-    "date": "MAR 14, 2027",
+    "description": "Reserve your room at the conference rate.",
+    "date": "FEB 14, 2027",
     "hidden": "false"
   },
   {
     "title": "Pre-conference Training",
-    "description": "On-site training days (additional cost)",
-    "date": "APR 7-8, 2027",
+    "description": "On-site training days. Additional cost applies.",
+    "date": "MAR 2-3, 2027",
     "hidden": "false"
   },
   {
-    "title": "Conference Days",
-    "description": "Kernelcon 2027",
-    "date": "APR 9-10, 2027",
+    "title": "Kernelcon 2027",
+    "description": "Algo(Rhythm). Drop the beat. Break the algorithm.",
+    "date": "MAR 4-5, 2027",
     "hidden": "false"
   }
 ]

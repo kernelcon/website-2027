@@ -558,6 +558,1402 @@ div.update-section {
   }
 }
 
+// ============================================================
+// RHYTHM-INSPIRED HOME SECTIONS
+// ============================================================
+
+$rhythm-bg-base:      #0a0a0f;
+$rhythm-bg-deep:      #0d0520;
+$rhythm-purple:       #7b2fff;
+$rhythm-green:        #39ff14;
+$rhythm-pink:         #ff006e;
+$rhythm-yellow:       #ffe600;
+$rhythm-grey-dim:     #3a3050;
+$rhythm-grey-text:    #a090c0;
+
+$glow-green:  0 0 10px #39ff14, 0 0 20px #39ff14, 0 0 40px rgba(57,255,20,0.4);
+$glow-purple: 0 0 10px #7b2fff, 0 0 20px #7b2fff, 0 0 40px rgba(123,47,255,0.4);
+$glow-pink:   0 0 10px #ff006e, 0 0 20px #ff006e, 0 0 40px rgba(255,0,110,0.4);
+$glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
+
+.home-rhythm-sections {
+  position: relative;
+  z-index: 3;
+  background: $rhythm-bg-base;
+}
+
+// Shared section layout
+.rhythm-section {
+  padding: 5rem 2rem;
+  max-width: 100%;
+}
+
+.rhythm-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.rhythm-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.4em;
+  color: $rhythm-purple;
+  text-shadow: $glow-purple;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  &::before { content: '▶'; color: $rhythm-green; }
+}
+
+.rhythm-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  line-height: 0.9;
+  letter-spacing: 0.04em;
+  color: #fff;
+  margin-bottom: 2.5rem;
+
+  .accent-yellow { color: $rhythm-yellow; text-shadow: $glow-yellow; }
+  .accent-purple { color: $rhythm-purple; text-shadow: $glow-purple; }
+  .accent-green  { color: $rhythm-green;  text-shadow: $glow-green;  }
+  .accent-pink   { color: $rhythm-pink;   text-shadow: $glow-pink;   }
+}
+
+.rhythm-stripe {
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, $rhythm-purple, $rhythm-green, $rhythm-pink, transparent);
+  opacity: 0.6;
+}
+
+// ── TRACKLIST ──────────────────────────────────────────────
+
+.tracklist-section {
+  background: $rhythm-bg-deep;
+
+  .section-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+
+    .rhythm-title { margin-bottom: 0; }
+  }
+
+  .now-playing {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: $rhythm-green;
+    text-shadow: $glow-green;
+    letter-spacing: 0.12em;
+    animation: rhythm-pulse 0.5s ease-in-out infinite alternate;
+  }
+}
+
+.track-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.track-item {
+  display: grid;
+  grid-template-columns: 64px 140px 1fr auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 1.2rem;
+  background: rgba(13, 5, 32, 0.8);
+  border: 1px solid transparent;
+  border-left: 3px solid $rhythm-grey-dim;
+  transition: all 0.2s;
+  position: relative;
+
+  &:hover {
+    border-color: $rhythm-purple;
+    border-left-color: $rhythm-green;
+    background: rgba(123, 47, 255, 0.08);
+  }
+
+  &.track-done {
+    opacity: 0.4;
+  }
+
+  &.track-coming {
+    border-left-color: $rhythm-yellow;
+  }
+
+  &.track-finale {
+    border-left-color: $rhythm-green;
+    border-top: 1px solid rgba(57, 255, 20, 0.3);
+    border-bottom: 1px solid rgba(57, 255, 20, 0.3);
+    background: rgba(57, 255, 20, 0.05);
+    .track-num { color: $rhythm-green; text-shadow: $glow-green; }
+  }
+
+  .track-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    color: $rhythm-grey-dim;
+    letter-spacing: 0.05em;
+  }
+
+  .track-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: $rhythm-yellow;
+    letter-spacing: 0.1em;
+  }
+
+  .track-names {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+
+    .track-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 0.05em;
+      color: #fff;
+    }
+
+    .track-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: $rhythm-grey-text;
+      letter-spacing: 0.08em;
+    }
+  }
+
+  .track-status {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    padding: 0.25rem 0.7rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    &.status-done   { color: $rhythm-grey-text; border: 1px solid $rhythm-grey-dim; }
+    &.status-coming { color: $rhythm-yellow; border: 1px solid $rhythm-yellow; }
+    &.status-finale { color: $rhythm-green; border: 1px solid $rhythm-green; text-shadow: $glow-green; animation: rhythm-pulse 0.5s ease-in-out infinite alternate; }
+  }
+}
+
+// ── VILLAGES ───────────────────────────────────────────────
+
+.villages-section {
+  background: $rhythm-bg-base;
+}
+
+.villages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 3px;
+}
+
+.village-card {
+  background: $rhythm-bg-deep;
+  padding: 1.5rem;
+  border-top: 3px solid $rhythm-purple;
+  border-left: 1px solid $rhythm-grey-dim;
+  border-right: 1px solid $rhythm-grey-dim;
+  border-bottom: 1px solid $rhythm-grey-dim;
+  transition: all 0.2s;
+  position: relative;
+
+  &:nth-child(2n) { border-top-color: $rhythm-green; }
+  &:nth-child(3n) { border-top-color: $rhythm-pink; }
+  &:nth-child(5n) { border-top-color: $rhythm-yellow; }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    border-top-color: $rhythm-green;
+    background: rgba(57, 255, 20, 0.04);
+  }
+
+  .village-icon {
+    font-size: 1.6rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .village-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    color: $rhythm-purple;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .village-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.05em;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  .village-desc {
+    font-size: 0.78rem;
+    color: $rhythm-grey-text;
+    line-height: 1.5;
+  }
+}
+
+// ── REGISTER CTA ───────────────────────────────────────────
+
+.cta-section {
+  background: $rhythm-bg-deep;
+
+  .cta-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+}
+
+.cta-content {
+  .cta-desc {
+    font-size: 0.95rem;
+    color: $rhythm-grey-text;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-perks {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+
+    li {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.78rem;
+      color: $rhythm-grey-text;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      &::before { content: '▶'; color: $rhythm-green; font-size: 0.55rem; }
+    }
+  }
+
+  .cta-button {
+    display: inline-block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.15em;
+    padding: 0.8rem 2.5rem;
+    background: $rhythm-green;
+    color: $rhythm-bg-base;
+    border: none;
+    text-decoration: none;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: $glow-green;
+
+    &:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 0 25px #39ff14, 0 0 50px #39ff14;
+    }
+  }
+}
+
+.cta-details {
+  background: rgba(13, 5, 32, 0.9);
+  padding: 2rem;
+  border: 1px solid $rhythm-grey-dim;
+  border-left: 4px solid $rhythm-purple;
+
+  .cta-detail-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    color: $rhythm-purple;
+    text-shadow: $glow-purple;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.2rem;
+  }
+
+  .cta-detail-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+
+    li {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: $rhythm-grey-text;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      &::before { content: '◈'; color: $rhythm-purple; }
+    }
+  }
+}
+
+// ── EQ FOOTER STRIP ────────────────────────────────────────
+
+.rhythm-eq-footer {
+  display: flex;
+  align-items: flex-end;
+  height: 70px;
+  gap: 3px;
+  overflow: hidden;
+  background: $rhythm-bg-base;
+  width: 100%;
+  box-sizing: border-box;
+
+  .footer-eq-bar {
+    flex: 1;
+    background: $rhythm-green;
+    min-height: 4px;
+    transform-origin: bottom;
+    opacity: 0.55;
+
+    &:nth-child(3n)   { background: $rhythm-purple; }
+    &:nth-child(5n)   { background: $rhythm-pink; }
+    &:nth-child(7n)   { background: $rhythm-yellow; }
+
+    @for $i from 1 through 48 {
+      &:nth-child(#{$i}) {
+        animation: footer-eq #{0.35 + ($i % 8) * 0.04}s ease-in-out infinite alternate;
+        animation-delay: #{($i % 6) * 0.06}s;
+      }
+    }
+  }
+}
+
+@keyframes footer-eq {
+  from { height: 6px; }
+  to   { height: 62px; }
+}
+
+@keyframes rhythm-pulse {
+  from { opacity: 0.5; transform: scale(0.97); }
+  to   { opacity: 1;   transform: scale(1.03); }
+}
+
+// ── RESPONSIVE ─────────────────────────────────────────────
+
+@media (max-width: 900px) {
+  .rhythm-section { padding: 3.5rem 1.5rem; }
+
+  .cta-section .cta-inner { grid-template-columns: 1fr; gap: 2rem; }
+
+  .track-item {
+    grid-template-columns: 50px 110px 1fr;
+    .track-status { display: none; }
+  }
+}
+
+@media (max-width: 600px) {
+  .villages-grid { grid-template-columns: 1fr; }
+  .track-item { grid-template-columns: 40px 90px 1fr; gap: 0.8rem; }
+}
+
+
+// ── HEADLINERS ────────────────────────────────────────────
+
+.headliners-section {
+  background: $rhythm-bg-base;
+}
+
+.headliner-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  margin-bottom: 4rem;
+}
+
+.headliner-card {
+  background: $rhythm-bg-deep;
+  padding: 2.5rem;
+  border: 1px solid $rhythm-grey-dim;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s;
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: conic-gradient(from 0deg, transparent, rgba(255,0,110,0.04), transparent, rgba(123,47,255,0.04), transparent);
+    animation: spin-slow 10s linear infinite;
+  }
+
+  &:hover { border-color: $rhythm-pink; }
+
+  .headliner-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    color: $rhythm-green;
+    text-shadow: $glow-green;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+    position: relative;
+  }
+
+  .headliner-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    line-height: 0.95;
+    color: #fff;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.3rem;
+    position: relative;
+    transition: text-shadow 0.3s;
+  }
+
+  &:hover .headliner-name { text-shadow: $glow-pink; }
+
+  .headliner-org {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: $rhythm-pink;
+    letter-spacing: 0.1em;
+    position: relative;
+  }
+
+  .headliner-bg-text {
+    position: absolute;
+    bottom: 1.5rem; right: 1.5rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4.5rem;
+    color: rgba(255,0,110,0.06);
+    line-height: 1;
+    letter-spacing: 0.1em;
+  }
+}
+
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+
+.performers-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.3em;
+  color: $rhythm-purple;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.performers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 3px;
+}
+
+.performer-card {
+  background: $rhythm-bg-deep;
+  padding: 1.3rem 1.4rem;
+  border-top: 3px solid $rhythm-purple;
+  border-left: 1px solid $rhythm-grey-dim;
+  border-right: 1px solid $rhythm-grey-dim;
+  border-bottom: 1px solid $rhythm-grey-dim;
+  transition: all 0.2s;
+  position: relative;
+
+  &:nth-child(3n)   { border-top-color: $rhythm-green; }
+  &:nth-child(5n)   { border-top-color: $rhythm-pink; }
+  &:nth-child(7n)   { border-top-color: $rhythm-yellow; }
+
+  &::after {
+    content: '◈';
+    position: absolute;
+    bottom: 0.7rem; right: 0.9rem;
+    font-size: 1rem;
+    color: $rhythm-grey-dim;
+    transition: color 0.2s;
+  }
+
+  &:hover {
+    border-top-color: $rhythm-green;
+    background: rgba(57,255,20,0.04);
+    transform: translateY(-2px);
+    &::after { color: $rhythm-green; }
+  }
+
+  .performer-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.05em;
+    color: #fff;
+    margin-bottom: 0.4rem;
+  }
+
+  .performer-track {
+    font-size: 0.75rem;
+    color: $rhythm-grey-text;
+    font-style: italic;
+    line-height: 1.4;
+  }
+}
+
+// ── SOUNDCHECK / TRAINING ──────────────────────────────────
+
+.soundcheck-section {
+  background: $rhythm-bg-deep;
+}
+
+.soundcheck-inner {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+.soundcheck-header {
+  .soundcheck-desc {
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: $rhythm-grey-text;
+    margin-top: 1rem;
+  }
+
+  .soundcheck-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    color: $rhythm-yellow;
+    margin-top: 1.5rem;
+    line-height: 2.2;
+  }
+}
+
+.workshop-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.workshop-item {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  padding: 1.4rem;
+  background: rgba(13,5,32,0.8);
+  border: 1px solid $rhythm-grey-dim;
+  border-right: 3px solid $rhythm-yellow;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: $rhythm-yellow;
+    background: rgba(255,230,0,0.04);
+  }
+
+  .workshop-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.7rem;
+    color: $rhythm-yellow;
+    opacity: 0.4;
+    line-height: 1;
+  }
+
+  .workshop-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.15rem;
+    letter-spacing: 0.05em;
+    color: #fff;
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
+  }
+
+  .workshop-instructor {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: $rhythm-yellow;
+    letter-spacing: 0.1em;
+  }
+}
+
+// ── THE STAGES ────────────────────────────────────────────
+
+.stages-section {
+  background: $rhythm-bg-base;
+}
+
+.stages-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.stage-card {
+  background: $rhythm-bg-deep;
+  padding: 1.4rem 1.1rem;
+  border-top: 4px solid $rhythm-purple;
+  border-left: 1px solid $rhythm-grey-dim;
+  border-right: 1px solid $rhythm-grey-dim;
+  border-bottom: 1px solid $rhythm-grey-dim;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: all 0.2s;
+  min-height: 240px;
+
+  &:nth-child(2) { border-top-color: $rhythm-green; }
+  &:nth-child(3) { border-top-color: $rhythm-yellow; }
+  &:nth-child(4) { border-top-color: $rhythm-pink; }
+  &:nth-child(5) { border-top-color: $rhythm-purple; }
+  &:nth-child(6) { border-top-color: $rhythm-green; }
+  &:nth-child(7) { border-top-color: $rhythm-pink; }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  }
+
+  .stage-icon {
+    font-size: 1.6rem;
+    display: block;
+  }
+
+  .stage-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  .stage-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.15em;
+    color: $rhythm-purple;
+    text-transform: uppercase;
+  }
+
+  .stage-desc {
+    font-size: 0.72rem;
+    color: $rhythm-grey-text;
+    line-height: 1.6;
+    flex: 1;
+  }
+}
+
+// ── MAIN STAGE / EVENTS ───────────────────────────────────
+
+.main-stage-section {
+  background: $rhythm-bg-deep;
+}
+
+.events-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+}
+
+.event-card {
+  background: $rhythm-bg-base;
+  padding: 2.3rem;
+  border: 1px solid $rhythm-grey-dim;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+
+  &.event-green { border-left: 4px solid $rhythm-green; }
+  &.event-pink  { border-left: 4px solid $rhythm-pink; }
+
+  &:hover { border-color: $rhythm-purple; box-shadow: 0 0 30px rgba(123,47,255,0.12); }
+
+  .event-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    color: $rhythm-yellow;
+    margin-bottom: 0.5rem;
+  }
+
+  .event-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    color: #fff;
+    margin-bottom: 0.7rem;
+  }
+
+  .event-tagline {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: $rhythm-pink;
+    letter-spacing: 0.08em;
+    font-style: italic;
+    margin-bottom: 0.9rem;
+  }
+
+  .event-desc {
+    font-size: 0.85rem;
+    color: $rhythm-grey-text;
+    line-height: 1.7;
+  }
+}
+
+// ── BATTLE MODE ───────────────────────────────────────────
+
+.battle-section {
+  background: $rhythm-bg-base;
+}
+
+.battle-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3px;
+}
+
+.battle-card {
+  background: $rhythm-bg-deep;
+  padding: 2rem;
+  border: 1px solid $rhythm-grey-dim;
+  border-top: 4px solid transparent;
+  transition: all 0.2s;
+
+  &.battle-pink   { border-top-color: $rhythm-pink; }
+  &.battle-yellow { border-top-color: $rhythm-yellow; }
+  &.battle-purple { border-top-color: $rhythm-purple; }
+
+  &:hover { transform: translateY(-3px); box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
+
+  .battle-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    color: $rhythm-green;
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+  }
+
+  .battle-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.05em;
+    color: #fff;
+    margin-bottom: 0.4rem;
+    line-height: 1.1;
+  }
+
+  .battle-motto {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: $rhythm-pink;
+    font-style: italic;
+    margin-bottom: 1rem;
+    letter-spacing: 0.04em;
+  }
+
+  .battle-desc {
+    font-size: 0.82rem;
+    color: $rhythm-grey-text;
+    line-height: 1.6;
+  }
+}
+
+// ── PIANO (Play the System) ───────────────────────────────
+
+.piano-section {
+  background: $rhythm-bg-deep;
+
+  .piano-subtitle {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.06em;
+    margin-bottom: 1.5rem;
+  }
+}
+
+// ── Canvas visualizer
+.piano-canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid rgba(123,47,255,0.3);
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  background: #080810;
+}
+
+// ── Instrument selector
+.inst-selector {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.4rem;
+}
+
+.inst-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.1rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.65);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.15s;
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+
+  .inst-icon { font-size: 1rem; }
+  .inst-name { text-transform: uppercase; }
+
+  &:hover {
+    border-color: var(--inst-color);
+    color: var(--inst-color);
+    background: rgba(255,255,255,0.08);
+  }
+
+  &.active {
+    background: rgba(0,0,0,0.4);
+    border-color: var(--inst-color);
+    color: var(--inst-color);
+    box-shadow: 0 0 12px var(--inst-color), inset 0 0 8px rgba(0,0,0,0.5);
+  }
+}
+
+// ── Track manager
+.track-manager {
+  margin-bottom: 1.2rem;
+  border: 1px solid rgba(123,47,255,0.3);
+  border-top: 2px solid $rhythm-purple;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.track-manager-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  color: $rhythm-purple;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid rgba(123,47,255,0.25);
+  background: rgba(123,47,255,0.08);
+}
+
+.studio-track {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  background: rgba(255,255,255,0.04);
+  border-left: 4px solid var(--track-color);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  box-shadow: inset 0 0 0 1px rgba(var(--track-color-rgb, 57,255,20), 0.04);
+  transition: opacity 0.2s, background 0.15s;
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: rgba(255,255,255,0.07); }
+  &.muted { opacity: 0.35; }
+
+  .studio-track-icon {
+    font-size: 1.4rem;
+    width: 28px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .studio-track-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.15rem;
+    letter-spacing: 0.08em;
+    color: var(--track-color);
+    text-shadow: 0 0 10px var(--track-color);
+    min-width: 60px;
+    flex-shrink: 0;
+  }
+  .studio-track-events {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    color: rgba(255,255,255,0.45);
+    flex: 1;
+    letter-spacing: 0.04em;
+  }
+  .studio-track-btn {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.6);
+    padding: 0.3rem 0.65rem;
+    cursor: pointer;
+    font-size: 0.78rem;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    &:hover { border-color: $rhythm-green; color: $rhythm-green; }
+    &.delete:hover { border-color: $rhythm-pink; color: $rhythm-pink; }
+  }
+}
+
+// ── Control buttons
+.piano-controls {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.piano-btn {
+  padding: 0.6rem 1.3rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+
+  &.rec       { background: $rhythm-pink; color: #0d0520 !important; font-weight: 700; &:hover { box-shadow: 0 0 16px $rhythm-pink; } }
+  &.stop-rec  { background: $rhythm-yellow; color: #0d0520 !important; font-weight: 700; &:hover { box-shadow: 0 0 16px $rhythm-yellow; } }
+  &.play      { background: $rhythm-green; color: #0d0520 !important; font-weight: 700; &:hover { box-shadow: 0 0 16px $rhythm-green; } }
+  &.stop-play { background: $rhythm-purple; color: #fff; &:hover { box-shadow: 0 0 16px $rhythm-purple; } }
+  &.capture   { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.3);
+    &:hover:not(:disabled) { border-color: $rhythm-green; color: $rhythm-green; }
+    &:disabled { opacity: 0.4; cursor: not-allowed; }
+  }
+  &.download  { background: rgba(57,255,20,0.15); color: $rhythm-green; border: 1px solid $rhythm-green; &:hover { box-shadow: 0 0 12px $rhythm-green; } }
+  &.tweet     { background: #000; color: #fff; border: 1px solid #555; &:hover { border-color: #fff; } }
+  &.linkedin  { background: #0a66c2; color: #fff; &:hover { box-shadow: 0 0 12px #0a66c2; } }
+}
+
+// ── Video section
+.piano-video-section {
+  margin-bottom: 1.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.piano-video {
+  width: 100%;
+  max-width: 700px;
+  border: 1px solid rgba(123,47,255,0.4);
+  background: #000;
+}
+
+.piano-share-btns {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+// ── Keyboard
+.piano-keyboard-wrapper {
+  position: relative;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.piano-keyboard {
+  position: relative;
+  display: flex;
+  height: 180px;
+  user-select: none;
+  flex-shrink: 0;
+  width: fit-content;
+}
+
+.piano-white-key {
+  width: 80px;
+  height: 180px;
+  background: linear-gradient(180deg, #ccc8e0 0%, #f0ecf8 50%, #e0dcea 100%);
+  border: 1px solid #444;
+  border-top: 3px solid #888;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 8px;
+  gap: 3px;
+  transition: background 0.05s;
+  z-index: 1;
+
+  &.pressed, &:active {
+    background: linear-gradient(180deg, $rhythm-green 0%, #a8ff90 100%);
+    box-shadow: 0 0 18px $rhythm-green, inset 0 2px 6px rgba(0,0,0,0.15);
+  }
+
+  .key-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.44rem;
+    color: rgba(0,0,0,0.35);
+    pointer-events: none;
+    line-height: 1;
+  }
+  .key-kb {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.75rem;
+    color: rgba(0,0,0,0.25);
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  &.pressed .key-label,
+  &.pressed .key-kb { color: rgba(0,0,0,0.65); }
+}
+
+.piano-black-key {
+  width: 48px;
+  height: 110px;
+  background: linear-gradient(180deg, #1a0830 0%, #0d0520 60%, #2a1040 100%);
+  border: 1px solid $rhythm-purple;
+  border-bottom: 3px solid rgba(123,47,255,0.6);
+  position: absolute;
+  top: 0;
+  cursor: pointer;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 8px;
+  transition: background 0.05s;
+
+  &.pressed, &:active {
+    background: linear-gradient(180deg, $rhythm-purple 0%, #5a1fcc 100%);
+    box-shadow: 0 0 18px $rhythm-purple;
+  }
+
+  .key-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.44rem;
+    color: rgba(255,255,255,0.3);
+    pointer-events: none;
+  }
+
+  &.pressed .key-label { color: rgba(255,255,255,0.9); }
+}
+
+// ── Drum pads
+.drum-pads {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  max-width: 640px;
+}
+
+.drum-pad {
+  height: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  background: rgba(255,255,255,0.04);
+  border: 2px solid rgba(255,255,255,0.12);
+  cursor: pointer;
+  transition: all 0.06s;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+
+  .pad-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    color: var(--pad-color);
+    letter-spacing: 0.08em;
+    pointer-events: none;
+  }
+  .pad-key {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.15em;
+    pointer-events: none;
+  }
+
+  &.active, &:active {
+    background: rgba(255,255,255,0.1);
+    border-color: var(--pad-color);
+    box-shadow: 0 0 24px var(--pad-color), inset 0 0 12px rgba(0,0,0,0.4);
+    transform: scale(0.97);
+  }
+  &:hover { border-color: var(--pad-color); background: rgba(255,255,255,0.07); }
+}
+
+// ── Always-visible share strip
+// ── Demo examples strip
+.example-strip {
+  display: flex;
+  align-items: stretch;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.4rem;
+}
+
+.example-strip-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: $rhythm-purple;
+  display: flex;
+  align-items: center;
+  padding-right: 0.4rem;
+  flex-shrink: 0;
+}
+
+.example-card {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.9rem;
+  background: rgba(13,5,32,0.7);
+  border: 1px solid rgba(123,47,255,0.3);
+  border-left: 3px solid $rhythm-purple;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.18s;
+  flex: 1;
+  min-width: 200px;
+
+  &:hover {
+    background: rgba(123,47,255,0.12);
+    border-color: $rhythm-purple;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(123,47,255,0.25);
+  }
+
+  .example-emoji {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+
+  .example-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .example-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    color: $rhythm-green;
+    text-shadow: 0 0 8px rgba(57,255,20,0.4);
+    line-height: 1;
+  }
+
+  .example-desc {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.03em;
+  }
+
+  .example-insts {
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    margin-top: 0.1rem;
+  }
+}
+
+.piano-tagline {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.65);
+  margin: 0 0 1.2rem;
+  max-width: 720px;
+}
+
+.piano-share-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+  padding: 1.2rem 1.4rem;
+  border: 1px solid rgba(57,255,20,0.2);
+  border-left: 3px solid $rhythm-green;
+  background: rgba(0, 20, 0, 0.35);
+}
+
+.share-strip-message {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.share-strip-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  color: $rhythm-green;
+  text-shadow: 0 0 10px rgba(57,255,20,0.4);
+}
+
+.share-strip-body {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.72);
+
+  strong { color: $rhythm-green; }
+}
+
+.share-strip-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 0.2rem;
+}
+
+// ── Active note badge
+.active-note-badge {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.5rem;
+  letter-spacing: 0.08em;
+  margin-top: 1rem;
+  height: 4rem;
+  line-height: 1;
+  transition: color 0.1s;
+}
+
+// ── FAQ / LINER NOTES ─────────────────────────────────────
+
+.faq-section {
+  background: $rhythm-bg-base;
+}
+
+.faq-inner {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+.faq-header {
+  .faq-desc {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 1rem;
+    letter-spacing: 0.05em;
+    line-height: 1.8;
+  }
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.faq-item {
+  border: 1px solid rgba(123, 47, 255, 0.3);
+  border-left: 3px solid $rhythm-purple;
+  overflow: hidden;
+  transition: border-color 0.2s;
+  background: rgba(13, 5, 32, 0.6);
+
+  &.open {
+    border-left-color: $rhythm-green;
+    border-color: rgba(57, 255, 20, 0.3);
+  }
+
+  .faq-question {
+    width: 100%;
+    background: transparent;
+    color: #ffffff;
+    border: none;
+    text-align: left;
+    padding: 1.1rem 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover { background: rgba(123,47,255,0.12); }
+
+    .faq-q-text {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.03em;
+      line-height: 1.4;
+      color: #ffffff;
+    }
+
+    .faq-icon {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: $rhythm-green;
+      transition: transform 0.3s, color 0.3s;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+  }
+
+  &.open .faq-icon { color: $rhythm-yellow; }
+
+  .faq-answer {
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    background: rgba(0, 0, 0, 0.3);
+
+    .faq-answer-inner {
+      padding: 1.1rem 1.4rem;
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.85);
+      line-height: 1.75;
+      font-family: 'Space Mono', monospace;
+    }
+  }
+}
+
+// ── RESPONSIVE ADDITIONS ──────────────────────────────────
+
+@media (max-width: 1100px) {
+  .stages-grid { grid-template-columns: repeat(4, 1fr); }
+  .soundcheck-inner { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 900px) {
+  .rhythm-section { padding: 3.5rem 1.5rem; }
+
+  .headliner-grid,
+  .events-grid,
+  .cta-section .cta-inner { grid-template-columns: 1fr; gap: 3px; }
+
+  .battle-grid  { grid-template-columns: 1fr; }
+  .faq-inner    { grid-template-columns: 1fr; gap: 2rem; }
+  .stages-grid  { grid-template-columns: repeat(2, 1fr); }
+
+  .track-item {
+    grid-template-columns: 50px 110px 1fr;
+    .track-status { display: none; }
+  }
+}
+
+@media (max-width: 600px) {
+  .performers-grid { grid-template-columns: 1fr; }
+  .track-item { grid-template-columns: 40px 90px 1fr; gap: 0.8rem; }
+  .stages-grid { grid-template-columns: 1fr 1fr; }
+  .piano-canvas { height: 120px; }
+  .inst-selector { gap: 0.4rem; }
+  .inst-btn { padding: 0.4rem 0.7rem; font-size: 0.65rem; }
+  .piano-white-key { width: 60px; height: 150px; }
+  .piano-black-key { width: 36px; height: 90px; }
+}
+
 // this is a stupid fix to make blurry text show up on certain versions of microsoft edge because why would we ever want every browser to render things the same way thats crazy lol
 _:-ms-lang(x),
 .focus {

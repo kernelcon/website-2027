@@ -63,6 +63,6 @@ jobs:
         with:
           target_branch: gh-pages
           build_dir: build
-          fqdn: kernelcon.org
+          fqdn: 2027.kernelcon.org
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

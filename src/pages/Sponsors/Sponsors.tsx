@@ -93,6 +93,12 @@ export default class Sponsors extends Component {
       <div className="container">
         <div className='venue-section'>
           <div className="sponsors">
+            <div className="page-header">
+              <span className="page-pre-label">Kernelcon 2027</span>
+              <h1>Label <span>Support</span></h1>
+              <div className="page-sub">The organizations that make Algo(Rhythm) possible</div>
+              <div className="page-rule" />
+            </div>
             <div>
               <h3>Sponsorship</h3>
               <div className="text-block">
@@ -163,6 +169,10 @@ export default class Sponsors extends Component {
           
                 <div className="past-sponsors">
                   <span className="sponsors-label">Past Sponsors:</span>
+                  <span className="sponsor-year">
+                    <a href="https://2026.kernelcon.org/sponsors/" target="_blank" rel="noopener noreferrer">2026</a>
+                  </span>
+                  <span className="sponsor-separator">|</span>
                   <span className="sponsor-year">
                     <a href="https://2025.kernelcon.org/sponsors/" target="_blank" rel="noopener noreferrer">2025</a>
                   </span>

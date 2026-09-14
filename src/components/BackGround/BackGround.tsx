@@ -1,326 +1,266 @@
-import { Component } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-import camper from '../../static/images/off-grid/camper.png';
-import dune from '../../static/images/off-grid/dune.jpg';
-import hills from '../../static/images/off-grid/hills.svg';
-import logo from '../../static/images/off-grid/logo.png';
-import mountains from '../../static/images/off-grid/mountains.svg';
-import peaks from '../../static/images/off-grid/peaks.svg';
-import ray from '../../static/images/off-grid/ray.png';
-import sitter from '../../static/images/off-grid/sitter.png';
-import sky from '../../static/images/off-grid/sky.svg';
-import stars1 from '../../static/images/off-grid/stars1.jpg';
-import stars2 from '../../static/images/off-grid/stars2.png';
-
+import { Component, createRef } from 'react';
+import KernelLogo from '../../static/images/logos/kernelcon_white.png';
 import './BackGround.scss';
 
-gsap.registerPlugin(ScrollTrigger);
+const HEX_CHARS = '0123456789ABCDEF';
+const ALGO_WORDS = ['ALGO', 'RHYTHM', '2027', 'CTF', 'HACK', '0xDEAD', 'RECON', 'XOR', 'NOP', 'ROP', 'PWN', 'FUZZ'];
 
-class BackGround extends Component {
+interface BackGroundState {
+  mounted: boolean;
+}
+
+export default class BackGround extends Component<object, BackGroundState> {
   static displayName = 'BackGround';
 
+  private canvasRef = createRef<HTMLCanvasElement>();
+  private waveCanvasRef = createRef<HTMLCanvasElement>();
+  private animFrameId = 0;
+  private waveFrameId = 0;
+  private columns: number[] = [];
+  private waveOffset = 0;
+
+  constructor(props: object) {
+    super(props);
+    this.state = { mounted: false };
+  }
+
   componentDidMount() {
-    // --- Morse code setup ---
-    const MORSE: Record<string, string> = {
-      'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
-      'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
-      'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
-      'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
-      'Y': '-.--', 'Z': '--..',
-      '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-',
-      '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.',
-      ' ': ' '
+    this.setState({ mounted: true });
+    this.initHexRain();
+    this.initWave();
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  componentWillUnmount() {
+    cancelAnimationFrame(this.animFrameId);
+    cancelAnimationFrame(this.waveFrameId);
+    window.removeEventListener('resize', this.handleResize);
+  }
+
+  handleResize = () => {
+    this.initHexRain();
+    this.initWave();
+  };
+
+  // ── HEX RAIN (Matrix-style but with hex and algo keywords) ──────────────────
+
+  initHexRain() {
+    const canvas = this.canvasRef.current;
+    if (!canvas) return;
+    cancelAnimationFrame(this.animFrameId);
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const fontSize = 13;
+    const cols = Math.floor(canvas.width / fontSize);
+    this.columns = Array.from({ length: cols }, () => Math.random() * -canvas.height);
+
+    let tick = 0;
+
+    const draw = () => {
+      ctx.fillStyle = 'rgba(10, 10, 15, 0.18)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < this.columns.length; i++) {
+        const y = this.columns[i];
+        // Occasionally drop an algo keyword instead of single char
+        const useWord = Math.random() < 0.002;
+        const text = useWord
+          ? ALGO_WORDS[Math.floor(Math.random() * ALGO_WORDS.length)]
+          : HEX_CHARS[Math.floor(Math.random() * HEX_CHARS.length)];
+
+        // Color cycling: mostly purple/green, occasional pink
+        const phase = (i + tick) % 60;
+        if (phase < 5)        ctx.fillStyle = '#ff006e'; // hot pink
+        else if (phase < 20)  ctx.fillStyle = '#39ff14'; // neon green bright
+        else if (phase < 40)  ctx.fillStyle = 'rgba(57,255,20,0.4)'; // faded green
+        else                  ctx.fillStyle = 'rgba(123,47,255,0.5)'; // purple
+
+        ctx.font = `${fontSize}px "Space Mono", monospace`;
+        ctx.fillText(text, i * fontSize, y);
+
+        this.columns[i] = y > canvas.height && Math.random() > 0.975
+          ? 0
+          : y + fontSize;
+      }
+      tick++;
+      this.animFrameId = requestAnimationFrame(draw);
     };
 
-    const ray2 = document.getElementById('ray2');
-    let previousWidth = window.innerWidth;
+    draw();
+  }
 
-    const createPulse = (container: HTMLElement, delay: number, duration: number, type: string) => {
-      const pulse = document.createElement('div');
-      pulse.className = 'morse-pulse ' + type;
-      pulse.style.bottom = '0';
-      container.appendChild(pulse);
-      gsap.fromTo(pulse, { bottom: 0 }, {
-        bottom: '100%',
-        duration: duration * 10,
-        delay: delay,
-        ease: 'power1.in',
-        onComplete: () => pulse.remove(),
-      });
-    };
+  // ── WAVEFORM ────────────────────────────────────────────────────────────────
 
-    const sendMorse = (message: string) => {
-      if (!ray2) return 0;
-      ray2.innerHTML = '';
-      let time = 0;
-      const unit = 0.3; // seconds per dot
-      const morse = message.toUpperCase().split('').map(c => MORSE[c] || '').join(' ');
-      morse.split('').forEach(symbol => {
-        if (symbol === '.') {
-          createPulse(ray2, time, unit, 'dot');
-          time += unit * 2;
-        } else if (symbol === '-') {
-          createPulse(ray2, time, unit, 'dash');
-          time += unit * 2;
-        } else {
-          time += unit * 6;
+  initWave() {
+    const canvas = this.waveCanvasRef.current;
+    if (!canvas) return;
+    cancelAnimationFrame(this.waveFrameId);
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width  = window.innerWidth;
+    canvas.height = 160;
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const cy = canvas.height / 2;
+      const t = this.waveOffset;
+
+      // Draw three overlapping sine waves
+      const waves = [
+        { amp: 45, freq: 0.018, phase: t * 0.8,  color: 'rgba(123,47,255,0.7)',  lw: 2 },
+        { amp: 28, freq: 0.03,  phase: t * 1.3,  color: 'rgba(57,255,20,0.8)',   lw: 1.5 },
+        { amp: 18, freq: 0.05,  phase: t * 0.5,  color: 'rgba(255,0,110,0.5)',   lw: 1 },
+      ];
+
+      waves.forEach(({ amp, freq, phase, color, lw }) => {
+        ctx.beginPath();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = lw;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = color;
+        for (let x = 0; x <= canvas.width; x += 2) {
+          const y = cy + amp * Math.sin(freq * x + phase)
+                       + (amp * 0.4) * Math.sin(freq * 2.3 * x + phase * 1.1);
+          x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
         }
+        ctx.stroke();
       });
-      return time;
+
+      this.waveOffset += 0.04;
+      this.waveFrameId = requestAnimationFrame(draw);
     };
-
-    const loopMorseMessages = (messages: string[]) => {
-      let idx = 0;
-      function next() {
-        const duration = sendMorse(messages[idx]);
-        idx = (idx + 1) % messages.length;
-        setTimeout(next, duration * 1000 + 500);
-      }
-      next();
-    };
-
-    loopMorseMessages(['2027', 'KERNELCON', 'HACK THE PLANET', 'CTF']);
-
-    // --- Helper functions ---
-    const getSceneScale = () => Math.min(window.innerWidth / 2160, window.innerHeight / 3840);
-
-    const updateScene = () => {
-      const vh = window.innerHeight;
-      const sceneScale = getSceneScale();
-      const offscreenY = vh + 1000;
-    
-      const camperEl = document.getElementById("camper");
-      const sitterEl = document.getElementById("sitter");
-      const rayMaskEl = document.getElementById("ray-mask");
-      const layerContainer = document.querySelector(".layer-container");
-    
-      // --- Dynamic sitter positioning ---
-      function positionSitter() {
-        if (!camperEl || !sitterEl || !layerContainer) return;
-        const camperRect = camperEl.getBoundingClientRect();
-        const containerRect = layerContainer.getBoundingClientRect();
-        const camperTop = camperRect.top - containerRect.top;
-        const camperHeight = camperRect.height;
-    
-        // Sitter sits just above camper
-        const sitterOffset = camperHeight * 0.035; // tweak as needed
-        sitterEl.style.top = camperTop + sitterOffset + "px";
-      }
-    
-      // --- Dynamic ray mask height (keeps rays attached to dish) ---
-      function updateRayMaskHeight() {
-        if (!camperEl || !rayMaskEl || !layerContainer) return;
-        const camperRect = camperEl.getBoundingClientRect();
-        const containerRect = layerContainer.getBoundingClientRect();
-        const camperHeight = camperRect.height;
-        const camperTop = camperRect.top - containerRect.top;
-    
-        // Make the mask end slightly above the camper top
-        const rayMaskBottom = camperTop + camperHeight * 0.08;
-        rayMaskEl.style.height = rayMaskBottom + "px";
-      }
-    
-      // Initial position updates
-      positionSitter();
-      updateRayMaskHeight();
-    
-      // Animate sitter slide-up from below its natural position
-      gsap.set("#sitter", { y: 200 }); // start below
-      gsap.to("#sitter", {
-        y: 0,
-        scrollTrigger: {
-          trigger: "body",
-          start: "top top",
-          end: "1000 top",
-          scrub: true,
-        },
-      });
-    
-      // --- Mountains and foreground layers ---
-      gsap.set("#far-mountains", { y: vh * 0.7 });
-      gsap.to("#far-mountains", {
-        y: vh * 0.2 - 100 * sceneScale,
-        scrollTrigger: { trigger: "body", start: "top top", end: "400 top", scrub: true },
-      });
-    
-      gsap.set("#mid-mountains", { y: vh * 0.9 });
-      gsap.to("#mid-mountains", {
-        y: vh * 0.3 - 100 * sceneScale,
-        scrollTrigger: { trigger: "body", start: "top top", end: "420 top", scrub: true },
-      });
-    
-      gsap.set("#near-mountains", { y: offscreenY });
-      gsap.to("#near-mountains", {
-        y: vh * 0.4 - 100 * sceneScale,
-        scrollTrigger: { trigger: "body", start: "top top", end: "500 top", scrub: true },
-      });
-    
-      gsap.set("#dune", { y: offscreenY });
-      gsap.to("#dune", {
-        y: vh * 0.45 - 80 * sceneScale,
-        scrollTrigger: { trigger: "body", start: "top top", end: "600 top", scrub: true },
-      });
-    
-      gsap.set("#camper", { y: offscreenY });
-      gsap.to("#camper", {
-        y: vh * 0.35 - 60 * sceneScale,
-        scrollTrigger: { trigger: "body", start: "top top", end: "500 top", scrub: true },
-      });
-    
-      // --- Rays animation ---
-      gsap.set(".glow-ray", { y: 3000, opacity: 0 });
-      gsap.to(".glow-ray", {
-        y: -200 * sceneScale - 600,
-        scrollTrigger: { trigger: "body", start: "top top", end: "1200 top", scrub: true },
-      });
-      gsap.to(".glow-ray", {
-        opacity: 0.8,
-        scrollTrigger: { trigger: "body", start: "500 top", end: "1000 top", scrub: true },
-      });
-    
-      // --- Logo animation (stops 150px from top) ---
-      gsap.set("#logo-container", { y: vh * 0.4, opacity: 0.6 });
-      gsap.to("#logo-container", {
-        y: 150,
-        opacity: 1,
-        scrollTrigger: { trigger: "body", start: "top top", end: "500 top", scrub: true },
-      });
-    
-      // --- Glow & Pulse effects ---
-      gsap.to(".glow", {
-        filter: "drop-shadow(0 0 30px rgba(100,170,255,0.8))",
-        repeat: -1,
-        yoyo: true,
-        duration: 1.8,
-        ease: "sine.inOut",
-      });
-      gsap.to(".pulse", {
-        scaleX: 0.9,
-        repeat: -1,
-        yoyo: true,
-        duration: 1.8,
-        ease: "sine.inOut",
-      });
-    
-      // --- Continuous updates while scrolling ---
-      gsap.ticker.add(positionSitter);
-      gsap.ticker.add(updateRayMaskHeight);
-    };
-
-    const resizeReflow = () => {
-      if (window.innerWidth !== previousWidth) {
-        previousWidth = window.innerWidth;
-        gsap.killTweensOf(".scene-layer, .glow-ray, #logo, #logo-text, #ray-mask");
-        updateScene();
-        ScrollTrigger.refresh();
-
-        // Force a full reflow like original HTML
-        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        window.scrollTo(0, maxScroll);
-        ScrollTrigger.update();
-        window.scrollTo(0, 0);
-      }
-    };
-
-    // Listen for orientation change (iOS Safari fix)
-    window.addEventListener("orientationchange", () => {
-      setTimeout(() => {
-        ScrollTrigger.refresh(true);
-      }, 300);
-    });
-
-    // Initial run
-    updateScene();
-
-    // Animate content section sliding up and pinning
-    const isMobile = window.innerWidth <= 768;
-    const mobileOffset = isMobile ? 13 : 0; // restore original 30vh offset on mobile
-    
-    gsap.to(".content", {
-      y: `-${50 + mobileOffset}vh`, // scroll higher - 50vh up from starting position
-      opacity: 1,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".content",
-        start: "top bottom",  // start when it's below viewport
-        end: "top 20%",       // end when content reaches 20% from top of viewport
-        scrub: 0.5,           // smooth scroll with small delay
-        pin: false,           // no pinning to prevent jumping
-        pinSpacing: false     // prevent layout jumps
-      }
-    });
-
-    // Debounced resize listener
-    let resizeTimeout: ReturnType<typeof setTimeout>;
-    const handleResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(resizeReflow, 200);
-    };
-    window.addEventListener('resize', handleResize);
+    draw();
   }
 
   render() {
     return (
-      <div>
-        <div className="layer-container">
-          <div id="background">
-            <img id="sky" className="scene-layer base" src={sky} alt="Sky" />
-            <img id="far-stars" className="scene-layer screen" src={stars1} alt="Far Stars" />
+      <div className="algo-hero">
+        {/* Hex rain canvas */}
+        <canvas ref={this.canvasRef} className="algo-rain-canvas" />
+
+        {/* Grid overlay */}
+        <div className="algo-grid-overlay" />
+
+        {/* Scanlines */}
+        <div className="algo-scanlines" />
+
+        {/* Hero center content */}
+        <div className="algo-hero-center">
+          <div className="algo-pre-label">♪ KERNELCON PRESENTS ♪</div>
+
+          <img
+            src={KernelLogo}
+            className="algo-logo"
+            alt="Kernelcon logo"
+          />
+
+          <div className="algo-theme-line">
+            <span className="algo-word">ALGO</span>
+            <span className="algo-paren">(</span>
+            <span className="algo-rhythm-word">RHYTHM</span>
+            <span className="algo-paren">)</span>
           </div>
 
-          <img id="near-stars" className="scene-layer screen" src={stars2} alt="Near Stars" />
-          <img id="far-mountains" className="scene-layer" src={peaks} alt="Far Mountains" />
-          <img id="mid-mountains" className="scene-layer" src={mountains} alt="Mid Mountains" />
-          <img id="near-mountains" className="scene-layer" src={hills} alt="Near Mountains" />
-          <img id="dune" className="scene-layer" src={dune} alt="Dune" />
-          <img id="sitter" className="glow" src={sitter} alt="Sitter" />
-          <img id="camper" src={camper} alt="Camper" />
-
-          <div id="ray-mask">
-            <div id="ray2" className="glow-ray"></div>
-            <img id="ray1" className="glow-ray pulse" src={ray} alt="Satellite" />
+          <div className="algo-tagline">
+            <span>Drop the beat.</span>
+            <em> Break the algorithm.</em>
           </div>
 
-          <div id="logo-container">
-            <img id="logo" className="glow" src={logo} alt="Logo" />
-            <div id="logo-text">kernelcon 2027 / 04.07.27 - 04.10.27</div>
+          <div className="algo-dates-row">
+            <div className="algo-date-chip">
+              <span className="algo-date-label">Training</span>
+              <span className="algo-date-val">MAR 2–3, 2027</span>
+            </div>
+            <div className="algo-date-sep">▶</div>
+            <div className="algo-date-chip">
+              <span className="algo-date-label">Conference</span>
+              <span className="algo-date-val">MAR 4–5, 2027</span>
+            </div>
+            <div className="algo-date-sep">▶</div>
+            <div className="algo-date-chip">
+              <span className="algo-date-label">Venue</span>
+              <span className="algo-date-val">OMAHA, NE</span>
+            </div>
+          </div>
+
+          <div className="algo-cta-row">
+            <a
+              href="/register"
+              className="algo-btn-primary"
+            >
+              Get Your Pass
+            </a>
+            <a
+              href="#speakers"
+              className="algo-btn-secondary"
+            >
+              See the Lineup
+            </a>
           </div>
         </div>
 
-        <main className="demo-content">
-          <section style={{ minHeight: "120vh", margin: "0vh", padding: "4rem 2rem", color: "white" }}>
-          </section>
+        {/* Waveform strip at bottom */}
+        <div className="algo-wave-strip">
+          <canvas ref={this.waveCanvasRef} className="algo-wave-canvas" />
+        </div>
 
-          <section className="content">
+        {/* EQ bars strip */}
+        <div className="algo-eq-strip" aria-hidden="true">
+          {Array.from({ length: 48 }).map((_, i) => (
+            <div key={i} className="algo-eq-bar" />
+          ))}
+        </div>
+
+        {/* Scroll content */}
+        <main className="algo-scroll-content">
+          <section className="algo-about-card">
+            <div className="content-eq-row">
+              {Array.from({ length: 24 }).map((_, i) => (
+                <div key={i} className="content-eq-bar" />
+              ))}
+            </div>
+            <div className="content-label">♪ KERNELCON 2027 ♪</div>
             <h2 className="content-title">Welcome to Kernelcon</h2>
-            <h4 className="content-subtitle">Unplug. Connect. Hack. Go Off Grid.</h4>
-            <p className="content-paragraph">Out here, under the endless Midwest sky, technology feels different. It's raw. It's hands-on. 
-              And its free from the digital noise of daily life. <strong>Kernelcon 2027</strong> invites you 
-              to step off the grid and immerse yourself in a world where curiosity meets community.
-            </p>
-
+            <h4 className="content-subtitle">Drop the Beat. Break the Algorithm.</h4>
             <p className="content-paragraph">
-              From sunrise keynotes to late-night hardware hacks, every moment is designed 
-              to push your skills further and recharge your inspiration.  
-              Whether you're exploring our villages, cracking challenges in the CTF, 
-              or sharing stories around the afterparty,  
-              you'll find yourself surrounded by people who live and breathe infosec.
+              <strong>Kernelcon 2027</strong> turns up the signal on the Midwest's premier cybersecurity
+              conference. This year's theme, <strong>Algo(Rhythm)</strong>, is a love letter to the
+              intersection of precision and chaos: the mathematical logic that powers every system
+              and the unpredictable beat that breaks it.
             </p>
-
             <p className="content-paragraph">
-              So leave the VR headset behind, feel the real breeze,  
-              and come join one of the Midwest's premier security experiences.  
-              Out here, it's not just about technology, it's about the people who shape it.
+              From exploit development to AI red-teaming, from RF hacking to CTF arenas,
+              every track is engineered to push your skills and recharge your inspiration.
+              Two days. Seven villages. Thirty-plus speakers. One frequency.
             </p>
+            <div className="content-stats">
+              <div className="content-stat">
+                <span className="stat-num">30+</span>
+                <span className="stat-label">Speakers</span>
+              </div>
+              <div className="content-stat">
+                <span className="stat-num">2</span>
+                <span className="stat-label">Days</span>
+              </div>
+              <div className="content-stat">
+                <span className="stat-num">7</span>
+                <span className="stat-label">Villages</span>
+              </div>
+              <div className="content-stat">
+                <span className="stat-num">5</span>
+                <span className="stat-label">Trainings</span>
+              </div>
+            </div>
           </section>
-
         </main>
       </div>
-
     );
   }
 }
-
-export default BackGround;

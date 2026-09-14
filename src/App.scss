@@ -17,7 +17,7 @@ body.light-mode {
 }
 
 body.dark-mode {
-  background-color: #000;
+  background-color: #0a0a0f;
   color: #dfdfdf;
   .nav-small {
     //background-color: rgba(27, 42, 59, .8)
@@ -31,7 +31,7 @@ body.dark-mode {
     }
   }
   div.page-box {
-    background-color: $dm-main-color;
+    background-color: #0a0a0f;
   }
   div.secondary-nav {
     //background-color: rgba(12, 20, 26, .8)
@@ -204,8 +204,9 @@ body.dark-mode {
 }
 
 .page-box {
-  background-color: $cultured;
+  background-color: #0d0520;
   min-height: calc(100vh - 50px);
+  color: rgba(255, 255, 255, 0.82);
 }
 
 .venue-section {

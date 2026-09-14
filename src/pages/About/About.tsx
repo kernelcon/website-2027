@@ -6,7 +6,7 @@ import FAQ from './FAQ';
 import Organizers from './Organizers';
 import './About.scss';
 
-import Kernelcon from '../../static/images/logos/kernelcon_black.png';
+import Kernelcon from '../../static/images/logos/kernelcon_white.png';
 import GrrCon from '../../static/images/other-cons/grrcon.png';
 import ThotCon from '../../static/images/other-cons/thotcon.png';
 import DerbyCon from '../../static/images/other-cons/derby.png';
@@ -246,46 +246,52 @@ export default class About extends Component<LegacyRouteProps, AboutState> {
             <div className='tab-title'>Archive</div>
             <p className='tab-paragraph'>Feel free to check out our previous con material, we are an open book!</p>
             <a className='tab-title'
-              href="https://2019.kernelcon.org" 
+              href="https://2026.kernelcon.org"
               rel='noopener noreferrer'
               target='_blank'>
-              Kernelcon 2019: Origin Story
+              Kernelcon 2026: Off Grid
             </a>
             <a className='tab-title'
-              href="https://2020.kernelcon.org" 
+              href="https://2025.kernelcon.org"
               rel='noopener noreferrer'
               target='_blank'>
-              Kernelcon 2020: Vision
+              Kernelcon 2025: Race Condition
             </a>
             <a className='tab-title'
-              href="https://2021.kernelcon.org" 
-              rel='noopener noreferrer'
-              target='_blank'>
-              Kernelcon 2021: Hack Live
-            </a>
-            <a className='tab-title'
-              href="https://2022.kernelcon.org" 
-              rel='noopener noreferrer'
-              target='_blank'>
-              Kernelcon 2022: Kernelcon Punk
-            </a>
-            <a className='tab-title'
-              href="https://2023.kernelcon.org" 
-              rel='noopener noreferrer'
-              target='_blank'>
-              Kernelcon 2023: Science!
-            </a>
-            <a className='tab-title'
-              href="https://2024.kernelcon.org" 
+              href="https://2024.kernelcon.org"
               rel='noopener noreferrer'
               target='_blank'>
               Kernelcon 2024: AI
             </a>
             <a className='tab-title'
-              href="https://2025.kernelcon.org" 
+              href="https://2023.kernelcon.org"
               rel='noopener noreferrer'
               target='_blank'>
-              Kernelcon 2025: Race Condition
+              Kernelcon 2023: Science!
+            </a>
+            <a className='tab-title'
+              href="https://2022.kernelcon.org"
+              rel='noopener noreferrer'
+              target='_blank'>
+              Kernelcon 2022: Kernelcon Punk
+            </a>
+            <a className='tab-title'
+              href="https://2021.kernelcon.org"
+              rel='noopener noreferrer'
+              target='_blank'>
+              Kernelcon 2021: Hack Live
+            </a>
+            <a className='tab-title'
+              href="https://2020.kernelcon.org"
+              rel='noopener noreferrer'
+              target='_blank'>
+              Kernelcon 2020: Vision
+            </a>
+            <a className='tab-title'
+              href="https://2019.kernelcon.org"
+              rel='noopener noreferrer'
+              target='_blank'>
+              Kernelcon 2019: Origin Story
             </a>
           </TabPanel>
         </span>
@@ -298,7 +304,12 @@ export default class About extends Component<LegacyRouteProps, AboutState> {
       <div id='main_hero' className=''>
         <div className='container'>
           <div className='venue-section'>
-            <h3>About</h3>
+            <div className="page-header">
+              <span className="page-pre-label">Kernelcon 2027</span>
+              <h1>The <span>Credits</span></h1>
+              <div className="page-sub">Who we are and what we stand for</div>
+              <div className="page-rule" />
+            </div>
               <MediaQuery minWidth={761}>
                 {this.getTabs(true)}
               </MediaQuery>
