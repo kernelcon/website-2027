@@ -143,16 +143,17 @@ const KB_MAP: Record<string,string> = {
 };
 const DRUM_KB: Record<string,string> = {z:'kick',x:'snare',c:'hihat',v:'tom',b:'clap',n:'cymbal'};
 const INSTRUMENTS = [
-  {id:'piano',name:'Piano',icon:'🎹',color:'#39ff14'},
-  {id:'synth',name:'Synth',icon:'◈', color:'#7b2fff'},
-  {id:'bass', name:'Bass', icon:'〰',color:'#ff006e'},
-  {id:'pad',  name:'Pad',  icon:'∿', color:'#ffe600'},
-  {id:'pluck',name:'Pluck',icon:'✦', color:'#00cfff'},
-  {id:'drums',  name:'Drums',  icon:'🥁',color:'#ff8800'},
-  {id:'guitar',   name:'Electric', icon:'🎸',color:'#ff4400'},
-  {id:'banjo',    name:'Banjo',    icon:'🪕',color:'#d4a050'},
-  {id:'organ',  name:'Organ',  icon:'⚙',  color:'#cc00ff'},
-  {id:'strings',name:'Strings',icon:'🎻',color:'#ffaaff'},
+  {id:'piano',   name:'Piano',    icon:'🎹',color:'#39ff14'},
+  {id:'synth',   name:'Synth',   icon:'◈', color:'#7b2fff'},
+  {id:'bass',    name:'Bass',    icon:'〰',color:'#ff006e'},
+  {id:'pad',     name:'Pad',     icon:'∿', color:'#ffe600'},
+  {id:'pluck',   name:'Pluck',   icon:'✦', color:'#00cfff'},
+  {id:'drums',   name:'Drums',   icon:'🥁',color:'#ff8800'},
+  {id:'guitar',  name:'Electric',icon:'⚡',color:'#ff4400'},
+  {id:'acoustic',name:'Acoustic',icon:'🎸',color:'#c8a050'},
+  {id:'banjo',   name:'Banjo',   icon:'🪕',color:'#d4a050'},
+  {id:'organ',   name:'Organ',   icon:'⚙', color:'#cc00ff'},
+  {id:'strings', name:'Strings', icon:'🎻',color:'#ffaaff'},
 ];
 const DRUM_PADS = [
   {id:'kick',  name:'KICK',  key:'Z',color:'#ff006e'},
@@ -489,7 +490,7 @@ function PianoSection() {
     };
 
     if (padId === 'kick')   { tone(150, 45, 1.0, 0.45); }
-    if (padId === 'snare')  { noise(0.18, 'highpass', 1200, 0.8); tone(220, 220, 0.4, 0.12); }
+    if (padId === 'snare')  { noise(0.18, 'highpass', 1200, 0.8); tone(200, 120, 0.4, 0.12); }
     if (padId === 'hihat')  { noise(0.06, 'highpass', 8000, 0.55); }
     if (padId === 'tom')    { tone(110, 55, 0.7, 0.35); }
     if (padId === 'clap')   { [0, 0.012, 0.024].forEach(d => {
@@ -497,7 +498,7 @@ function PianoSection() {
       const data = buf.getChannelData(0);
       for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
       const src = ctx.createBufferSource(); src.buffer = buf;
-      const filt = ctx.createBiquadFilter(); filt.type = 'bandpass'; filt.frequency.value = 1400;
+      const filt = ctx.createBiquadFilter(); filt.type = 'bandpass'; filt.frequency.value = 1800;
       const g = ctx.createGain();
       g.gain.setValueAtTime(0.7, t + d);
       g.gain.exponentialRampToValueAtTime(0.001, t + d + 0.08);
@@ -524,82 +525,177 @@ function PianoSection() {
       const freq = FREQS[note];
       if (!freq) return;
       if (inst === 'piano') {
-        // Piano: hammer thump + 3 detuned strings (triple stringing) + harmonic partials
-        const dur = 2.6;
-        const hLen = Math.floor(ctx.sampleRate * 0.009);
+        // Register-dependent decay: bass notes ring longer than treble
+        const noteNum = Math.log2(freq / 130.81) * 12;
+        const dur = Math.max(1.4, 3.8 - (noteNum / 36) * 2.0);
+        // Hammer thump: bandpass-filtered noise at ~600Hz (felt on string)
+        const hLen = Math.floor(ctx.sampleRate * 0.008);
         const hBuf = ctx.createBuffer(1, hLen, ctx.sampleRate);
         const hd = hBuf.getChannelData(0);
-        for (let i = 0; i < hLen; i++) hd[i] = (Math.random()*2-1) * Math.exp(-i / hLen * 7);
+        for (let i = 0; i < hLen; i++) hd[i] = (Math.random()*2-1) * Math.exp(-i / hLen * 8);
         const hs = ctx.createBufferSource(); hs.buffer = hBuf;
-        const hg = ctx.createGain(); hg.gain.value = 0.18;
-        hs.connect(hg); wire(hg); hs.start(t);
-        // Three strings per note (piano has 2-3 strings per key, slightly detuned)
-        [-5, 0, 5].forEach(det => {
+        const hf = ctx.createBiquadFilter(); hf.type = 'bandpass'; hf.frequency.value = 600; hf.Q.value = 0.9;
+        const hg = ctx.createGain(); hg.gain.value = 0.22;
+        hs.connect(hf); hf.connect(hg); wire(hg); hs.start(t);
+        // Three strings, tight detuning ±2 cents (real piano), triangle for odd harmonics
+        [-2, 0, 2].forEach(det => {
           const o = ctx.createOscillator(); const g = ctx.createGain();
-          o.type = 'sine'; o.frequency.setValueAtTime(freq, t); o.detune.setValueAtTime(det, t);
-          g.gain.setValueAtTime(0.32, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+          o.type = 'triangle'; o.frequency.setValueAtTime(freq, t); o.detune.setValueAtTime(det, t);
+          g.gain.setValueAtTime(0.28, t);
+          g.gain.exponentialRampToValueAtTime(0.13, t + 0.3); // fast initial drop
+          g.gain.exponentialRampToValueAtTime(0.001, t + dur);
           o.connect(g); wire(g); o.start(t); o.stop(t + dur);
         });
-        mk('sine', freq*2, 0.09, dur*0.65);
-        mk('sine', freq*3, 0.04, dur*0.40);
+        // Partials with inharmonicity (piano string stiffness makes upper partials slightly sharp)
+        ([
+          [2, 1.0002, 0.10, dur * 0.68],
+          [3, 1.0005, 0.055, dur * 0.50],
+          [4, 1.001,  0.028, dur * 0.36],
+          [5, 1.002,  0.016, dur * 0.26],
+          [6, 1.003,  0.009, dur * 0.18],
+        ] as [number,number,number,number][]).forEach(([mult, sharp, vol, pdur]) => {
+          const o = ctx.createOscillator(); const g = ctx.createGain();
+          o.type = 'sine'; o.frequency.setValueAtTime(freq * mult * sharp, t);
+          g.gain.setValueAtTime(vol, t);
+          g.gain.exponentialRampToValueAtTime(vol * 0.4, t + 0.28);
+          g.gain.exponentialRampToValueAtTime(0.001, t + pdur);
+          o.connect(g); wire(g); o.start(t); o.stop(t + pdur);
+        });
       }
       else if (inst === 'synth') {
+        // Sawtooth + lowpass filter — bare oscillator without filter isn't a synth
         const o = ctx.createOscillator(); const g = ctx.createGain();
+        const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2200; lp.Q.value = 3;
         o.type = 'sawtooth'; o.frequency.setValueAtTime(freq, t);
         g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.3, t+0.02);
         g.gain.exponentialRampToValueAtTime(0.001, t+1.8);
-        o.connect(g); wire(g); o.start(t); o.stop(t+1.8);
+        o.connect(lp); lp.connect(g); wire(g); o.start(t); o.stop(t+1.8);
       }
-      else if (inst === 'bass') { mk('sine', freq/2, 0.55, 2.0); mk('sine', freq/4, 0.2, 1.5); }
+      else if (inst === 'bass') {
+        // Bass plays at the actual frequency (freq/2 was an octave error)
+        mk('sine', freq, 0.55, 2.0);
+        mk('sine', freq * 2, 0.15, 1.2);   // 2nd harmonic for warmth
+        mk('triangle', freq, 0.18, 0.8);   // odd harmonics for body
+      }
       else if (inst === 'pad') {
+        // Triangle voices (warmer than sine) + octave shimmer
         [-8,0,8].forEach(det => {
           const o = ctx.createOscillator(); const g = ctx.createGain();
-          o.type = 'sine'; o.frequency.setValueAtTime(freq, t); o.detune.setValueAtTime(det, t);
-          g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.15, t+0.3);
-          g.gain.setValueAtTime(0.15, t+1.2); g.gain.exponentialRampToValueAtTime(0.001, t+2.8);
+          o.type = 'triangle'; o.frequency.setValueAtTime(freq, t); o.detune.setValueAtTime(det, t);
+          g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.12, t+0.3);
+          g.gain.setValueAtTime(0.12, t+1.2); g.gain.exponentialRampToValueAtTime(0.001, t+2.8);
           o.connect(g); wire(g); o.start(t); o.stop(t+2.8);
         });
+        const os = ctx.createOscillator(); const gs = ctx.createGain();
+        os.type = 'sine'; os.frequency.setValueAtTime(freq*2, t);
+        gs.gain.setValueAtTime(0, t); gs.gain.linearRampToValueAtTime(0.04, t+0.6);
+        gs.gain.exponentialRampToValueAtTime(0.001, t+2.8);
+        os.connect(gs); wire(gs); os.start(t); os.stop(t+2.8);
       }
-      else if (inst === 'pluck') { mk('triangle', freq, 0.6, 0.4); mk('triangle', freq*1.5, 0.3, 0.15); }
+      else if (inst === 'pluck') {
+        // Noise exciter (the pluck attack) + sawtooth body
+        const aLen = Math.floor(ctx.sampleRate * 0.008);
+        const aBuf = ctx.createBuffer(1, aLen, ctx.sampleRate);
+        const ad = aBuf.getChannelData(0);
+        for (let i = 0; i < aLen; i++) ad[i] = (Math.random()*2-1) * Math.exp(-i/aLen*6);
+        const asSrc = ctx.createBufferSource(); asSrc.buffer = aBuf;
+        const ag = ctx.createGain(); ag.gain.value = 0.3;
+        asSrc.connect(ag); wire(ag); asSrc.start(t);
+        const dur = Math.max(0.15, 0.6 - (freq - 130) / 1200);
+        mk('sawtooth', freq, 0.5, dur);
+        mk('sawtooth', freq * 2, 0.2, dur * 0.5);
+      }
       else if (inst === 'guitar') {
-        // Blues/rock electric: tanh soft-clip (tube saturation, not digital hard clip)
-        // No power chord — root note with chorus detune like a real single-coil pickup
-        const dur = 1.0;
+        // Electric: tanh soft-clip, mid scoop, realistic cab sim, tighter detuning
+        const dur = 1.2;
         const ws = ctx.createWaveShaper();
         const N = 512; const crv = new Float32Array(N);
-        const drive = 6; // moderate overdrive — warm not harsh
+        const drive = 5; // warm blues/rock overdrive
         for (let i = 0; i < N; i++) {
           const x = (i * 2 / (N - 1)) - 1;
           crv[i] = Math.tanh(x * drive) / Math.tanh(drive);
         }
         ws.curve = crv; ws.oversample = '4x';
-        // Presence peak at 2.8kHz — the "cut through the mix" frequency of a Telecaster
+        // Mid scoop (classic electric guitar scooped EQ character)
+        const midScoop = ctx.createBiquadFilter();
+        midScoop.type = 'peaking'; midScoop.frequency.value = 600; midScoop.gain.value = -4; midScoop.Q.value = 0.9;
+        // Presence at 3.2kHz (Tele/Strat cut-through, not 2.8kHz which sounds honky)
         const presence = ctx.createBiquadFilter();
-        presence.type = 'peaking'; presence.frequency.value = 2800; presence.gain.value = 9; presence.Q.value = 0.8;
-        // Cabinet sim: LP removes harshness, HP removes mud
-        const tone = ctx.createBiquadFilter(); tone.type = 'lowpass'; tone.frequency.value = 7200;
-        const hp2 = ctx.createBiquadFilter(); hp2.type = 'highpass'; hp2.frequency.value = 90;
-        const out = ctx.createGain(); out.gain.value = 0.34;
-        ws.connect(presence); presence.connect(tone); tone.connect(hp2); hp2.connect(out); wire(out);
-        // Three slightly detuned strings → natural chorus without a chorus pedal
-        [[0, 0.7], [14, 0.45], [-10, 0.35]].forEach(([det, vol]) => {
+        presence.type = 'peaking'; presence.frequency.value = 3200; presence.gain.value = 8; presence.Q.value = 0.9;
+        // Realistic cab sim: LP at 5kHz (cabs roll off hard above 4.5-6kHz), HP at 80Hz
+        const cabLP = ctx.createBiquadFilter(); cabLP.type = 'lowpass'; cabLP.frequency.value = 5000;
+        const cabHP = ctx.createBiquadFilter(); cabHP.type = 'highpass'; cabHP.frequency.value = 80;
+        const out = ctx.createGain(); out.gain.value = 0.32;
+        ws.connect(midScoop); midScoop.connect(presence); presence.connect(cabLP); cabLP.connect(cabHP); cabHP.connect(out); wire(out);
+        // Tighter detuning: ±5 cents (was ±14 — too wide, sounded like 12-string)
+        [[0, 0.7], [5, 0.4], [-5, 0.35]].forEach(([det, vol]) => {
           const o = ctx.createOscillator(); const g = ctx.createGain();
           o.type = 'sawtooth'; o.frequency.setValueAtTime(freq, t); o.detune.setValueAtTime(det, t);
           g.gain.setValueAtTime(0, t);
-          g.gain.linearRampToValueAtTime(vol, t + 0.005); // fast pick attack
-          g.gain.exponentialRampToValueAtTime(vol * 0.5, t + 0.08); // initial string bloom decay
+          g.gain.linearRampToValueAtTime(vol, t + 0.004);
+          g.gain.setValueAtTime(vol * 0.88, t + 0.15); // sustain plateau before slow decay
           g.gain.exponentialRampToValueAtTime(0.001, t + dur);
           o.connect(g); g.connect(ws); o.start(t); o.stop(t + dur);
         });
-        // High-freq pick click (the "tick" of a pick on a wound string)
-        const pLen = Math.floor(ctx.sampleRate * 0.005);
+        // Pick click (4ms)
+        const pLen = Math.floor(ctx.sampleRate * 0.004);
         const pBuf = ctx.createBuffer(1, pLen, ctx.sampleRate);
         const pd = pBuf.getChannelData(0);
-        for (let i = 0; i < pLen; i++) pd[i] = (Math.random() * 2 - 1) * Math.exp(-i / pLen * 10);
+        for (let i = 0; i < pLen; i++) pd[i] = (Math.random() * 2 - 1) * Math.exp(-i / pLen * 12);
         const ps = ctx.createBufferSource(); ps.buffer = pBuf;
         const pf = ctx.createBiquadFilter(); pf.type = 'bandpass'; pf.frequency.value = 4500; pf.Q.value = 1.5;
-        const pg = ctx.createGain(); pg.gain.value = 0.22;
+        const pg = ctx.createGain(); pg.gain.value = 0.20;
         ps.connect(pf); pf.connect(pg); wire(pg); ps.start(t);
+      }
+      else if (inst === 'acoustic') {
+        // Acoustic guitar: noise excitation → resonant harmonic bank + body resonances
+        const dur = 1.8;
+        const exciteMs = Math.min(1000 / freq, 15); // ~one string period, capped at 15ms
+        const exciteLen = Math.floor(ctx.sampleRate * exciteMs / 1000);
+        const exciteBuf = ctx.createBuffer(1, exciteLen, ctx.sampleRate);
+        const ed = exciteBuf.getChannelData(0);
+        for (let i = 0; i < exciteLen; i++)
+          ed[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / exciteLen, 1.5);
+        // Harmonic resonators — higher harmonics decay progressively faster
+        ([
+          [1, 0.50, 1.00, 35],
+          [2, 0.28, 0.70, 28],
+          [3, 0.16, 0.50, 22],
+          [4, 0.09, 0.35, 16],
+          [5, 0.05, 0.22, 12],
+        ] as [number,number,number,number][]).forEach(([h, vol, decayFrac, Q]) => {
+          const src = ctx.createBufferSource(); src.buffer = exciteBuf;
+          const bp = ctx.createBiquadFilter();
+          bp.type = 'bandpass'; bp.frequency.value = freq * h; bp.Q.value = Q;
+          const g = ctx.createGain();
+          g.gain.setValueAtTime(vol, t);
+          g.gain.exponentialRampToValueAtTime(0.001, t + dur * decayFrac);
+          src.connect(bp); bp.connect(g); wire(g); src.start(t); src.stop(t + dur);
+        });
+        // Body resonances: dreadnought air cavity ~95Hz, top plate ~190Hz, brace ~380Hz
+        ([
+          [95,  0.30, 0.55, 7],
+          [190, 0.18, 0.40, 6],
+          [380, 0.09, 0.28, 5],
+        ] as [number,number,number,number][]).forEach(([bFreq, vol, decayFrac, Q]) => {
+          const src = ctx.createBufferSource(); src.buffer = exciteBuf;
+          const bp = ctx.createBiquadFilter();
+          bp.type = 'bandpass'; bp.frequency.value = bFreq; bp.Q.value = Q;
+          const g = ctx.createGain();
+          g.gain.setValueAtTime(vol, t);
+          g.gain.exponentialRampToValueAtTime(0.001, t + dur * decayFrac);
+          src.connect(bp); bp.connect(g); wire(g); src.start(t); src.stop(t + dur);
+        });
+        // Steel string sparkle transient (fingernail/pick on wound string)
+        const sparkLen = Math.floor(ctx.sampleRate * 0.018);
+        const sparkBuf = ctx.createBuffer(1, sparkLen, ctx.sampleRate);
+        const sd = sparkBuf.getChannelData(0);
+        for (let i = 0; i < sparkLen; i++)
+          sd[i] = (Math.random() * 2 - 1) * Math.exp(-i / sparkLen * 6);
+        const ss = ctx.createBufferSource(); ss.buffer = sparkBuf;
+        const sf = ctx.createBiquadFilter(); sf.type = 'bandpass'; sf.frequency.value = 5500; sf.Q.value = 1.0;
+        const sg = ctx.createGain(); sg.gain.value = 0.15;
+        ss.connect(sf); sf.connect(sg); wire(sg); ss.start(t); ss.stop(t + dur);
       }
       else if (inst === 'banjo') {
         // Banjo: sawtooth (all harmonics, bright/metallic) + drum-head resonance + loud pick attack
@@ -633,46 +729,49 @@ function PianoSection() {
         ps.connect(pf); pf.connect(pg); wire(pg); ps.start(t);
       }
       else if (inst === 'organ') {
-        // Hammond drawbar: harmonics at 1x 2x 3x 4x 6x 8x with drawbar-style volumes
-        const drawbars = [[1,0.7],[2,0.8],[3,0.45],[4,0.5],[6,0.25],[8,0.18]];
+        // Hammond drawbar footages: 16'=×0.5, 8'=×1, 4'=×2, 2⅔'=×3, 2'=×4, 1⅗'=×6, 1'=×8
+        const drawbars: [number,number][] = [[0.5,0.55],[1,0.8],[2,0.7],[3,0.45],[4,0.40],[6,0.25],[8,0.15]];
         drawbars.forEach(([mult, vol]) => {
           const o = ctx.createOscillator(); const g = ctx.createGain();
-          o.type = 'sine'; o.frequency.setValueAtTime(freq*mult, t);
-          g.gain.setValueAtTime(vol*0.22, t);
-          g.gain.setValueAtTime(vol*0.22, t+1.8);
-          g.gain.exponentialRampToValueAtTime(0.001, t+2.2);
-          o.connect(g); wire(g); o.start(t); o.stop(t+2.2);
+          o.type = 'sine'; o.frequency.setValueAtTime(freq * mult, t);
+          g.gain.setValueAtTime(vol * 0.18, t);
+          g.gain.setValueAtTime(vol * 0.18, t + 1.8);
+          g.gain.exponentialRampToValueAtTime(0.001, t + 2.2);
+          o.connect(g); wire(g); o.start(t); o.stop(t + 2.2);
         });
-        // Rotary cabinet chorus
-        [-6,6].forEach(det => {
+        // Leslie rotary cabinet: LFO at ~6Hz oscillates the detune (not static cents)
+        [1, -1].forEach(polarity => {
           const o = ctx.createOscillator(); const g = ctx.createGain();
-          o.type = 'sine'; o.frequency.setValueAtTime(freq, t); o.detune.setValueAtTime(det, t);
-          g.gain.setValueAtTime(0.08, t); g.gain.exponentialRampToValueAtTime(0.001, t+2.2);
-          o.connect(g); wire(g); o.start(t); o.stop(t+2.2);
+          o.type = 'sine'; o.frequency.setValueAtTime(freq, t);
+          const lfo = ctx.createOscillator(); const lfoG = ctx.createGain();
+          lfo.type = 'sine'; lfo.frequency.value = 6.0;
+          lfoG.gain.value = 18 * polarity; // cents peak
+          lfo.connect(lfoG); lfoG.connect(o.detune);
+          lfo.start(t); lfo.stop(t + 2.2);
+          g.gain.setValueAtTime(0.09, t); g.gain.exponentialRampToValueAtTime(0.001, t + 2.2);
+          o.connect(g); wire(g); o.start(t); o.stop(t + 2.2);
         });
       }
       else if (inst === 'strings') {
-        // Strings: 5 detuned voices + delayed vibrato LFO (bowed string characteristic)
+        // Triangle voices (odd harmonics = warmer, bowed-string timbre) + delayed vibrato
         const dur = 3.4;
         const detunes = [-14, -7, 0, 7, 14];
         detunes.forEach((det, i) => {
           const o = ctx.createOscillator(); const g = ctx.createGain();
-          o.type = 'sine'; o.frequency.setValueAtTime(freq, t); o.detune.setValueAtTime(det, t);
-          // Vibrato: LFO kicks in after 400ms (as a real player would)
+          o.type = 'triangle'; o.frequency.setValueAtTime(freq, t); o.detune.setValueAtTime(det, t);
           const lfo = ctx.createOscillator(); const lfoG = ctx.createGain();
-          lfo.frequency.value = 5.2 + i * 0.15; // slight per-voice variation
+          lfo.frequency.value = 5.2 + i * 0.15;
           lfoG.gain.setValueAtTime(0, t); lfoG.gain.linearRampToValueAtTime(freq * 0.007, t + 0.7);
           lfo.connect(lfoG); lfoG.connect(o.frequency);
           lfo.start(t); lfo.stop(t + dur);
-          g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.13 - i*0.01, t+0.5);
-          g.gain.setValueAtTime(0.11, t+1.8); g.gain.exponentialRampToValueAtTime(0.001, t+dur);
-          o.connect(g); wire(g); o.start(t); o.stop(t+dur);
-          // Octave shimmer
+          g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.13 - i * 0.01, t + 0.5);
+          g.gain.setValueAtTime(0.11, t + 1.8); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+          o.connect(g); wire(g); o.start(t); o.stop(t + dur);
           const o2 = ctx.createOscillator(); const g2 = ctx.createGain();
-          o2.type = 'sine'; o2.frequency.setValueAtTime(freq*2, t); o2.detune.setValueAtTime(det*0.5, t);
-          g2.gain.setValueAtTime(0, t); g2.gain.linearRampToValueAtTime(0.035, t+0.9);
-          g2.gain.exponentialRampToValueAtTime(0.001, t+dur*0.9);
-          o2.connect(g2); wire(g2); o2.start(t); o2.stop(t+dur*0.9);
+          o2.type = 'triangle'; o2.frequency.setValueAtTime(freq * 2, t); o2.detune.setValueAtTime(det * 0.5, t);
+          g2.gain.setValueAtTime(0, t); g2.gain.linearRampToValueAtTime(0.032, t + 0.9);
+          g2.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.9);
+          o2.connect(g2); wire(g2); o2.start(t); o2.stop(t + dur * 0.9);
         });
       }
     }
