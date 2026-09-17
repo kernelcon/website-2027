@@ -154,6 +154,7 @@ const INSTRUMENTS = [
   {id:'banjo',   name:'Banjo',   icon:'🪕',color:'#d4a050'},
   {id:'organ',   name:'Organ',   icon:'⚙', color:'#cc00ff'},
   {id:'strings', name:'Strings', icon:'🎻',color:'#ffaaff'},
+  {id:'soprano', name:'Soprano', icon:'🎤',color:'#ffccff'},
 ];
 const DRUM_PADS = [
   {id:'kick',  name:'KICK',  key:'Z',color:'#ff006e'},
@@ -760,6 +761,46 @@ function PianoSection() {
           g2.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.9);
           o2.connect(g2); wire(g2); o2.start(t); o2.stop(t + dur * 0.9);
         });
+      }
+      else if (inst === 'soprano') {
+        // Soprano "ooh": sawtooth source → two formant bandpass filters (F1=300Hz, F2=870Hz)
+        // These are the textbook formant frequencies for the "oo" vowel
+        const dur = 2.8;
+        const src = ctx.createOscillator();
+        src.type = 'sawtooth';
+        src.frequency.setValueAtTime(freq, t);
+        // Vibrato: soprano characteristic ~5.5Hz, kicks in after 200ms
+        const lfo = ctx.createOscillator(); const lfoG = ctx.createGain();
+        lfo.type = 'sine'; lfo.frequency.value = 5.5;
+        lfoG.gain.setValueAtTime(0, t);
+        lfoG.gain.linearRampToValueAtTime(freq * 0.012, t + 0.5); // ~20 cents peak depth
+        lfo.connect(lfoG); lfoG.connect(src.frequency);
+        lfo.start(t); lfo.stop(t + dur);
+        // Formant filters (bandpass = vocal tract resonance)
+        const f1 = ctx.createBiquadFilter(); f1.type = 'bandpass'; f1.frequency.value = 300; f1.Q.value = 6;
+        const f2 = ctx.createBiquadFilter(); f2.type = 'bandpass'; f2.frequency.value = 870; f2.Q.value = 10;
+        // F1 louder than F2 for "ooh" (front-cavity resonance dominates)
+        const f1g = ctx.createGain(); f1g.gain.value = 1.0;
+        const f2g = ctx.createGain(); f2g.gain.value = 0.5;
+        // Shared envelope: soft attack, full sustain, gentle release
+        const env = ctx.createGain();
+        env.gain.setValueAtTime(0, t);
+        env.gain.linearRampToValueAtTime(0.55, t + 0.07);  // 70ms attack
+        env.gain.setValueAtTime(0.50, t + 0.4);
+        env.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        src.connect(f1); f1.connect(f1g); f1g.connect(env);
+        src.connect(f2); f2.connect(f2g); f2g.connect(env);
+        wire(env);
+        // Breath noise: a touch of air at the start
+        const bLen = Math.floor(ctx.sampleRate * 0.06);
+        const bBuf = ctx.createBuffer(1, bLen, ctx.sampleRate);
+        const bd = bBuf.getChannelData(0);
+        for (let i = 0; i < bLen; i++) bd[i] = (Math.random() * 2 - 1) * Math.exp(-i / bLen * 5);
+        const bSrc = ctx.createBufferSource(); bSrc.buffer = bBuf;
+        const bFilt = ctx.createBiquadFilter(); bFilt.type = 'bandpass'; bFilt.frequency.value = 2500; bFilt.Q.value = 0.8;
+        const bGain = ctx.createGain(); bGain.gain.value = 0.07;
+        bSrc.connect(bFilt); bFilt.connect(bGain); wire(bGain); bSrc.start(t);
+        src.start(t); src.stop(t + dur);
       }
     }
 
