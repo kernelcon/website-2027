@@ -41,13 +41,13 @@ const TRAININGS = [
 ];
 
 const STAGES = [
-  { icon: "🎫", name: "Badge Stage",     tag: "Badge Village",          desc: "Hardware quests and interactive badge challenges. Solve puzzles. Unlock achievements." },
-  { icon: "📻", name: "Analog Stage",    tag: "HAM Radio Village",      desc: "Old-school frequencies. The original wireless hacks. Before WiFi there was RF." },
-  { icon: "🔧", name: "Workshop Stage",  tag: "Hardware Hacking",       desc: "Embedded systems, IoT, and hardware exploitation. Build and break in equal measure." },
-  { icon: "🔐", name: "Pick & Roll",     tag: "Lockpicking Village",    desc: "Physical security, locks, vaults. The original social engineering is a tension wrench." },
-  { icon: "📡", name: "RF Stage",        tag: "Radio Hacking Outpost",  desc: "SDR, WiFi, signal exploitation. The airwaves are never safe when we're around." },
-  { icon: "💚", name: "Chill Room",      tag: "Mental Health Village",  desc: "Recharge between sets. Talk to humans. Rest is part of the craft." },
-  { icon: "🎨", name: "Art Stage",       tag: "Hack/Craft Village",     desc: "Screen printing, DTF, making things. Because hackers make art too." },
+  { icon: "🎫", name: "Badge Channel",    tag: "Badge Village",          desc: "Hardware quests and interactive badge challenges. Solve puzzles. Unlock achievements." },
+  { icon: "📻", name: "Analog Channel",   tag: "HAM Radio Village",      desc: "Old-school frequencies. The original wireless hacks. Before WiFi there was RF." },
+  { icon: "🔧", name: "Workshop Channel", tag: "Hardware Hacking",       desc: "Embedded systems, IoT, and hardware exploitation. Build and break in equal measure." },
+  { icon: "🔐", name: "Pick & Roll",      tag: "Lockpicking Village",    desc: "Physical security, locks, vaults. The original social engineering is a tension wrench." },
+  { icon: "📡", name: "RF Channel",       tag: "Radio Hacking Outpost",  desc: "SDR, WiFi, signal exploitation. The airwaves are never safe when we're around." },
+  { icon: "💚", name: "Chill Room",       tag: "Mental Health Village",  desc: "Recharge between sets. Talk to humans. Rest is part of the craft." },
+  { icon: "🎨", name: "Art Channel",      tag: "Hack/Craft Village",     desc: "Screen printing, DTF, making things. Because hackers make art too." },
 ];
 
 const EVENTS = [
@@ -1187,11 +1187,11 @@ export default class Home extends Component<object, HomeState> {
           <div className="rhythm-stripe" />
           */}
 
-          {/* ── THE STAGES ── */}
+          {/* ── THE CHANNELS ── */}
           <div className="rhythm-section stages-section">
             <div className="rhythm-inner">
               <div className="rhythm-label">Villages &amp; Areas</div>
-              <h2 className="rhythm-title">THE <span className="accent-purple">STAGES</span></h2>
+              <h2 className="rhythm-title">THE <span className="accent-purple">CHANNELS</span></h2>
               <div className="stages-grid">
                 {STAGES.map((s) => (
                   <div key={s.name} className="stage-card">
@@ -1232,7 +1232,7 @@ export default class Home extends Component<object, HomeState> {
           <div className="rhythm-section battle-section">
             <div className="rhythm-inner">
               <div className="rhythm-label">Competitions</div>
-              <h2 className="rhythm-title">BATTLE<br /><span className="accent-pink">MODE</span></h2>
+              <h2 className="rhythm-title">BATTLE <span className="accent-pink">MODE</span></h2>
               <div className="battle-grid">
                 {BATTLES.map((b) => (
                   <div key={b.name} className={`battle-card battle-${b.color}`}>
