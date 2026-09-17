@@ -1417,38 +1417,47 @@ function PianoSection() {
       return `${(n>>16)&255},${(n>>8)&255},${n&255}`;
     };
 
-    const FADE   = 800;  // ms before a note label fades out
+    const FADE   = 800;
     const LANE_H = 27;
     const LANE_G = 2;
-    const Y0     = 26;   // first lane top
+    const Y0     = 26;
     const NAME_W = 96;
     const NOTE_W = 76;
+    const THIN_H = 2;   // canvas height when nothing is loaded
 
     const draw = () => {
-      const W = canvas.width, H = canvas.height;
-      c.fillStyle = '#060610';
-      c.fillRect(0, 0, W, H);
-
-      // Header
-      c.font = '11px "Space Mono", monospace';
-      c.fillStyle = '#3a1a8c';
-      c.fillText('⬡ ALGO(RHYTHM) 2027  ·  KERNELCON  ·  BATTLE MODE STUDIO', 16, 18);
-
+      const W = canvas.width;
       const now = Date.now();
       const trs = tracksVizRef.current;
 
-      // Which instrument lanes to show: loaded tracks (deduped) or all instruments when idle
-      let instIds: string[];
-      if (trs.length === 0) {
-        instIds = INSTRUMENTS.map(i => i.id);
-      } else {
-        const seen = new Set<string>();
-        instIds = trs.filter(tr => !seen.has(tr.inst) && seen.add(tr.inst) !== undefined).map(tr => tr.inst);
+      // Deduplicate instrument ids from active tracks only — nothing shown when empty
+      const seen = new Set<string>();
+      const instIds = trs
+        .filter(tr => !seen.has(tr.inst) && seen.add(tr.inst) !== undefined)
+        .map(tr => tr.inst);
+
+      // Dynamic canvas height: thin when empty, exact fit when loaded
+      const desiredH = instIds.length === 0
+        ? THIN_H
+        : Y0 + instIds.length * (LANE_H + LANE_G) + 6;
+      if (canvas.height !== desiredH) canvas.height = desiredH;
+
+      const H = canvas.height;
+      c.fillStyle = '#060610';
+      c.fillRect(0, 0, W, H);
+
+      if (instIds.length === 0) {
+        frame = requestAnimationFrame(draw);
+        return;
       }
+
+      // Header row
+      c.font = '11px "Space Mono", monospace';
+      c.fillStyle = '#3a1a8c';
+      c.fillText('⬡ ALGO(RHYTHM) 2027  ·  KERNELCON  ·  BATTLE MODE', 16, 18);
 
       instIds.forEach((instId, idx) => {
         const ly = Y0 + idx * (LANE_H + LANE_G);
-        if (ly + LANE_H > H - 4) return;
         const def = INSTRUMENTS.find(d => d.id === instId);
         const col = def?.color ?? '#39ff14';
         const r = rgb(col);
@@ -1460,7 +1469,7 @@ function PianoSection() {
         c.fillStyle = `rgba(${r},${0.03 + t * 0.11})`;
         c.fillRect(0, ly, W, LANE_H);
 
-        // Left accent bar (color intensity = activity)
+        // Left accent bar
         c.fillStyle = col;
         c.globalAlpha = 0.22 + t * 0.78;
         c.fillRect(0, ly, 3, LANE_H);
@@ -1471,14 +1480,13 @@ function PianoSection() {
         c.fillStyle = `rgba(${r},${0.35 + t * 0.65})`;
         c.fillText(`${def?.icon ?? '?'} ${(def?.name ?? instId).toUpperCase()}`, 8, ly + 18);
 
-        // Waveform (between name col and note col)
-        const wx = NAME_W;
-        const ww = W - NAME_W - NOTE_W - 8;
-        const amp = trs.length === 0 ? 2.5 : (t > 0 ? 2 + t * 10 : 1.5);
+        // Waveform
+        const wx = NAME_W, ww = W - NAME_W - NOTE_W - 8;
+        const amp = t > 0 ? 2 + t * 10 : 1.5;
         const spd = 0.0008 * (idx * 0.4 + 1);
         c.strokeStyle = col;
         c.lineWidth = t > 0.1 ? 1.8 : 0.8;
-        c.globalAlpha = trs.length === 0 ? 0.15 : (0.18 + t * 0.82);
+        c.globalAlpha = 0.18 + t * 0.82;
         c.shadowBlur = t * 16;
         c.shadowColor = col;
         c.beginPath();
@@ -1488,50 +1496,32 @@ function PianoSection() {
             Math.sin(f * Math.PI * 7  + now * spd)              * amp +
             Math.sin(f * Math.PI * 13 + now * spd * 1.5) * 0.45 * amp +
             Math.sin(f * Math.PI * 3  + now * spd * 0.7) * 0.22 * amp;
-          const wy = ly + LANE_H / 2 + wave;
-          x === 0 ? c.moveTo(wx, wy) : c.lineTo(wx + x, wy);
+          x === 0 ? c.moveTo(wx, ly + LANE_H / 2 + wave) : c.lineTo(wx + x, ly + LANE_H / 2 + wave);
         }
         c.stroke();
         c.shadowBlur = 0;
         c.globalAlpha = 1;
 
-        // Note label — right side, glowing, fades with t
+        // Note label (fades out)
         if (entry && t > 0) {
           c.globalAlpha = t;
-          c.shadowBlur = 18;
-          c.shadowColor = col;
+          c.shadowBlur = 18; c.shadowColor = col;
           c.fillStyle = col;
           c.font = `bold 17px "Bebas Neue", sans-serif`;
           c.fillText(entry.note, W - NOTE_W + 6, ly + 19);
-          c.shadowBlur = 0;
-          c.globalAlpha = 1;
+          c.shadowBlur = 0; c.globalAlpha = 1;
         }
       });
 
-      // Separator line below lanes
-      const bottomY = Y0 + instIds.length * (LANE_H + LANE_G) + 2;
-      if (bottomY < H - 8) {
-        c.strokeStyle = 'rgba(123,47,255,0.12)';
-        c.lineWidth = 1;
-        c.beginPath();
-        c.moveTo(0, bottomY); c.lineTo(W, bottomY);
-        c.stroke();
-      }
-
-      // Particles (float up through the lanes)
+      // Particles
       particlesRef.current = particlesRef.current
         .map(p => ({...p, y: p.y + p.vy, life: p.life - 0.022}))
         .filter(p => p.life > 0);
       particlesRef.current.forEach(p => {
         c.globalAlpha = p.life * 0.9;
-        c.fillStyle = p.color;
-        c.shadowBlur = 10;
-        c.shadowColor = p.color;
-        c.beginPath();
-        c.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
-        c.fill();
-        c.shadowBlur = 0;
-        c.globalAlpha = 1;
+        c.fillStyle = p.color; c.shadowBlur = 10; c.shadowColor = p.color;
+        c.beginPath(); c.arc(p.x, p.y, 2.5, 0, Math.PI * 2); c.fill();
+        c.shadowBlur = 0; c.globalAlpha = 1;
       });
 
       frame = requestAnimationFrame(draw);
@@ -1704,7 +1694,7 @@ function PianoSection() {
         </div>
 
         {/* Waveform canvas */}
-        <canvas ref={canvasRef} className="piano-canvas" width={1200} height={380} />
+        <canvas ref={canvasRef} className="piano-canvas" width={1200} height={2} />
 
         {/* Drum pads OR keyboard */}
         {instrument === 'drums' ? (
