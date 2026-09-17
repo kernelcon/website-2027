@@ -1383,9 +1383,10 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
   height: auto;
   display: block;
   border: 1px solid rgba(123,47,255,0.3);
+  border-top: 2px solid rgba(123,47,255,0.5);
   border-radius: 4px;
   margin-bottom: 1.5rem;
-  background: #080810;
+  background: #060610;
 }
 
 // ── Instrument selector

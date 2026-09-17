@@ -1011,8 +1011,8 @@ function PianoSection() {
   const loopDurRef = useRef(4000);
   const trackIdRef = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement|null>(null);
-  const activeNoteVizRef = useRef('');
-  const activeInstVizRef = useRef('piano');
+  const activeNotesRef = useRef<Map<string,{note:string;birth:number}>>(new Map());
+  const tracksVizRef  = useRef<Track[]>([]);
   const particlesRef = useRef<{x:number;y:number;vy:number;life:number;color:string}[]>([]);
   const chunksRef = useRef<Blob[]>([]);
 
@@ -1379,16 +1379,19 @@ function PianoSection() {
     const display = inst === 'drums'
       ? (DRUM_PADS.find(p => p.id === note)?.name ?? note)
       : note;
-    activeNoteVizRef.current = display;
-    activeInstVizRef.current = inst;
-    setTimeout(() => { activeNoteVizRef.current = ''; }, 500);
+    activeNotesRef.current.set(inst, { note: display, birth: Date.now() });
 
     const instData = INSTRUMENTS.find(i => i.id === inst);
     const col = instData?.color ?? '#39ff14';
-    for (let i = 0; i < 8; i++) {
+    // Spawn particles near the instrument's lane
+    const instIdx = INSTRUMENTS.findIndex(i => i.id === inst);
+    const laneY = 28 + instIdx * 28 + 14;
+    for (let i = 0; i < 6; i++) {
       particlesRef.current.push({
-        x: 40 + Math.random() * 1120, y: 50 + Math.random() * 60,
-        vy: -0.6 - Math.random() * 2.5, life: 1, color: col,
+        x: 120 + Math.random() * 900,
+        y: laneY + (Math.random() - 0.5) * 16,
+        vy: -0.5 - Math.random() * 2.0,
+        life: 1, color: col,
       });
     }
 
@@ -1397,65 +1400,138 @@ function PianoSection() {
     }
   }, [getCtx, getDest, makeDrum]);
 
-  // Waveform canvas
+  // Sync tracks into viz ref so the draw loop can read them without deps
+  useEffect(() => { tracksVizRef.current = tracks; }, [tracks]);
+
+  // Per-instrument stream visualizer
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx2d = canvas.getContext('2d');
-    if (!ctx2d) return;
+    const c = canvas.getContext('2d');
+    if (!c) return;
     let frame = 0;
+
+    // "#rrggbb" → "r,g,b"
+    const rgb = (hex: string) => {
+      const n = parseInt(hex.replace('#',''), 16);
+      return `${(n>>16)&255},${(n>>8)&255},${n&255}`;
+    };
+
+    const FADE   = 800;  // ms before a note label fades out
+    const LANE_H = 27;
+    const LANE_G = 2;
+    const Y0     = 26;   // first lane top
+    const NAME_W = 96;
+    const NOTE_W = 76;
 
     const draw = () => {
       const W = canvas.width, H = canvas.height;
-      ctx2d.fillStyle = '#060610';
-      ctx2d.fillRect(0, 0, W, H);
+      c.fillStyle = '#060610';
+      c.fillRect(0, 0, W, H);
 
-      ctx2d.font = '11px "Space Mono", monospace';
-      ctx2d.fillStyle = '#5a2acc';
-      ctx2d.fillText('⬡ ALGO(RHYTHM) 2027  ·  KERNELCON', 16, 18);
+      // Header
+      c.font = '11px "Space Mono", monospace';
+      c.fillStyle = '#3a1a8c';
+      c.fillText('⬡ ALGO(RHYTHM) 2027  ·  KERNELCON  ·  BATTLE MODE STUDIO', 16, 18);
 
-      const note = activeNoteVizRef.current;
-      const instId = activeInstVizRef.current;
-      const instData = INSTRUMENTS.find(i => i.id === instId);
-      const col = instData?.color ?? '#39ff14';
-      const amp = note ? 28 : 4;
-      const now = Date.now() / 1000;
+      const now = Date.now();
+      const trs = tracksVizRef.current;
 
-      // Waveform
-      ctx2d.strokeStyle = col; ctx2d.lineWidth = 2;
-      ctx2d.shadowBlur = note ? 14 : 3; ctx2d.shadowColor = col;
-      ctx2d.globalAlpha = 0.85;
-      ctx2d.beginPath();
-      for (let x = 0; x < W; x++) {
-        const y = H/2 + Math.sin(x*0.018 + now*3.1)*amp*0.8
-          + Math.sin(x*0.031 + now*2.2)*amp*0.5
-          + Math.sin(x*0.007 + now*1.4)*amp*0.3;
-        x === 0 ? ctx2d.moveTo(x, y) : ctx2d.lineTo(x, y);
-      }
-      ctx2d.stroke();
-      ctx2d.shadowBlur = 0; ctx2d.globalAlpha = 1;
-
-      // Note + inst label
-      if (note) {
-        ctx2d.shadowBlur = 28; ctx2d.shadowColor = col;
-        ctx2d.fillStyle = col;
-        ctx2d.font = 'bold 54px "Bebas Neue", sans-serif';
-        ctx2d.fillText(note, 40, H/2 + 20);
-        ctx2d.shadowBlur = 0;
-        ctx2d.fillStyle = 'rgba(255,255,255,0.45)';
-        ctx2d.font = '10px "Space Mono", monospace';
-        ctx2d.fillText(instData?.name ?? '', 40, H/2 + 36);
+      // Which instrument lanes to show: loaded tracks (deduped) or all instruments when idle
+      let instIds: string[];
+      if (trs.length === 0) {
+        instIds = INSTRUMENTS.map(i => i.id);
+      } else {
+        const seen = new Set<string>();
+        instIds = trs.filter(tr => !seen.has(tr.inst) && seen.add(tr.inst) !== undefined).map(tr => tr.inst);
       }
 
-      // Particles
+      instIds.forEach((instId, idx) => {
+        const ly = Y0 + idx * (LANE_H + LANE_G);
+        if (ly + LANE_H > H - 4) return;
+        const def = INSTRUMENTS.find(d => d.id === instId);
+        const col = def?.color ?? '#39ff14';
+        const r = rgb(col);
+        const entry = activeNotesRef.current.get(instId);
+        const age = entry ? now - entry.birth : Infinity;
+        const t = age < FADE ? Math.max(0, 1 - age / FADE) : 0;
+
+        // Lane background
+        c.fillStyle = `rgba(${r},${0.03 + t * 0.11})`;
+        c.fillRect(0, ly, W, LANE_H);
+
+        // Left accent bar (color intensity = activity)
+        c.fillStyle = col;
+        c.globalAlpha = 0.22 + t * 0.78;
+        c.fillRect(0, ly, 3, LANE_H);
+        c.globalAlpha = 1;
+
+        // Icon + name
+        c.font = '10px "Space Mono", monospace';
+        c.fillStyle = `rgba(${r},${0.35 + t * 0.65})`;
+        c.fillText(`${def?.icon ?? '?'} ${(def?.name ?? instId).toUpperCase()}`, 8, ly + 18);
+
+        // Waveform (between name col and note col)
+        const wx = NAME_W;
+        const ww = W - NAME_W - NOTE_W - 8;
+        const amp = trs.length === 0 ? 2.5 : (t > 0 ? 2 + t * 10 : 1.5);
+        const spd = 0.0008 * (idx * 0.4 + 1);
+        c.strokeStyle = col;
+        c.lineWidth = t > 0.1 ? 1.8 : 0.8;
+        c.globalAlpha = trs.length === 0 ? 0.15 : (0.18 + t * 0.82);
+        c.shadowBlur = t * 16;
+        c.shadowColor = col;
+        c.beginPath();
+        for (let x = 0; x <= ww; x += 2) {
+          const f = x / ww;
+          const wave =
+            Math.sin(f * Math.PI * 7  + now * spd)              * amp +
+            Math.sin(f * Math.PI * 13 + now * spd * 1.5) * 0.45 * amp +
+            Math.sin(f * Math.PI * 3  + now * spd * 0.7) * 0.22 * amp;
+          const wy = ly + LANE_H / 2 + wave;
+          x === 0 ? c.moveTo(wx, wy) : c.lineTo(wx + x, wy);
+        }
+        c.stroke();
+        c.shadowBlur = 0;
+        c.globalAlpha = 1;
+
+        // Note label — right side, glowing, fades with t
+        if (entry && t > 0) {
+          c.globalAlpha = t;
+          c.shadowBlur = 18;
+          c.shadowColor = col;
+          c.fillStyle = col;
+          c.font = `bold 17px "Bebas Neue", sans-serif`;
+          c.fillText(entry.note, W - NOTE_W + 6, ly + 19);
+          c.shadowBlur = 0;
+          c.globalAlpha = 1;
+        }
+      });
+
+      // Separator line below lanes
+      const bottomY = Y0 + instIds.length * (LANE_H + LANE_G) + 2;
+      if (bottomY < H - 8) {
+        c.strokeStyle = 'rgba(123,47,255,0.12)';
+        c.lineWidth = 1;
+        c.beginPath();
+        c.moveTo(0, bottomY); c.lineTo(W, bottomY);
+        c.stroke();
+      }
+
+      // Particles (float up through the lanes)
       particlesRef.current = particlesRef.current
-        .map(p => ({...p, y: p.y + p.vy, life: p.life - 0.02}))
+        .map(p => ({...p, y: p.y + p.vy, life: p.life - 0.022}))
         .filter(p => p.life > 0);
       particlesRef.current.forEach(p => {
-        ctx2d.globalAlpha = p.life;
-        ctx2d.fillStyle = p.color; ctx2d.shadowBlur = 8; ctx2d.shadowColor = p.color;
-        ctx2d.beginPath(); ctx2d.arc(p.x, p.y, 3, 0, Math.PI*2); ctx2d.fill();
-        ctx2d.shadowBlur = 0; ctx2d.globalAlpha = 1;
+        c.globalAlpha = p.life * 0.9;
+        c.fillStyle = p.color;
+        c.shadowBlur = 10;
+        c.shadowColor = p.color;
+        c.beginPath();
+        c.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+        c.fill();
+        c.shadowBlur = 0;
+        c.globalAlpha = 1;
       });
 
       frame = requestAnimationFrame(draw);
@@ -1628,7 +1704,7 @@ function PianoSection() {
         </div>
 
         {/* Waveform canvas */}
-        <canvas ref={canvasRef} className="piano-canvas" width={1200} height={110} />
+        <canvas ref={canvasRef} className="piano-canvas" width={1200} height={380} />
 
         {/* Drum pads OR keyboard */}
         {instrument === 'drums' ? (
