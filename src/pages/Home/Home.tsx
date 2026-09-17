@@ -1110,7 +1110,7 @@ export default class Home extends Component<object, HomeState> {
                       <div className="track-sub">{d.sub}</div>
                     </div>
                     <div className={`track-status status-${d.status}`}>
-                      {d.status === "finale" ? "★ EXECUTING" : "PENDING"}
+                      {d.status === "finale" ? "★ PLAYING" : "PENDING"}
                     </div>
                   </div>
                 ))}

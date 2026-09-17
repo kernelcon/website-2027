@@ -650,7 +650,7 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
     color: $rhythm-green;
     text-shadow: $glow-green;
     letter-spacing: 0.12em;
-    animation: rhythm-pulse 0.5s ease-in-out infinite alternate;
+    animation: none;
   }
 }
 

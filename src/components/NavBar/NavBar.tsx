@@ -18,7 +18,7 @@ const NavBar = () => {
 					/>
 
 					<p className="nav-dates">Algo(Rhythm) · Omaha, NE</p>
-					<p className="second-nav-dates"><span className="nav-training-label">Training</span> Mar 2–3 · Conference Mar 4–5</p>
+					<p className="second-nav-dates"><span className="nav-training-label">Training</span> Mar 2–3 · <span className="nav-conference-label">Conference</span> Mar 4–5</p>
 				</Link>
 				<Link to="/register" className="navbar-register">
 					Register
