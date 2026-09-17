@@ -133,6 +133,38 @@ const FREQS: Record<string, number> = {
   'C5':523.25,
 };
 
+// ── Piano sample loading (Salamander Grand Piano via Tone.js CDN) ─────────────
+// Files use 's' for sharp: D#3 → Ds3.mp3, F#4 → Fs4.mp3
+const PIANO_SAMPLE_MAP: Record<string, string> = {
+  'C2':'C2', 'C#2':'C2', 'D2':'Ds2', 'D#2':'Ds2', 'E2':'Ds2', 'F2':'Fs2', 'F#2':'Fs2',
+  'G2':'Fs2','G#2':'A2', 'A2':'A2',  'A#2':'A2',  'B2':'A2',
+  'C3':'C3', 'C#3':'C3', 'D3':'Ds3', 'D#3':'Ds3', 'E3':'Ds3', 'F3':'Fs3', 'F#3':'Fs3',
+  'G3':'Fs3','G#3':'A3', 'A3':'A3',  'A#3':'A3',  'B3':'A3',
+  'C4':'C4', 'C#4':'C4', 'D4':'Ds4', 'D#4':'Ds4', 'E4':'Ds4', 'F4':'Fs4', 'F#4':'Fs4',
+  'G4':'Fs4','G#4':'A4', 'A4':'A4',  'A#4':'A4',  'B4':'A4',
+  'C5':'C5',
+};
+const SALM_HZ: Record<string, number> = {
+  'C2':65.41, 'Ds2':77.78, 'Fs2':92.50, 'A2':110.00,
+  'C3':130.81,'Ds3':155.56,'Fs3':185.00,'A3':220.00,
+  'C4':261.63,'Ds4':311.13,'Fs4':369.99,'A4':440.00,
+  'C5':523.25,
+};
+const pianoCache = new Map<string, AudioBuffer>();
+let pianoLoadStarted = false;
+function loadPianoSamples(ctx: AudioContext) {
+  if (pianoLoadStarted) return;
+  pianoLoadStarted = true;
+  const keys = [...new Set(Object.values(PIANO_SAMPLE_MAP))];
+  keys.forEach(async (k) => {
+    try {
+      const r = await fetch(`https://tonejs.github.io/audio/salamander/${k}.mp3`);
+      if (!r.ok) return;
+      pianoCache.set(k, await ctx.decodeAudioData(await r.arrayBuffer()));
+    } catch { /* synthesis fallback stays active */ }
+  });
+}
+
 const WHITE_KEYS = ['C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4','A4','B4','C5'];
 const BLACK_KEYS = [
   {note:'C#3',left:56},{note:'D#3',left:136},
@@ -1000,62 +1032,61 @@ const EXAMPLES: Example[] = [
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
-        ...seq('hihat', 0, 24000, 250),
-        ...seq('kick',  0, 24000, 1000),
-        ...seq('kick',  750, 24000, 2000),
-        ...seq('snare', 500, 24000, 1000),
-        {note:'cymbal',t:0},{note:'cymbal',t:8000},{note:'cymbal',t:16000},
-        {note:'tom',t:1750},{note:'tom',t:3750},{note:'tom',t:5750},{note:'tom',t:7750},
-        {note:'tom',t:9750},{note:'tom',t:11750},{note:'tom',t:13750},{note:'tom',t:15750},
-        {note:'tom',t:17750},{note:'tom',t:19750},{note:'tom',t:21750},{note:'tom',t:23750},
-        {note:'clap',t:3500},{note:'clap',t:7500},{note:'clap',t:11500},{note:'clap',t:15500},
-        {note:'clap',t:19500},{note:'clap',t:23500},
+        // VERSE (0–12000ms): kick + hihat only, building tension
+        ...seq('kick',  0,    12000, 1000),
+        ...seq('hihat', 0,    12000, 500),
+        {note:'cymbal',t:0},
+        // CHORUS (12000–24000ms): full kit drops hard
+        {note:'cymbal',t:12000},
+        ...seq('kick',  12000, 24000, 500),
+        ...seq('snare', 12250, 24000, 500),
+        ...seq('hihat', 12000, 24000, 125),
+        {note:'clap',t:15500},{note:'clap',t:19500},{note:'clap',t:23500},
       ]},
       { inst: 'bass', events: [
-        // Walking C–E–G–A cycle, 120 BPM
-        ...Array.from({length:6}, (_,r) => [
-          {note:'C2',t:r*4000+0},{note:'E2',t:r*4000+500},{note:'G2',t:r*4000+1000},
-          {note:'A2',t:r*4000+1500},{note:'G2',t:r*4000+2000},{note:'E2',t:r*4000+2500},
-          {note:'C2',t:r*4000+3000},{note:'D2',t:r*4000+3500},
+        // VERSE (0–12000ms): steady root walk C–E–G
+        ...Array.from({length:4}, (_,r) => [
+          {note:'C3',t:r*3000+0},{note:'E3',t:r*3000+1000},{note:'G3',t:r*3000+2000},
         ]).flat(),
-      ]},
-      { inst: 'electric', events: [
-        // Power chords on beats 1+3 — C and G alternating
-        ...Array.from({length:12}, (_,r) => [
-          {note:'C3',t:r*2000+0},{note:'G3',t:r*2000+50},
-          {note:'G3',t:r*2000+1000},{note:'D4',t:r*2000+1050},
+        // CHORUS (12000–24000ms): tighter A2 walk, double-time feel
+        ...Array.from({length:8}, (_,r) => [
+          {note:'C3',t:12000+r*1500+0},{note:'E3',t:12000+r*1500+300},
+          {note:'G3',t:12000+r*1500+600},{note:'A3',t:12000+r*1500+900},
         ]).flat(),
       ]},
       { inst: 'piano', events: [
-        // Syncopated chord stabs on the 8th-note offbeats
-        ...Array.from({length:12}, (_,r) => [
-          {note:'C4',t:r*2000+250},{note:'E4',t:r*2000+300},{note:'G4',t:r*2000+350},
-          {note:'F4',t:r*2000+750},{note:'A4',t:r*2000+800},
-          {note:'G4',t:r*2000+1250},{note:'B4',t:r*2000+1300},
-          {note:'E4',t:r*2000+1750},{note:'G4',t:r*2000+1800},{note:'C5',t:r*2000+1850},
+        // VERSE (0–12000ms): sparse C major chord every 2000ms
+        {note:'C4',t:0},{note:'E4',t:80},{note:'G4',t:160},
+        {note:'C4',t:2000},{note:'E4',t:2080},{note:'G4',t:2160},
+        {note:'F3',t:4000},{note:'A3',t:4080},{note:'C4',t:4160},
+        {note:'G3',t:6000},{note:'B3',t:6080},{note:'D4',t:6160},
+        {note:'C4',t:8000},{note:'E4',t:8080},{note:'G4',t:8160},
+        {note:'F3',t:10000},{note:'A3',t:10080},{note:'C4',t:10160},
+        // CHORUS (12000–24000ms): punchy offbeat stabs every 250ms
+        ...Array.from({length:48}, (_,i) => [
+          {note:'C4',t:12000+i*250+0},{note:'E4',t:12000+i*250+30},{note:'G4',t:12000+i*250+60},
         ]).flat(),
       ]},
       { inst: 'synth', events: [
-        // Soaring lead — C major pentatonic melodic line
-        {note:'G4',t:0},{note:'A4',t:500},{note:'C5',t:1000},{note:'A4',t:1500},
-        {note:'G4',t:2000},{note:'E4',t:2500},{note:'G4',t:3000},{note:'C5',t:3500},
-        {note:'B4',t:4000},{note:'A4',t:4500},{note:'G4',t:5000},{note:'E4',t:5500},
-        {note:'F4',t:6000},{note:'G4',t:6500},{note:'A4',t:7000},{note:'C5',t:7500},
-        {note:'G4',t:8000},{note:'A4',t:8500},{note:'C5',t:9000},{note:'B4',t:9500},
-        {note:'A4',t:10000},{note:'G4',t:10500},{note:'E4',t:11000},{note:'G4',t:11500},
-        {note:'C5',t:12000},{note:'B4',t:12500},{note:'A4',t:13000},{note:'G4',t:13500},
-        {note:'E4',t:14000},{note:'F4',t:14500},{note:'G4',t:15000},{note:'A4',t:15500},
-        {note:'C5',t:16000},{note:'A4',t:16500},{note:'G4',t:17000},{note:'E4',t:17500},
-        {note:'G4',t:18000},{note:'A4',t:18500},{note:'C5',t:19000},{note:'G4',t:19500},
-        {note:'E4',t:20000},{note:'G4',t:20500},{note:'A4',t:21000},{note:'C5',t:21500},
-        {note:'B4',t:22000},{note:'A4',t:22500},{note:'G4',t:23000},{note:'C5',t:23500},
+        // VERSE (0–12000ms): slow pentatonic melody, one note per beat
+        {note:'G4',t:0},{note:'A4',t:1000},{note:'C5',t:2000},{note:'A4',t:3000},
+        {note:'G4',t:4000},{note:'E4',t:5000},{note:'G4',t:6000},{note:'C5',t:7000},
+        {note:'B4',t:8000},{note:'A4',t:9000},{note:'G4',t:10000},{note:'E4',t:11000},
+        // CHORUS (12000–24000ms): fast C major run every 250ms — the hook
+        ...Array.from({length:24}, (_,r) => [
+          {note:'C4',t:12000+r*500+0},{note:'E4',t:12000+r*500+125},
+          {note:'G4',t:12000+r*500+250},{note:'A4',t:12000+r*500+375},
+        ]).flat(),
+      ]},
+      { inst: 'electric', events: [
+        // CHORUS only (12000–24000ms): power chord stab every 500ms
+        ...Array.from({length:24}, (_,i) => [
+          {note:'A#3',t:12000+i*500+0},{note:'F4',t:12000+i*500+30},
+        ]).flat(),
       ]},
       { inst: 'pad', events: [
-        // Slow C major wash
-        {note:'C3',t:0},{note:'E3',t:200},{note:'G3',t:400},
-        {note:'F3',t:8000},{note:'A3',t:8200},{note:'C4',t:8400},
-        {note:'G3',t:16000},{note:'B3',t:16200},{note:'D4',t:16400},
-        {note:'C3',t:20000},{note:'E3',t:20200},{note:'G3',t:20400},
+        // CHORUS only: C major wash enters with the drop
+        {note:'C3',t:12000},{note:'G3',t:12200},{note:'E3',t:12400},
       ]},
     ],
   },
@@ -1067,83 +1098,54 @@ const EXAMPLES: Example[] = [
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
-        // Jazz ride: cymbal every 300ms, light kick/snare
-        ...seq('cymbal', 0, 24000, 600),
-        {note:'kick',t:0},{note:'kick',t:2400},{note:'kick',t:4800},{note:'kick',t:7200},
-        {note:'kick',t:9600},{note:'kick',t:12000},{note:'kick',t:14400},{note:'kick',t:16800},
-        {note:'kick',t:19200},{note:'kick',t:21600},
-        {note:'snare',t:600},{note:'snare',t:1800},{note:'snare',t:3000},{note:'snare',t:4200},
-        {note:'snare',t:5400},{note:'snare',t:6600},{note:'snare',t:7800},{note:'snare',t:9000},
-        {note:'snare',t:10200},{note:'snare',t:11400},{note:'snare',t:12600},{note:'snare',t:13800},
-        {note:'snare',t:15000},{note:'snare',t:16200},{note:'snare',t:17400},{note:'snare',t:18600},
-        {note:'snare',t:19800},{note:'snare',t:21000},{note:'snare',t:22200},{note:'snare',t:23400},
-        {note:'hihat',t:300},{note:'hihat',t:900},{note:'hihat',t:1500},{note:'hihat',t:2100},
-        {note:'hihat',t:2700},{note:'hihat',t:3300},{note:'hihat',t:3900},{note:'hihat',t:4500},
-        ...Array.from({length:16}, (_,i) => ({note:'hihat',t:i*1500+750})),
+        // VERSE (0–12000ms): ride only + kick on beat 1, cool and sparse
+        ...seq('cymbal', 0, 12000, 600),
+        ...seq('kick', 0, 12000, 2400),
+        // CHORUS (12000–24000ms): full jazz kit — ride tightens, snare 2+4
+        ...seq('cymbal', 12000, 24000, 300),
+        ...seq('kick',   12000, 24000, 2400),
+        ...seq('snare',  12600, 24000, 1200),
+        ...seq('hihat',  12300, 24000, 600),
       ]},
       { inst: 'bass', events: [
-        // Walking Bb–F–Eb–F changes
-        ...Array.from({length:6}, (_,r) => [
-          {note:'A#2',t:r*4000+0},{note:'F2',t:r*4000+600},{note:'G2',t:r*4000+1200},
-          {note:'A#2',t:r*4000+1800},{note:'D#2',t:r*4000+2400},{note:'F2',t:r*4000+3000},
-          {note:'G2',t:r*4000+3600},
+        // VERSE (0–12000ms): simple Bb–F root movement
+        ...Array.from({length:5}, (_,r) => [
+          {note:'A#2',t:r*2400+0},{note:'F2',t:r*2400+1200},
+        ]).flat(),
+        // CHORUS (12000–24000ms): chromatic walk Bb→C→D→Eb→F
+        ...Array.from({length:4}, (_,r) => [
+          {note:'A#2',t:12000+r*2400+0},{note:'C3',t:12000+r*2400+300},
+          {note:'D3',t:12000+r*2400+600},{note:'D#3',t:12000+r*2400+900},
+          {note:'F3',t:12000+r*2400+1200},{note:'D#3',t:12000+r*2400+1500},
+          {note:'D3',t:12000+r*2400+1800},{note:'C3',t:12000+r*2400+2100},
         ]).flat(),
       ]},
       { inst: 'piano', events: [
-        // Jazz comping — Bb maj7, Eb maj7, F7 voicings
+        // VERSE (0–12000ms): sparse Bb maj7 chord every 2400ms
         {note:'A#3',t:0},{note:'D4',t:100},{note:'F4',t:200},
-        {note:'A4',t:1200},{note:'C4',t:1300},
         {note:'D#4',t:2400},{note:'G4',t:2500},{note:'A#4',t:2600},
-        {note:'F4',t:3600},{note:'A4',t:3700},{note:'C4',t:3800},
-        {note:'A#3',t:4800},{note:'D4',t:4900},{note:'F4',t:5000},
-        {note:'G4',t:6000},{note:'A#4',t:6100},{note:'D4',t:6200},
-        {note:'D#4',t:7200},{note:'G4',t:7300},{note:'A#4',t:7400},
-        {note:'F4',t:8400},{note:'A4',t:8500},
-        {note:'A#3',t:9600},{note:'D4',t:9700},{note:'F4',t:9800},
-        {note:'A4',t:10800},{note:'C4',t:10900},
-        {note:'D#4',t:12000},{note:'G4',t:12100},{note:'A#4',t:12200},
-        {note:'F4',t:13200},{note:'A4',t:13300},{note:'C4',t:13400},
-        {note:'A#3',t:14400},{note:'D4',t:14500},{note:'F4',t:14600},
-        {note:'G4',t:15600},{note:'A#4',t:15700},{note:'D4',t:15800},
-        {note:'D#4',t:16800},{note:'G4',t:16900},{note:'A#4',t:17000},
-        {note:'F4',t:18000},{note:'A4',t:18100},
-        {note:'A#3',t:19200},{note:'D4',t:19300},{note:'F4',t:19400},
-        {note:'A4',t:20400},{note:'C4',t:20500},
-        {note:'D#4',t:21600},{note:'G4',t:21700},{note:'A#4',t:21800},
-        {note:'F4',t:22800},{note:'A4',t:22900},{note:'C5',t:23000},
+        {note:'F4',t:4800},{note:'A4',t:4900},{note:'C4',t:5000},
+        {note:'A#3',t:7200},{note:'D4',t:7300},{note:'F4',t:7400},
+        {note:'D#4',t:9600},{note:'G4',t:9700},{note:'A#4',t:9800},
+        // CHORUS (12000–24000ms): every 600ms with added 7ths, more motion
+        ...Array.from({length:10}, (_,r) => [
+          {note:'A#3',t:12000+r*1200+0},{note:'D4',t:12000+r*1200+60},{note:'F4',t:12000+r*1200+120},{note:'A4',t:12000+r*1200+180},
+          {note:'D#4',t:12000+r*1200+600},{note:'G4',t:12000+r*1200+660},{note:'A#4',t:12000+r*1200+720},
+        ]).flat(),
       ]},
       { inst: 'strings', events: [
-        // Sweeping melodic phrases, Bb major
-        {note:'F4',t:0},{note:'G4',t:600},{note:'A#4',t:1200},{note:'A4',t:1800},
-        {note:'G4',t:2400},{note:'F4',t:3000},{note:'D4',t:3600},{note:'F4',t:4200},
-        {note:'G4',t:4800},{note:'A4',t:5400},{note:'A#4',t:6000},{note:'A4',t:6600},
-        {note:'G4',t:7200},{note:'F4',t:7800},{note:'D4',t:8400},{note:'C4',t:9000},
-        {note:'D4',t:9600},{note:'F4',t:10200},{note:'G4',t:10800},{note:'A4',t:11400},
-        {note:'A#4',t:12000},{note:'A4',t:12600},{note:'G4',t:13200},{note:'F4',t:13800},
-        {note:'D4',t:14400},{note:'F4',t:15000},{note:'G4',t:15600},{note:'A4',t:16200},
-        {note:'A#4',t:16800},{note:'A4',t:17400},{note:'G4',t:18000},{note:'F4',t:18600},
-        {note:'D4',t:19200},{note:'C4',t:19800},{note:'D4',t:20400},{note:'F4',t:21000},
-        {note:'G4',t:21600},{note:'A4',t:22200},{note:'A#4',t:22800},{note:'F4',t:23400},
+        // CHORUS only (12000–24000ms): long sustained melody enters
+        {note:'A#4',t:12000},{note:'A4',t:13200},{note:'G4',t:14400},{note:'F4',t:15600},
+        {note:'D4',t:16800},{note:'F4',t:18000},{note:'G4',t:19200},{note:'A4',t:20400},
+        {note:'A#4',t:21600},{note:'A4',t:22200},{note:'G4',t:22800},{note:'F4',t:23400},
       ]},
       { inst: 'pluck', events: [
-        // Pizzicato countermelody between chords
-        {note:'F4',t:300},{note:'D4',t:900},{note:'A#4',t:1500},{note:'G4',t:2100},
-        {note:'D4',t:2700},{note:'F4',t:3300},{note:'A4',t:3900},{note:'C4',t:4500},
-        {note:'D4',t:5100},{note:'F4',t:5700},{note:'G4',t:6300},{note:'A#4',t:6900},
-        {note:'A4',t:7500},{note:'G4',t:8100},{note:'F4',t:8700},{note:'D4',t:9300},
-        {note:'F4',t:9900},{note:'G4',t:10500},{note:'A#4',t:11100},{note:'A4',t:11700},
-        {note:'G4',t:12300},{note:'F4',t:12900},{note:'D4',t:13500},{note:'F4',t:14100},
-        {note:'A4',t:14700},{note:'G4',t:15300},{note:'D4',t:15900},{note:'A#4',t:16500},
-        {note:'A4',t:17100},{note:'G4',t:17700},{note:'F4',t:18300},{note:'D4',t:18900},
-        {note:'F4',t:19500},{note:'G4',t:20100},{note:'A4',t:20700},{note:'A#4',t:21300},
-        {note:'G4',t:21900},{note:'F4',t:22500},{note:'D4',t:23100},
+        // CHORUS only (12000–24000ms): pizzicato every 300ms
+        ...Array.from({length:40}, (_,i) => ({note:['A#4','G4','F4','D4'][i%4],t:12000+i*300})),
       ]},
       { inst: 'pad', events: [
-        // Warm Bb wash
-        {note:'A#3',t:0},{note:'D4',t:400},{note:'F4',t:800},
-        {note:'D#3',t:9600},{note:'G3',t:10000},{note:'A#3',t:10400},
-        {note:'F3',t:16800},{note:'A3',t:17200},{note:'C4',t:17600},
-        {note:'A#3',t:21600},{note:'D4',t:22000},{note:'F4',t:22400},
+        // CHORUS only: warm Bb wash enters with the drop
+        {note:'A#3',t:12000},{note:'D4',t:12400},{note:'F4',t:12800},
       ]},
     ],
   },
@@ -1155,60 +1157,57 @@ const EXAMPLES: Example[] = [
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
-        // Gospel stomp: kick+snare heavy
-        ...seq('kick',  0,    24000, 1500),
-        ...seq('kick',  750,  24000, 3000),
-        ...seq('snare', 750,  24000, 1500),
-        {note:'cymbal',t:0},{note:'cymbal',t:6000},{note:'cymbal',t:12000},{note:'cymbal',t:18000},
-        {note:'clap',t:750},{note:'clap',t:2250},{note:'clap',t:3750},{note:'clap',t:5250},
-        {note:'clap',t:6750},{note:'clap',t:8250},{note:'clap',t:9750},{note:'clap',t:11250},
+        // VERSE (0–12000ms): just kick on beat 1 — cavernous, sparse
+        ...seq('kick', 0, 12000, 3000),
+        {note:'cymbal',t:0},
+        // CHORUS (12000–24000ms): full gospel stomp crashes in
+        {note:'cymbal',t:12000},
+        ...seq('kick',  12000, 24000, 1500),
+        ...seq('snare', 12750, 24000, 1500),
         {note:'clap',t:12750},{note:'clap',t:14250},{note:'clap',t:15750},{note:'clap',t:17250},
         {note:'clap',t:18750},{note:'clap',t:20250},{note:'clap',t:21750},{note:'clap',t:23250},
       ]},
       { inst: 'bass', events: [
-        // Deep D pedal with cosmic movement
-        {note:'D2',t:0},{note:'A2',t:1500},{note:'D2',t:3000},{note:'A2',t:4500},
-        {note:'G2',t:6000},{note:'A2',t:7500},{note:'D2',t:9000},{note:'A2',t:10500},
-        {note:'A#2',t:12000},{note:'A2',t:13500},{note:'G2',t:15000},{note:'A2',t:16500},
-        {note:'D2',t:18000},{note:'A2',t:19500},{note:'G2',t:21000},{note:'D2',t:22500},
+        // VERSE (0–12000ms): deep D2 pedal, breathes slowly
+        {note:'D2',t:0},{note:'A2',t:6000},
+        // CHORUS (12000–24000ms): active D2→G2→A2→G2 movement
+        ...Array.from({length:4}, (_,r) => [
+          {note:'D2',t:12000+r*3000+0},{note:'G2',t:12000+r*3000+750},
+          {note:'A2',t:12000+r*3000+1500},{note:'G2',t:12000+r*3000+2250},
+        ]).flat(),
       ]},
       { inst: 'organ', events: [
-        // Big Dm–Gm–Am–Dm drawbar chords
+        // VERSE (0–12000ms): long Dm chord every 3000ms
         {note:'D3',t:0},{note:'F3',t:100},{note:'A3',t:200},
+        {note:'D3',t:3000},{note:'F3',t:3100},{note:'A3',t:3200},
         {note:'G3',t:6000},{note:'A#3',t:6100},{note:'D4',t:6200},
-        {note:'A3',t:12000},{note:'C4',t:12100},{note:'E4',t:12200},
-        {note:'D3',t:18000},{note:'F3',t:18100},{note:'A3',t:18200},
-        // Second pass with octave doublings
-        {note:'D3',t:3000},{note:'F3',t:3100},{note:'A3',t:3200},{note:'D4',t:3300},
         {note:'G3',t:9000},{note:'A#3',t:9100},{note:'D4',t:9200},
+        // CHORUS (12000–24000ms): chord every 1500ms — fills the room
+        {note:'A3',t:12000},{note:'C4',t:12100},{note:'E4',t:12200},
+        {note:'D3',t:13500},{note:'F3',t:13600},{note:'A3',t:13700},
         {note:'A3',t:15000},{note:'C4',t:15100},{note:'E4',t:15200},
-        {note:'D3',t:21000},{note:'F3',t:21100},{note:'A3',t:21200},{note:'D4',t:21300},
+        {note:'D3',t:16500},{note:'F3',t:16600},{note:'A3',t:16700},
+        {note:'G3',t:18000},{note:'A#3',t:18100},{note:'D4',t:18200},
+        {note:'D3',t:19500},{note:'F3',t:19600},{note:'A3',t:19700},
+        {note:'A3',t:21000},{note:'C4',t:21100},{note:'E4',t:21200},
+        {note:'D3',t:22500},{note:'F3',t:22600},{note:'A3',t:22700},
+      ]},
+      { inst: 'soprano', events: [
+        // VERSE (0–12000ms): slow D minor melody, one note per 3000ms
+        {note:'D4',t:750},{note:'F4',t:3750},{note:'A4',t:6750},{note:'F4',t:9750},
+        // CHORUS (12000–24000ms): holds C5→A4 — the big moment
+        {note:'C5',t:12000},{note:'A4',t:15000},{note:'C5',t:18000},{note:'A4',t:21000},
       ]},
       { inst: 'strings', events: [
-        // Soaring countermelody in D minor
-        {note:'A4',t:0},{note:'G4',t:750},{note:'F4',t:1500},{note:'E4',t:2250},
-        {note:'D4',t:3000},{note:'F4',t:3750},{note:'A4',t:4500},{note:'C5',t:5250},
-        {note:'A#4',t:6000},{note:'A4',t:6750},{note:'G4',t:7500},{note:'F4',t:8250},
-        {note:'E4',t:9000},{note:'F4',t:9750},{note:'G4',t:10500},{note:'A4',t:11250},
+        // CHORUS only (12000–24000ms): soaring D minor countermelody
         {note:'C5',t:12000},{note:'A4',t:12750},{note:'G4',t:13500},{note:'F4',t:14250},
         {note:'E4',t:15000},{note:'D4',t:15750},{note:'F4',t:16500},{note:'A4',t:17250},
         {note:'A#4',t:18000},{note:'A4',t:18750},{note:'G4',t:19500},{note:'F4',t:20250},
         {note:'E4',t:21000},{note:'F4',t:21750},{note:'A4',t:22500},{note:'D4',t:23250},
       ]},
-      { inst: 'soprano', events: [
-        // High floating melody, D minor
-        {note:'D4',t:750},{note:'F4',t:2250},{note:'A4',t:3750},
-        {note:'C5',t:5250},{note:'A4',t:6750},{note:'G4',t:8250},
-        {note:'F4',t:9750},{note:'A4',t:11250},{note:'C5',t:12750},
-        {note:'A4',t:14250},{note:'G4',t:15750},{note:'F4',t:17250},
-        {note:'A4',t:18750},{note:'C5',t:20250},{note:'A4',t:21750},{note:'D4',t:23250},
-      ]},
       { inst: 'synth', events: [
-        // Ethereal arpeggio: D4→F4→A4→C5 cycling
-        ...Array.from({length:24}, (_,i) => [
-          {note:'D4',t:i*1000+0},{note:'F4',t:i*1000+250},
-          {note:'A4',t:i*1000+500},{note:'C5',t:i*1000+750},
-        ]).flat(),
+        // CHORUS only (12000–24000ms): fast D4→F4→A4→C5 arpeggio every 375ms
+        ...Array.from({length:32}, (_,i) => ({note:(['D4','F4','A4','C5'] as const)[i%4],t:12000+i*375})),
       ]},
     ],
   },
@@ -1220,35 +1219,27 @@ const EXAMPLES: Example[] = [
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
-        ...seq('hihat', 0, 24000, 250),
-        ...seq('kick',  0, 24000, 1000),
-        ...seq('snare', 500, 24000, 1000),
-        {note:'snare',t:750},{note:'snare',t:1750},{note:'snare',t:2750},
-        {note:'snare',t:3750},{note:'snare',t:4750},{note:'snare',t:5750},
-        {note:'cymbal',t:0},{note:'cymbal',t:6000},{note:'cymbal',t:12000},{note:'cymbal',t:18000},
-        {note:'tom',t:1875},{note:'tom',t:3875},{note:'tom',t:5875},{note:'tom',t:7875},
-        {note:'tom',t:9875},{note:'tom',t:11875},{note:'tom',t:13875},{note:'tom',t:15875},
-        {note:'tom',t:17875},{note:'tom',t:19875},{note:'tom',t:21875},{note:'tom',t:23875},
+        // VERSE (0–12000ms): hi-hat every 125ms + kick every 1000ms — tense, mechanical
+        ...seq('hihat', 0,    12000, 125),
+        ...seq('kick',  0,    12000, 1000),
+        {note:'cymbal',t:0},
+        // CHORUS (12000–24000ms): full kit, clap burst on drop
+        {note:'clap',t:12000},
+        {note:'cymbal',t:12000},
+        ...seq('hihat', 12000, 24000, 125),
+        ...seq('kick',  12000, 24000, 500),
+        ...seq('snare', 12250, 24000, 500),
       ]},
       { inst: 'bass', events: [
-        // Syncopated Am bass: A2→E3→G3 with off-beats
-        ...Array.from({length:8}, (_,r) => [
-          {note:'A2',t:r*3000+0},{note:'A2',t:r*3000+250},{note:'E2',t:r*3000+750},
-          {note:'G2',t:r*3000+1000},{note:'A2',t:r*3000+1500},{note:'E2',t:r*3000+2000},
-          {note:'G2',t:r*3000+2500},
-        ]).flat(),
-      ]},
-      { inst: 'electric', events: [
-        // Tense Am power chords, driving rhythm
+        // VERSE (0–12000ms): A3→E3 alternating (steady, locked in)
         ...Array.from({length:12}, (_,r) => [
-          {note:'A3',t:r*2000+0},{note:'E4',t:r*2000+50},
-          {note:'A3',t:r*2000+500},{note:'E4',t:r*2000+550},
-          {note:'G3',t:r*2000+1000},{note:'D4',t:r*2000+1050},
-          {note:'A3',t:r*2000+1500},{note:'E4',t:r*2000+1550},
+          {note:'A3',t:r*1000+0},{note:'E3',t:r*1000+500},
         ]).flat(),
+        // CHORUS (12000–24000ms): A2→E3→G3→A2 fast walk every 250ms
+        ...Array.from({length:24}, (_,r) => ({note:(['A2','E3','G3','A2'] as const)[r%4],t:12000+r*250})),
       ]},
       { inst: 'synth', events: [
-        // Urgent Am ostinato — repeating driving figure
+        // VERSE + CHORUS: ostinato runs throughout — the through-line
         ...Array.from({length:8}, (_,r) => [
           {note:'A4',t:r*3000+0},{note:'C5',t:r*3000+250},{note:'E4',t:r*3000+500},
           {note:'G4',t:r*3000+750},{note:'A4',t:r*3000+1000},{note:'C5',t:r*3000+1250},
@@ -1257,26 +1248,19 @@ const EXAMPLES: Example[] = [
         ]).flat(),
       ]},
       { inst: 'pluck', events: [
-        // Fast Am arpeggios — A4→C5→E4→G4
+        // CHORUS only (12000–24000ms): rapid A4→G4→E4→C4 arpeggios every 125ms
+        ...Array.from({length:96}, (_,i) => ({note:(['A4','G4','E4','C4'] as const)[i%4],t:12000+i*125})),
+      ]},
+      { inst: 'electric', events: [
+        // CHORUS only (12000–24000ms): Am power chord stab every 500ms
         ...Array.from({length:24}, (_,i) => [
-          {note:'A4',t:i*1000+0},{note:'C5',t:i*1000+125},
-          {note:'E4',t:i*1000+250},{note:'G4',t:i*1000+375},
-          {note:'A4',t:i*1000+500},{note:'E4',t:i*1000+625},
-          {note:'G4',t:i*1000+750},{note:'C5',t:i*1000+875},
+          {note:'A3',t:12000+i*500+0},{note:'E4',t:12000+i*500+30},
         ]).flat(),
       ]},
       { inst: 'piano', events: [
-        // Accent stabs — Am chord hits on the 3
-        {note:'A3',t:500},{note:'C4',t:550},{note:'E4',t:600},
-        {note:'A3',t:1500},{note:'C4',t:1550},{note:'E4',t:1600},
-        {note:'G3',t:2500},{note:'B3',t:2550},{note:'D4',t:2600},
-        {note:'A3',t:3500},{note:'C4',t:3550},{note:'E4',t:3600},
-        {note:'F3',t:4500},{note:'A3',t:4550},{note:'C4',t:4600},
-        {note:'E3',t:5500},{note:'G3',t:5550},{note:'B3',t:5600},
-        ...Array.from({length:6}, (_,r) => [
-          {note:'A3',t:6000+r*3000+500},{note:'C4',t:6000+r*3000+550},{note:'E4',t:6000+r*3000+600},
-          {note:'G3',t:6000+r*3000+1500},{note:'B3',t:6000+r*3000+1550},{note:'D4',t:6000+r*3000+1600},
-          {note:'F3',t:6000+r*3000+2500},{note:'A3',t:6000+r*3000+2550},{note:'C4',t:6000+r*3000+2600},
+        // CHORUS only (12000–24000ms): A minor chord punch every 500ms
+        ...Array.from({length:24}, (_,i) => [
+          {note:'A3',t:12000+i*500+0},{note:'C4',t:12000+i*500+30},{note:'E4',t:12000+i*500+60},
         ]).flat(),
       ]},
     ],
@@ -1352,48 +1336,50 @@ const EXAMPLES: Example[] = [
     dur: 24000,
     tracks: [
       { inst: 'bass', events: [
-        // Very slow orchestral bass movement
-        {note:'C2',t:0},{note:'G2',t:3000},{note:'F2',t:6000},{note:'G2',t:9000},
-        {note:'C2',t:12000},{note:'G2',t:15000},{note:'A2',t:18000},{note:'G2',t:21000},
-      ]},
-      { inst: 'organ', events: [
-        // Dark low C major chords
-        {note:'C3',t:0},{note:'E3',t:150},{note:'G3',t:300},
-        {note:'F3',t:6000},{note:'A3',t:6150},{note:'C4',t:6300},
-        {note:'G3',t:12000},{note:'B3',t:12150},{note:'D4',t:12300},
-        {note:'C3',t:18000},{note:'E3',t:18150},{note:'G3',t:18300},
+        // VERSE (0–12000ms): C2→G2, one note per 6000ms — glacial movement
+        {note:'C2',t:0},{note:'G2',t:6000},
+        // CHORUS (12000–24000ms): C2→G2→F2→G2 every 3000ms — motion builds
+        {note:'C2',t:12000},{note:'G2',t:15000},{note:'F2',t:18000},{note:'G2',t:21000},
       ]},
       { inst: 'pad', events: [
-        // Grand slow C major sustain
-        {note:'C3',t:0},{note:'G3',t:500},{note:'E3',t:1000},
-        {note:'C3',t:12000},{note:'G3',t:12500},{note:'E3',t:13000},
+        // VERSE (0–12000ms): C3+G3 open fifth — sparse, spacious
+        {note:'C3',t:0},{note:'G3',t:500},
+        // CHORUS (12000–24000ms): fuller C3+E3+G3 triad enters
+        {note:'C3',t:12000},{note:'E3',t:12400},{note:'G3',t:12800},
       ]},
       { inst: 'strings', events: [
-        // Broad sweeping orchestral melody
-        {note:'E4',t:0},{note:'G4',t:750},{note:'C5',t:1500},{note:'B4',t:2250},
-        {note:'A4',t:3000},{note:'G4',t:3750},{note:'E4',t:4500},{note:'F4',t:5250},
-        {note:'G4',t:6000},{note:'A4',t:6750},{note:'C5',t:7500},{note:'B4',t:8250},
-        {note:'A4',t:9000},{note:'G4',t:9750},{note:'F4',t:10500},{note:'E4',t:11250},
+        // VERSE (0–12000ms): C4→E4→G4→E4 slowly every 1500ms
+        {note:'C4',t:0},{note:'E4',t:1500},{note:'G4',t:3000},{note:'E4',t:4500},
+        {note:'C4',t:6000},{note:'E4',t:7500},{note:'G4',t:9000},{note:'E4',t:10500},
+        // CHORUS (12000–24000ms): sweeping full melody every 750ms
         {note:'G4',t:12000},{note:'A4',t:12750},{note:'B4',t:13500},{note:'C5',t:14250},
         {note:'B4',t:15000},{note:'A4',t:15750},{note:'G4',t:16500},{note:'E4',t:17250},
         {note:'F4',t:18000},{note:'G4',t:18750},{note:'A4',t:19500},{note:'C5',t:20250},
         {note:'B4',t:21000},{note:'A4',t:21750},{note:'G4',t:22500},{note:'C5',t:23250},
       ]},
       { inst: 'piano', events: [
-        // Arpeggiated C major runs — rising phrases
-        ...Array.from({length:8}, (_,r) => [
+        // VERSE (0–12000ms): arpeggiated C major, rising phrases
+        ...Array.from({length:4}, (_,r) => [
           {note:'C4',t:r*3000+0},{note:'E4',t:r*3000+187},{note:'G4',t:r*3000+375},{note:'C5',t:r*3000+562},
           {note:'G4',t:r*3000+750},{note:'E4',t:r*3000+937},{note:'C4',t:r*3000+1125},{note:'E4',t:r*3000+1312},
           {note:'G4',t:r*3000+1500},{note:'C5',t:r*3000+1687},{note:'B4',t:r*3000+1875},{note:'G4',t:r*3000+2062},
-          {note:'E4',t:r*3000+2250},{note:'G4',t:r*3000+2437},{note:'C5',t:r*3000+2625},{note:'E4',t:r*3000+2812},
+        ]).flat(),
+        // CHORUS (12000–24000ms): chord stabs every 750ms — strong downbeats
+        ...Array.from({length:16}, (_,i) => [
+          {note:'C4',t:12000+i*750+0},{note:'E4',t:12000+i*750+40},{note:'G4',t:12000+i*750+80},
         ]).flat(),
       ]},
       { inst: 'soprano', events: [
-        // Long soaring high notes — slow and expressive
-        {note:'G4',t:1500},{note:'A4',t:4500},{note:'C5',t:7500},
-        {note:'B4',t:10500},{note:'A4',t:13500},{note:'G4',t:15000},
-        {note:'A4',t:16500},{note:'C5',t:18000},{note:'B4',t:19500},
-        {note:'A4',t:21000},{note:'G4',t:22500},{note:'C5',t:23500},
+        // CHORUS only (12000–24000ms): the voice enters — G4→A4→C5→A4
+        {note:'G4',t:12000},{note:'A4',t:13500},{note:'C5',t:15000},{note:'A4',t:16500},
+        {note:'G4',t:18000},{note:'A4',t:19500},{note:'C5',t:21000},{note:'B4',t:22500},
+      ]},
+      { inst: 'organ', events: [
+        // CHORUS only (12000–24000ms): organ swells in under everything
+        {note:'C3',t:12000},{note:'E3',t:12150},{note:'G3',t:12300},
+        {note:'F3',t:15000},{note:'A3',t:15150},{note:'C4',t:15300},
+        {note:'G3',t:18000},{note:'B3',t:18150},{note:'D4',t:18300},
+        {note:'C3',t:21000},{note:'E3',t:21150},{note:'G3',t:21300},
       ]},
     ],
   },
@@ -1904,6 +1890,7 @@ function PianoSection() {
     if (!audioCtxRef.current) {
       audioCtxRef.current = new (window.AudioContext ||
         (window as unknown as {webkitAudioContext:typeof AudioContext}).webkitAudioContext)();
+      loadPianoSamples(audioCtxRef.current); // fire-and-forget; falls back to synthesis
     }
     if (audioCtxRef.current.state === 'suspended') audioCtxRef.current.resume();
     return audioCtxRef.current;
@@ -1969,6 +1956,19 @@ function PianoSection() {
     const dest = getDest();
     const t = ctx.currentTime;
     const wire = (src: AudioNode) => { src.connect(ctx.destination); src.connect(dest); };
+    // Chorus: delay + LFO modulation on delay time — thickens and widens the sound
+    const wireChorus = (src: AudioNode, dur: number) => {
+      const delay = ctx.createDelay(0.05);
+      delay.delayTime.value = 0.023;
+      const lfo = ctx.createOscillator(); const lfoG = ctx.createGain();
+      lfo.frequency.value = 1.3; lfoG.gain.value = 0.011;
+      lfo.connect(lfoG); lfoG.connect(delay.delayTime);
+      const dry = ctx.createGain(); dry.gain.value = 0.68;
+      const wet = ctx.createGain(); wet.gain.value = 0.44;
+      src.connect(dry); wire(dry);
+      src.connect(delay); delay.connect(wet); wire(wet);
+      lfo.start(t); lfo.stop(t + dur + 0.06);
+    };
     const mk = (type: OscillatorType, f: number, vol: number, dec: number) => {
       const o = ctx.createOscillator(); const g = ctx.createGain();
       o.type = type; o.frequency.setValueAtTime(f, t);
@@ -1985,7 +1985,7 @@ function PianoSection() {
         // Register-dependent decay: bass notes ring longer than treble
         const noteNum = Math.log2(freq / 130.81) * 12;
         const dur = Math.max(1.4, 3.8 - (noteNum / 36) * 2.0);
-        // Hammer thump: bandpass-filtered noise at ~600Hz (felt on string)
+        // Hammer thump — keep the physical attack transient regardless of sample/synthesis path
         const hLen = Math.floor(ctx.sampleRate * 0.008);
         const hBuf = ctx.createBuffer(1, hLen, ctx.sampleRate);
         const hd = hBuf.getChannelData(0);
@@ -1994,30 +1994,41 @@ function PianoSection() {
         const hf = ctx.createBiquadFilter(); hf.type = 'bandpass'; hf.frequency.value = 600; hf.Q.value = 0.9;
         const hg = ctx.createGain(); hg.gain.value = 0.22;
         hs.connect(hf); hf.connect(hg); wire(hg); hs.start(t);
-        // Three strings, tight detuning ±2 cents (real piano), triangle for odd harmonics
-        [-2, 0, 2].forEach(det => {
-          const o = ctx.createOscillator(); const g = ctx.createGain();
-          o.type = 'triangle'; o.frequency.setValueAtTime(freq, t); o.detune.setValueAtTime(det, t);
-          g.gain.setValueAtTime(0.28, t);
-          g.gain.exponentialRampToValueAtTime(0.13, t + 0.3); // fast initial drop
+        // Sample path: pitch-shifted Salamander Grand Piano buffer
+        const sKey = PIANO_SAMPLE_MAP[note];
+        const sBuf = sKey ? pianoCache.get(sKey) : undefined;
+        if (sBuf) {
+          const src = ctx.createBufferSource(); src.buffer = sBuf;
+          src.playbackRate.value = freq / SALM_HZ[sKey];
+          const g = ctx.createGain();
+          g.gain.setValueAtTime(0.68, t);
           g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-          o.connect(g); wire(g); o.start(t); o.stop(t + dur);
-        });
-        // Partials with inharmonicity (piano string stiffness makes upper partials slightly sharp)
-        ([
-          [2, 1.0002, 0.10, dur * 0.68],
-          [3, 1.0005, 0.055, dur * 0.50],
-          [4, 1.001,  0.028, dur * 0.36],
-          [5, 1.002,  0.016, dur * 0.26],
-          [6, 1.003,  0.009, dur * 0.18],
-        ] as [number,number,number,number][]).forEach(([mult, sharp, vol, pdur]) => {
-          const o = ctx.createOscillator(); const g = ctx.createGain();
-          o.type = 'sine'; o.frequency.setValueAtTime(freq * mult * sharp, t);
-          g.gain.setValueAtTime(vol, t);
-          g.gain.exponentialRampToValueAtTime(vol * 0.4, t + 0.28);
-          g.gain.exponentialRampToValueAtTime(0.001, t + pdur);
-          o.connect(g); wire(g); o.start(t); o.stop(t + pdur);
-        });
+          src.connect(g); wire(g); src.start(t); src.stop(t + dur + 0.5);
+        } else {
+          // Synthesis fallback: triangle strings + inharmonic partials
+          [-2, 0, 2].forEach(det => {
+            const o = ctx.createOscillator(); const g = ctx.createGain();
+            o.type = 'triangle'; o.frequency.setValueAtTime(freq, t); o.detune.setValueAtTime(det, t);
+            g.gain.setValueAtTime(0.28, t);
+            g.gain.exponentialRampToValueAtTime(0.13, t + 0.3);
+            g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+            o.connect(g); wire(g); o.start(t); o.stop(t + dur);
+          });
+          ([
+            [2, 1.0002, 0.10, dur * 0.68],
+            [3, 1.0005, 0.055, dur * 0.50],
+            [4, 1.001,  0.028, dur * 0.36],
+            [5, 1.002,  0.016, dur * 0.26],
+            [6, 1.003,  0.009, dur * 0.18],
+          ] as [number,number,number,number][]).forEach(([mult, sharp, vol, pdur]) => {
+            const o = ctx.createOscillator(); const g = ctx.createGain();
+            o.type = 'sine'; o.frequency.setValueAtTime(freq * mult * sharp, t);
+            g.gain.setValueAtTime(vol, t);
+            g.gain.exponentialRampToValueAtTime(vol * 0.4, t + 0.28);
+            g.gain.exponentialRampToValueAtTime(0.001, t + pdur);
+            o.connect(g); wire(g); o.start(t); o.stop(t + pdur);
+          });
+        }
       }
       else if (inst === 'synth') {
         // Sawtooth + lowpass filter — bare oscillator without filter isn't a synth
@@ -2026,7 +2037,7 @@ function PianoSection() {
         o.type = 'sawtooth'; o.frequency.setValueAtTime(freq, t);
         g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.3, t+0.02);
         g.gain.exponentialRampToValueAtTime(0.001, t+1.8);
-        o.connect(lp); lp.connect(g); wire(g); o.start(t); o.stop(t+1.8);
+        o.connect(lp); lp.connect(g); wireChorus(g, 1.8); o.start(t); o.stop(t+1.8);
       }
       else if (inst === 'bass') {
         // Bass plays at the actual frequency (freq/2 was an octave error)
@@ -2035,19 +2046,21 @@ function PianoSection() {
         mk('triangle', freq, 0.18, 0.8);   // odd harmonics for body
       }
       else if (inst === 'pad') {
-        // Triangle voices (warmer than sine) + octave shimmer
+        // Triangle voices (warmer than sine) + octave shimmer, all through chorus bus
+        const padBus = ctx.createGain(); padBus.gain.value = 1.0;
         [-8,0,8].forEach(det => {
           const o = ctx.createOscillator(); const g = ctx.createGain();
           o.type = 'triangle'; o.frequency.setValueAtTime(freq, t); o.detune.setValueAtTime(det, t);
           g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.12, t+0.3);
           g.gain.setValueAtTime(0.12, t+1.2); g.gain.exponentialRampToValueAtTime(0.001, t+2.8);
-          o.connect(g); wire(g); o.start(t); o.stop(t+2.8);
+          o.connect(g); g.connect(padBus); o.start(t); o.stop(t+2.8);
         });
         const os = ctx.createOscillator(); const gs = ctx.createGain();
         os.type = 'sine'; os.frequency.setValueAtTime(freq*2, t);
         gs.gain.setValueAtTime(0, t); gs.gain.linearRampToValueAtTime(0.04, t+0.6);
         gs.gain.exponentialRampToValueAtTime(0.001, t+2.8);
-        os.connect(gs); wire(gs); os.start(t); os.stop(t+2.8);
+        os.connect(gs); gs.connect(padBus); os.start(t); os.stop(t+2.8);
+        wireChorus(padBus, 2.8);
       }
       else if (inst === 'pluck') {
         // Noise exciter (the pluck attack) + sawtooth body
@@ -2198,7 +2211,9 @@ function PianoSection() {
       }
       else if (inst === 'strings') {
         // Triangle voices (odd harmonics = warmer, bowed-string timbre) + delayed vibrato
+        // All voices bused together then through chorus for ensemble width
         const dur = 3.4;
+        const strBus = ctx.createGain(); strBus.gain.value = 1.0;
         const detunes = [-14, -7, 0, 7, 14];
         detunes.forEach((det, i) => {
           const o = ctx.createOscillator(); const g = ctx.createGain();
@@ -2210,13 +2225,14 @@ function PianoSection() {
           lfo.start(t); lfo.stop(t + dur);
           g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.13 - i * 0.01, t + 0.5);
           g.gain.setValueAtTime(0.11, t + 1.8); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-          o.connect(g); wire(g); o.start(t); o.stop(t + dur);
+          o.connect(g); g.connect(strBus); o.start(t); o.stop(t + dur);
           const o2 = ctx.createOscillator(); const g2 = ctx.createGain();
           o2.type = 'triangle'; o2.frequency.setValueAtTime(freq * 2, t); o2.detune.setValueAtTime(det * 0.5, t);
           g2.gain.setValueAtTime(0, t); g2.gain.linearRampToValueAtTime(0.032, t + 0.9);
           g2.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.9);
-          o2.connect(g2); wire(g2); o2.start(t); o2.stop(t + dur * 0.9);
+          o2.connect(g2); g2.connect(strBus); o2.start(t); o2.stop(t + dur * 0.9);
         });
+        wireChorus(strBus, dur);
       }
       else if (inst === 'soprano') {
         // Soprano "ooh": sawtooth source → two formant bandpass filters (F1=300Hz, F2=870Hz)
@@ -2246,7 +2262,7 @@ function PianoSection() {
         env.gain.exponentialRampToValueAtTime(0.001, t + dur);
         src.connect(f1); f1.connect(f1g); f1g.connect(env);
         src.connect(f2); f2.connect(f2g); f2g.connect(env);
-        wire(env);
+        wireChorus(env, dur);
         // Breath noise: a touch of air at the start
         const bLen = Math.floor(ctx.sampleRate * 0.06);
         const bBuf = ctx.createBuffer(1, bLen, ctx.sampleRate);
