@@ -67,7 +67,11 @@ export default class Agenda extends Component<AgendaProps, AgendaState> {
 
         <TabPanel tabId="schedule">
           <div className="text-area">
-            <TalksSchedule />
+            {/* <TalksSchedule /> */}
+            <div className="coming-soon-block">
+              <div className="coming-soon-title">Schedule</div>
+              <p className="coming-soon-text">Check back soon. The full talk schedule will be posted once speaker selections are finalized.</p>
+            </div>
           </div>
         </TabPanel>
 
@@ -107,7 +111,7 @@ export default class Agenda extends Component<AgendaProps, AgendaState> {
           <div className="con-page">
             <div className="text-area">
               <div className="page-header">
-                <span className="page-pre-label">Kernelcon 2027</span>
+                <span className="page-pre-label">March 4–5, 2027</span>
                 <h1>The <span>Agenda</span></h1>
                 <div className="page-sub">March 4-5, 2027 · Hilton Omaha</div>
                 <div className="page-rule" />

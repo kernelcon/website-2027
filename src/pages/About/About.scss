@@ -1,14 +1,15 @@
 @use '../../static/styles/base/colors' as *;
 @use '../../static/styles/base/variables' as *;
 .about-sub-text {
-  color: #000;
-  font-weight: 300;
-  font-size: 16px;
-  line-height: 24px;
-  padding: 10px 0px;
+  font-family: 'Space Mono', monospace;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  padding: 10px 0;
   a {
-    color: $boston-blue;
+    color: #39ff14;
     text-decoration: underline;
+    &:hover { color: #00cfff; }
   }
 }
 
@@ -62,10 +63,10 @@
 
 .in-touch-icons {
   width: 100px;
-  fill: #333;
-  &:first-child {
-    margin-right: 40px;
-  }
+  fill: #39ff14;
+  transition: fill 0.2s;
+  &:hover { fill: #00cfff; }
+  &:first-child { margin-right: 40px; }
 }
 
 .faq-list {
@@ -73,60 +74,83 @@
   .faq-single {
     .faq-question {
       display: flex;
-      padding: 0px 10px;
-      font-size: 16px;
-      font-weight: 300;
+      padding: 0 10px;
       align-items: center;
       .question {
-        font-weight: 500;
+        font-family: 'Space Mono', monospace;
+        font-size: 0.85rem;
+        font-weight: 400;
+        color: #fff;
       }
     }
     .faq-answer {
       display: flex;
-      font-size: 16px;
-      font-weight: 300;
-      align-items: center;
+      align-items: flex-start;
     }
-    .faq-q,
-    .faq-a {
-      font-size: 30px;
-      font-weight: 500;
+    .faq-q {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      color: #39ff14;
       padding-right: 10px;
       max-width: 28px;
+      line-height: 1;
+    }
+    .faq-a {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      color: #7b2fff;
+      padding-right: 10px;
+      max-width: 28px;
+      line-height: 1;
     }
     .question,
     .answer {
-      padding-left: 10px;
+      padding-left: 12px;
       min-height: 30px;
-      border-left: 3px solid $boston-blue;
+      border-left: 2px solid rgba(123, 47, 255, 0.5);
       align-items: center;
       display: flex;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 1.6;
       ul {
         padding-left: 20px;
       }
     }
     .question {
-      display: flex;
+      color: #fff;
     }
   }
 }
 
-.rc-collapse>.rc-collapse-item>.rc-collapse-header {
-  height: 65px !important;
+.rc-collapse > .rc-collapse-item > .rc-collapse-header {
+  height: 60px !important;
   line-height: unset !important;
-  text-indent: 0px !important;
-  color: #666 !important;
+  text-indent: 0 !important;
+  color: #fff !important;
   display: flex;
-  border-bottom: 2px solid #eee;
+  border-bottom: 1px solid rgba(123, 47, 255, 0.25) !important;
+  background: transparent !important;
+  &:hover {
+    background: rgba(123, 47, 255, 0.06) !important;
+  }
 }
 
 .rc-collapse {
   border: none !important;
   width: 100% !important;
+  background: transparent !important;
 }
 
 .rc-collapse-content {
   padding: 0 52px !important;
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.rc-collapse > .rc-collapse-item {
+  border-bottom: none !important;
 }
 
 i.arrow {
@@ -211,19 +235,24 @@ i.arrow {
   width: 265px;
   margin-right: 30px;
   .oc-name {
-    font-size: 20px;
-    font-weight: 400;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.25rem;
+    letter-spacing: 0.04em;
+    color: #fff;
   }
   .oc-title {
-    color: $text-highlight;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
     text-transform: uppercase;
-  }
-  .oc-title,
-  .oc-twitter {
-    font-size: 12px;
+    color: #7b2fff;
+    letter-spacing: 0.06em;
   }
   .oc-twitter {
-    color: black;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: #39ff14;
+    text-decoration: none;
+    &:hover { color: #00cfff; }
   }
 }
 

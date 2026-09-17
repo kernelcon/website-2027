@@ -57,14 +57,16 @@ class Dates extends Component {
     return (
       <div className='dates-page'>
         <div className='container'>
-          <div className='dates-header'>
-            <span className='dates-pre-label'>Tour Dates</span>
-            <h1>Important <span>Dates</span></h1>
-            <div className='dates-sub'>MAR 4–5, 2027 · Omaha, NE · All times Central</div>
-            <div className='dates-rule' />
-          </div>
-          <div className='dates-list'>
-            {dates}
+          <div className='venue-section'>
+            <div className='page-header'>
+              <span className='page-pre-label'>Tour Dates</span>
+              <h1>Important <span>Dates</span></h1>
+              <div className='page-sub'>MAR 4–5, 2027 · Omaha, NE · All times Central</div>
+              <div className='page-rule' />
+            </div>
+            <div className='dates-list'>
+              {dates}
+            </div>
           </div>
         </div>
       </div>

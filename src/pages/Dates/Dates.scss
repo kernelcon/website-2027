@@ -9,56 +9,7 @@ $bg:     #0d0520;
 .dates-page {
   min-height: 100vh;
   background: $bg;
-  padding: 2.5rem 0 4rem;
-}
-
-// ── Page header ─────────────────────────────────────────────────────────────
-
-.dates-header {
-  padding: 0 1rem 2rem;
-
-  .dates-pre-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.68rem;
-    letter-spacing: 0.4em;
-    color: $purple;
-    text-shadow: 0 0 10px rgba(123,47,255,0.5);
-    text-transform: uppercase;
-    margin-bottom: 0.4rem;
-    display: block;
-
-    &::before { content: '▶ '; color: $green; }
-  }
-
-  h1, h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2.4rem, 6vw, 4rem);
-    letter-spacing: 0.06em;
-    line-height: 0.92;
-    color: #fff;
-    text-shadow: 0 0 30px rgba(255,255,255,0.12);
-    margin-bottom: 0.4rem;
-
-    span {
-      color: $green;
-      text-shadow: 0 0 20px rgba(57,255,20,0.5);
-    }
-  }
-
-  .dates-sub {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.74rem;
-    color: rgba(255,255,255,0.45);
-    letter-spacing: 0.06em;
-    margin-top: 0.3rem;
-  }
-
-  .dates-rule {
-    margin-top: 1.2rem;
-    height: 1px;
-    background: linear-gradient(90deg, $purple, $green, transparent);
-    opacity: 0.5;
-  }
+  padding: 0 0 4rem;
 }
 
 // ── Cards grid ───────────────────────────────────────────────────────────────

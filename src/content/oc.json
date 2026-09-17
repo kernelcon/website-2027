@@ -14,6 +14,7 @@
       "id": 2,
       "name": "Tyler Rosonke",
       "title": "Badge Chair",
+      "title2": "A/V Chair",
       "image": "tyler.png",
       "twitter": "zonksec",
       "mastodon": "",
@@ -23,7 +24,8 @@
     {
       "id": 3,
       "name": "Dan Browder",
-      "title": "Graphics Chair and Website",
+      "title": "General Chair",
+      "title2": "Graphics & Art",
       "image": "popcorn.png",
       "twitter": "popcornhax",
       "mastodon": "",
@@ -43,7 +45,8 @@
     {
       "id": 5,
       "name": "Adam Schaal",
-      "title": "Village Chair and Website",
+      "title": "Village Chair",
+      "title2": "Website",
       "image": "adam.png",
       "twitter": "clevernyyyy",
       "mastodon": "",
@@ -53,7 +56,8 @@
     {
       "id": 6,
       "name": "Jason Lehr",
-      "title": "Training Chair and Security",
+      "title": "Training Chair",
+      "title2": "Security",
       "image": "jason.png",
       "twitter": "__JCL__",
       "mastodon": "",
@@ -63,7 +67,7 @@
     {
       "id": 7,
       "name": "Tim Vidas",
-      "title": "General Chair",
+      "title": "TPC Chair",
       "image": "tim.png",
       "twitter": "tvidas",
       "mastodon": "",
@@ -83,7 +87,7 @@
     {
       "id": 9,
       "name": "Kate Knowlton",
-      "title": "Store Czar",
+      "title": "",
       "image": "kate.png",
       "twitter": "vulnKat",
       "mastodon": "",
@@ -110,21 +114,11 @@
       "mastodon_url": "",
       "oc": true
     },
-    {
-      "id": 13,
-      "name": "Will Gentle",
-      "title": "Entertainment",
-      "image": "will.png",
-      "twitter": "",
-      "mastodon": "Negahyphen",
-      "mastodon_url": "https://infosec.exchange/@Negahyphen",
-      "oc": true
-    },
-    {
+{
       "id": 16,
       "name": "Matt Virus",
-      "title": "Hardware and Infrastructure Lord",
-      "image": "mattv.webp",
+      "title": "Head of Infrastructure",
+      "image": "matt.png",
       "twitter": "themattvirus",
       "mastodon": "",
       "mastodon_url": "",
@@ -132,8 +126,9 @@
     },
     {
       "id": 17,
-      "name": "Arber",
+      "name": "Arber Biqku",
       "title": "Volunteer Coordinator",
+      "title2": "CTF Goon",
       "image": "arber.png",
       "twitter": "sud0m4st3r",
       "mastodon": "",
@@ -141,11 +136,32 @@
       "oc": true
     },
     {
-      "id": 18,
-      "name": "Andrew",
-      "title": "Events Chair",
-      "image": "andrew.png",
+      "id": 19,
+      "name": "Jay",
+      "title": "Speaker Ops",
+      "image": "",
       "twitter": "",
+      "mastodon": "",
+      "mastodon_url": "",
+      "oc": true
+    },
+    {
+      "id": 20,
+      "name": "Sheila",
+      "title": "Swag Lord",
+      "image": "",
+      "twitter": "",
+      "mastodon": "",
+      "mastodon_url": "",
+      "oc": true
+    },
+    {
+      "id": 18,
+      "name": "Andrew Larson",
+      "title": "Events Chair",
+      "title2": "CTF Goon",
+      "image": "andrew.png",
+      "twitter": "Zoogsz",
       "mastodon": "",
       "mastodon_url": "",
       "oc": true

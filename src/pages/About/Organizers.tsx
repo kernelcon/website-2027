@@ -8,6 +8,7 @@ interface OcPerson {
   id?: number;
   name: string;
   title?: string;
+  title2?: string;
   image?: string;
   twitter?: string;
   mastodon?: string;
@@ -48,7 +49,8 @@ class Organizers extends Component {
               </div>
               <div className='oc-text-section'>
                 <div className='oc-name'>{el.name}</div>
-                <div className='oc-title'>{el.title}</div>
+                {el.title && <div className='oc-title'>{el.title}</div>}
+                {el.title2 && <div className='oc-title'>{el.title2}</div>}
                 {el.twitter && <a className='oc-twitter' target='_blank' rel='noopener noreferrer' href={`https://twitter.com/${el.twitter}`}>{`@${el.twitter}`}</a>}
                 {el.mastodon && <a className='oc-twitter' target='_blank' rel='noopener noreferrer' href={`${el.mastodon_url}`}>{`@${el.mastodon}`}</a>}
               </div>

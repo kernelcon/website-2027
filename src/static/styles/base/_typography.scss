@@ -7,6 +7,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Hand:wght@400..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap');
+/* Override @ symbol in Space Mono with a readable system sans-serif */
+@font-face {
+  font-family: 'Space Mono';
+  src: local('Arial'), local('Helvetica Neue'), local('Helvetica');
+  unicode-range: U+0040;
+}
+
 /* FONT STACK */
 
 $font-stack: -apple-system,

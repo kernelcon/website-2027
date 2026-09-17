@@ -14,22 +14,29 @@ $bg:      #0d0520;
 // ── Intro text blocks ──────────────────────────────────────────────────────
 
 .sponsors {
-  div { margin-bottom: 30px; }
+  h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.08em;
+    color: $green;
+    margin: 2rem 0 0.5rem;
+    &:first-of-type { margin-top: 0; }
+  }
+
+  h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 0.5rem;
+  }
 
   .text-block {
     p {
       font-family: 'Space Mono', monospace;
-      font-size: 0.88rem;
+      font-size: 0.82rem;
       line-height: 1.7;
       color: rgba(255,255,255,0.75);
-      margin-bottom: 1rem;
-    }
-
-    h4 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.2rem;
-      letter-spacing: 0.06em;
-      color: rgba(255,255,255,0.9);
       margin-bottom: 0.75rem;
     }
 

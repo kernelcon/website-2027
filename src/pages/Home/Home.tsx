@@ -5,13 +5,13 @@ import "./Home.scss";
 // ── DATA ──────────────────────────────────────────────────────────────────────
 
 const KEY_DATES = [
-  { num: "01", date: "OCT 2026",  title: "Signal Detected",      sub: "Registration Opens",        status: "done"   },
-  { num: "02", date: "OCT 2026",  title: "Open Channel",         sub: "Call for Papers Opens",     status: "done"   },
-  { num: "03", date: "NOV 2026",  title: "Buffer Overflow",      sub: "Call for Training Closes",  status: "done"   },
-  { num: "04", date: "DEC 2026",  title: "Final Commit",         sub: "CFP Closes",                status: "done"   },
+  { num: "01", date: "SEP 2026",  title: "Signal Detected",      sub: "Registration Opens",        status: "finale" },
+  { num: "02", date: "SEP 2026",  title: "Open Channel",         sub: "Call for Papers, Training & Villages Open", status: "finale" },
+  { num: "03", date: "NOV 2026",  title: "Buffer Overflow",      sub: "Call for Training Closes",  status: "coming" },
+  { num: "04", date: "DEC 2026",  title: "Final Commit",         sub: "CFP Closes",                status: "coming" },
   { num: "05", date: "FEB 2027",  title: "Headliners Drop",      sub: "Keynotes Announced",        status: "coming" },
   { num: "06", date: "MAR 2–3",  title: "Pre-show Soundcheck",  sub: "Pre-conference Training",   status: "coming" },
-  { num: "07", date: "MAR 4–5",  title: "EXECUTE PAYLOAD",      sub: "Kernelcon 2027 Main Event", status: "finale" },
+  { num: "07", date: "MAR 4–5",  title: "EXECUTE PAYLOAD",      sub: "Kernelcon 2027 Main Event", status: "coming" },
 ];
 
 // const KEYNOTES = [
@@ -52,14 +52,14 @@ const STAGES = [
 
 const EVENTS = [
   {
-    date: "WEDNESDAY // MARCH 4TH // BY PWP LIVE",
+    date: "THURSDAY // MARCH 4TH // BY PWP LIVE",
     name: "KERNELCON\nCARNAGE",
     tagline: '"The mosh pit goes full contact."',
     desc: "Pro wrestling at a hacker conference. Yes, really. PWP Live brings the body slams and submission holds to Omaha. The most unhinged crossover event since someone patched a kernel live on stage. Come for the chaos.",
     accent: "green",
   },
   {
-    date: "THURSDAY // MARCH 5TH // CLOSING NIGHT",
+    date: "FRIDAY // MARCH 5TH // CLOSING NIGHT",
     name: "KERNEL\nPANIC LIVE",
     tagline: '"The encore you\'ve been waiting for."',
     desc: "The closing night party. Open bar, music, and that special hacker hospitality that only exists when hundreds of people who break things for fun are finally allowed to just… relax. Don't skip the encore.",
@@ -1110,7 +1110,7 @@ export default class Home extends Component<object, HomeState> {
                       <div className="track-sub">{d.sub}</div>
                     </div>
                     <div className={`track-status status-${d.status}`}>
-                      {d.status === "done" ? "EXECUTED" : d.status === "finale" ? "★ EXECUTE" : "PENDING"}
+                      {d.status === "finale" ? "★ EXECUTING" : "PENDING"}
                     </div>
                   </div>
                 ))}
@@ -1152,7 +1152,7 @@ export default class Home extends Component<object, HomeState> {
           <div className="rhythm-stripe" />
           */}
 
-          {/* ── SOUNDCHECK / TRAINING ── */}
+          {/* ── SOUNDCHECK / TRAINING ── (hidden until training is announced)
           <div className="rhythm-section soundcheck-section">
             <div className="rhythm-inner soundcheck-inner">
               <div className="soundcheck-header">
@@ -1185,6 +1185,7 @@ export default class Home extends Component<object, HomeState> {
           </div>
 
           <div className="rhythm-stripe" />
+          */}
 
           {/* ── THE STAGES ── */}
           <div className="rhythm-section stages-section">
@@ -1206,7 +1207,7 @@ export default class Home extends Component<object, HomeState> {
 
           <div className="rhythm-stripe" />
 
-          {/* ── MAIN STAGE / EVENTS ── */}
+          {/* ── MAIN STAGE / EVENTS ── (hidden until events are announced)
           <div className="rhythm-section main-stage-section">
             <div className="rhythm-inner">
               <div className="rhythm-label">Entertainment</div>
@@ -1225,6 +1226,7 @@ export default class Home extends Component<object, HomeState> {
           </div>
 
           <div className="rhythm-stripe" />
+          */}
 
           {/* ── BATTLE MODE ── */}
           <div className="rhythm-section battle-section">

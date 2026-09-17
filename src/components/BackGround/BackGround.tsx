@@ -1,4 +1,5 @@
 import { Component, createRef } from 'react';
+import type { RefObject } from 'react';
 import KernelLogo from '../../static/images/logos/kernelcon_white.png';
 import './BackGround.scss';
 
@@ -14,6 +15,7 @@ export default class BackGround extends Component<object, BackGroundState> {
 
   private canvasRef = createRef<HTMLCanvasElement>();
   private waveCanvasRef = createRef<HTMLCanvasElement>();
+  private cardRef = createRef<HTMLElement>();
   private animFrameId = 0;
   private waveFrameId = 0;
   private columns: number[] = [];
@@ -29,13 +31,22 @@ export default class BackGround extends Component<object, BackGroundState> {
     this.initHexRain();
     this.initWave();
     window.addEventListener('resize', this.handleResize);
+    window.addEventListener('scroll', this.handleParallax, { passive: true });
   }
 
   componentWillUnmount() {
     cancelAnimationFrame(this.animFrameId);
     cancelAnimationFrame(this.waveFrameId);
     window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener('scroll', this.handleParallax);
   }
+
+  handleParallax = () => {
+    const card = this.cardRef.current;
+    if (!card) return;
+    const y = window.scrollY * 0.35;
+    card.style.transform = `translateY(-${y}px)`;
+  };
 
   handleResize = () => {
     this.initHexRain();
@@ -220,25 +231,22 @@ export default class BackGround extends Component<object, BackGroundState> {
 
         {/* Scroll content */}
         <main className="algo-scroll-content">
-          <section className="algo-about-card">
-            <div className="content-eq-row">
-              {Array.from({ length: 24 }).map((_, i) => (
-                <div key={i} className="content-eq-bar" />
-              ))}
-            </div>
+          <section className="algo-about-card" ref={this.cardRef as RefObject<HTMLElement>}>
+            {/* content-eq-row removed */}
             <div className="content-label">♪ KERNELCON 2027 ♪</div>
             <h2 className="content-title">Welcome to Kernelcon</h2>
             <h4 className="content-subtitle">Drop the Beat. Break the Algorithm.</h4>
             <p className="content-paragraph">
-              <strong>Kernelcon 2027</strong> turns up the signal on the Midwest's premier cybersecurity
-              conference. This year's theme, <strong>Algo(Rhythm)</strong>, is a love letter to the
-              intersection of precision and chaos: the mathematical logic that powers every system
-              and the unpredictable beat that breaks it.
+              Every hacker knows the feeling — when keystrokes stop feeling like keystrokes
+              and the system starts to open up. The pattern clicks. The noise drops away.
+              That's the rhythm. <strong>Algo(Rhythm)</strong> is about that state: the intuitive
+              cadence of someone who's put in the reps, reading a system the way a musician
+              reads a room.
             </p>
             <p className="content-paragraph">
-              From exploit development to AI red-teaming, from RF hacking to CTF arenas,
-              every track is engineered to push your skills and recharge your inspiration.
-              Two days. Seven villages. Thirty-plus speakers. One frequency.
+              Sometimes it's slow and deliberate — methodical recon, careful enumeration.
+              Sometimes it's a frenetic improvised sprint when a window opens and you have
+              seconds to act. Either way, the best hacking has a flow to it. Come find yours.
             </p>
             <div className="content-stats">
               <div className="content-stat">
