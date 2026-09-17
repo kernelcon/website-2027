@@ -121,6 +121,9 @@ const FAQS = [
 // ── STUDIO (Multi-instrument Web Audio) ──────────────────────────────────────
 
 const FREQS: Record<string, number> = {
+  'C2': 65.41,'C#2': 69.30,'D2': 73.42,'D#2': 77.78,
+  'E2': 82.41,'F2': 87.31,'F#2': 92.50,'G2': 98.00,
+  'G#2':103.83,'A2':110.00,'A#2':116.54,'B2':123.47,
   'C3':130.81,'C#3':138.59,'D3':146.83,'D#3':155.56,
   'E3':164.81,'F3':174.61,'F#3':185.00,'G3':196.00,
   'G#3':207.65,'A3':220.00,'A#3':233.08,'B3':246.94,
@@ -164,7 +167,6 @@ const DRUM_PADS = [
   {id:'clap',  name:'CLAP',  key:'B',color:'#39ff14'},
   {id:'cymbal',name:'CYMBAL',key:'N',color:'#ff8800'},
 ];
-const TRACK_COLORS = ['#39ff14','#7b2fff','#ff006e','#ffe600','#00cfff','#ff8800'];
 
 interface NoteEvent { note: string; t: number; }
 interface Track { id: number; inst: string; events: NoteEvent[]; dur: number; muted: boolean; }
@@ -991,6 +993,411 @@ const EXAMPLES: Example[] = [
     ],
   },
 
+  // ── FULL SEND ─────────────────────────────────────────────────────────────
+  {
+    name: 'FULL SEND', emoji: '🔥',
+    desc: 'Piano + Synth + Electric + Bass + Pad + Drums · C major · 120 BPM · 24s',
+    dur: 24000,
+    tracks: [
+      { inst: 'drums', events: [
+        ...seq('hihat', 0, 24000, 250),
+        ...seq('kick',  0, 24000, 1000),
+        ...seq('kick',  750, 24000, 2000),
+        ...seq('snare', 500, 24000, 1000),
+        {note:'cymbal',t:0},{note:'cymbal',t:8000},{note:'cymbal',t:16000},
+        {note:'tom',t:1750},{note:'tom',t:3750},{note:'tom',t:5750},{note:'tom',t:7750},
+        {note:'tom',t:9750},{note:'tom',t:11750},{note:'tom',t:13750},{note:'tom',t:15750},
+        {note:'tom',t:17750},{note:'tom',t:19750},{note:'tom',t:21750},{note:'tom',t:23750},
+        {note:'clap',t:3500},{note:'clap',t:7500},{note:'clap',t:11500},{note:'clap',t:15500},
+        {note:'clap',t:19500},{note:'clap',t:23500},
+      ]},
+      { inst: 'bass', events: [
+        // Walking C–E–G–A cycle, 120 BPM
+        ...Array.from({length:6}, (_,r) => [
+          {note:'C2',t:r*4000+0},{note:'E2',t:r*4000+500},{note:'G2',t:r*4000+1000},
+          {note:'A2',t:r*4000+1500},{note:'G2',t:r*4000+2000},{note:'E2',t:r*4000+2500},
+          {note:'C2',t:r*4000+3000},{note:'D2',t:r*4000+3500},
+        ]).flat(),
+      ]},
+      { inst: 'electric', events: [
+        // Power chords on beats 1+3 — C and G alternating
+        ...Array.from({length:12}, (_,r) => [
+          {note:'C3',t:r*2000+0},{note:'G3',t:r*2000+50},
+          {note:'G3',t:r*2000+1000},{note:'D4',t:r*2000+1050},
+        ]).flat(),
+      ]},
+      { inst: 'piano', events: [
+        // Syncopated chord stabs on the 8th-note offbeats
+        ...Array.from({length:12}, (_,r) => [
+          {note:'C4',t:r*2000+250},{note:'E4',t:r*2000+300},{note:'G4',t:r*2000+350},
+          {note:'F4',t:r*2000+750},{note:'A4',t:r*2000+800},
+          {note:'G4',t:r*2000+1250},{note:'B4',t:r*2000+1300},
+          {note:'E4',t:r*2000+1750},{note:'G4',t:r*2000+1800},{note:'C5',t:r*2000+1850},
+        ]).flat(),
+      ]},
+      { inst: 'synth', events: [
+        // Soaring lead — C major pentatonic melodic line
+        {note:'G4',t:0},{note:'A4',t:500},{note:'C5',t:1000},{note:'A4',t:1500},
+        {note:'G4',t:2000},{note:'E4',t:2500},{note:'G4',t:3000},{note:'C5',t:3500},
+        {note:'B4',t:4000},{note:'A4',t:4500},{note:'G4',t:5000},{note:'E4',t:5500},
+        {note:'F4',t:6000},{note:'G4',t:6500},{note:'A4',t:7000},{note:'C5',t:7500},
+        {note:'G4',t:8000},{note:'A4',t:8500},{note:'C5',t:9000},{note:'B4',t:9500},
+        {note:'A4',t:10000},{note:'G4',t:10500},{note:'E4',t:11000},{note:'G4',t:11500},
+        {note:'C5',t:12000},{note:'B4',t:12500},{note:'A4',t:13000},{note:'G4',t:13500},
+        {note:'E4',t:14000},{note:'F4',t:14500},{note:'G4',t:15000},{note:'A4',t:15500},
+        {note:'C5',t:16000},{note:'A4',t:16500},{note:'G4',t:17000},{note:'E4',t:17500},
+        {note:'G4',t:18000},{note:'A4',t:18500},{note:'C5',t:19000},{note:'G4',t:19500},
+        {note:'E4',t:20000},{note:'G4',t:20500},{note:'A4',t:21000},{note:'C5',t:21500},
+        {note:'B4',t:22000},{note:'A4',t:22500},{note:'G4',t:23000},{note:'C5',t:23500},
+      ]},
+      { inst: 'pad', events: [
+        // Slow C major wash
+        {note:'C3',t:0},{note:'E3',t:200},{note:'G3',t:400},
+        {note:'F3',t:8000},{note:'A3',t:8200},{note:'C4',t:8400},
+        {note:'G3',t:16000},{note:'B3',t:16200},{note:'D4',t:16400},
+        {note:'C3',t:20000},{note:'E3',t:20200},{note:'G3',t:20400},
+      ]},
+    ],
+  },
+
+  // ── MIDNIGHT JAZZ ─────────────────────────────────────────────────────────
+  {
+    name: 'MIDNIGHT JAZZ', emoji: '🎷',
+    desc: 'Piano + Bass + Strings + Pluck + Pad + Drums · Bb major · 100 BPM · 24s',
+    dur: 24000,
+    tracks: [
+      { inst: 'drums', events: [
+        // Jazz ride: cymbal every 300ms, light kick/snare
+        ...seq('cymbal', 0, 24000, 600),
+        {note:'kick',t:0},{note:'kick',t:2400},{note:'kick',t:4800},{note:'kick',t:7200},
+        {note:'kick',t:9600},{note:'kick',t:12000},{note:'kick',t:14400},{note:'kick',t:16800},
+        {note:'kick',t:19200},{note:'kick',t:21600},
+        {note:'snare',t:600},{note:'snare',t:1800},{note:'snare',t:3000},{note:'snare',t:4200},
+        {note:'snare',t:5400},{note:'snare',t:6600},{note:'snare',t:7800},{note:'snare',t:9000},
+        {note:'snare',t:10200},{note:'snare',t:11400},{note:'snare',t:12600},{note:'snare',t:13800},
+        {note:'snare',t:15000},{note:'snare',t:16200},{note:'snare',t:17400},{note:'snare',t:18600},
+        {note:'snare',t:19800},{note:'snare',t:21000},{note:'snare',t:22200},{note:'snare',t:23400},
+        {note:'hihat',t:300},{note:'hihat',t:900},{note:'hihat',t:1500},{note:'hihat',t:2100},
+        {note:'hihat',t:2700},{note:'hihat',t:3300},{note:'hihat',t:3900},{note:'hihat',t:4500},
+        ...Array.from({length:16}, (_,i) => ({note:'hihat',t:i*1500+750})),
+      ]},
+      { inst: 'bass', events: [
+        // Walking Bb–F–Eb–F changes
+        ...Array.from({length:6}, (_,r) => [
+          {note:'A#2',t:r*4000+0},{note:'F2',t:r*4000+600},{note:'G2',t:r*4000+1200},
+          {note:'A#2',t:r*4000+1800},{note:'D#2',t:r*4000+2400},{note:'F2',t:r*4000+3000},
+          {note:'G2',t:r*4000+3600},
+        ]).flat(),
+      ]},
+      { inst: 'piano', events: [
+        // Jazz comping — Bb maj7, Eb maj7, F7 voicings
+        {note:'A#3',t:0},{note:'D4',t:100},{note:'F4',t:200},
+        {note:'A4',t:1200},{note:'C4',t:1300},
+        {note:'D#4',t:2400},{note:'G4',t:2500},{note:'A#4',t:2600},
+        {note:'F4',t:3600},{note:'A4',t:3700},{note:'C4',t:3800},
+        {note:'A#3',t:4800},{note:'D4',t:4900},{note:'F4',t:5000},
+        {note:'G4',t:6000},{note:'A#4',t:6100},{note:'D4',t:6200},
+        {note:'D#4',t:7200},{note:'G4',t:7300},{note:'A#4',t:7400},
+        {note:'F4',t:8400},{note:'A4',t:8500},
+        {note:'A#3',t:9600},{note:'D4',t:9700},{note:'F4',t:9800},
+        {note:'A4',t:10800},{note:'C4',t:10900},
+        {note:'D#4',t:12000},{note:'G4',t:12100},{note:'A#4',t:12200},
+        {note:'F4',t:13200},{note:'A4',t:13300},{note:'C4',t:13400},
+        {note:'A#3',t:14400},{note:'D4',t:14500},{note:'F4',t:14600},
+        {note:'G4',t:15600},{note:'A#4',t:15700},{note:'D4',t:15800},
+        {note:'D#4',t:16800},{note:'G4',t:16900},{note:'A#4',t:17000},
+        {note:'F4',t:18000},{note:'A4',t:18100},
+        {note:'A#3',t:19200},{note:'D4',t:19300},{note:'F4',t:19400},
+        {note:'A4',t:20400},{note:'C4',t:20500},
+        {note:'D#4',t:21600},{note:'G4',t:21700},{note:'A#4',t:21800},
+        {note:'F4',t:22800},{note:'A4',t:22900},{note:'C5',t:23000},
+      ]},
+      { inst: 'strings', events: [
+        // Sweeping melodic phrases, Bb major
+        {note:'F4',t:0},{note:'G4',t:600},{note:'A#4',t:1200},{note:'A4',t:1800},
+        {note:'G4',t:2400},{note:'F4',t:3000},{note:'D4',t:3600},{note:'F4',t:4200},
+        {note:'G4',t:4800},{note:'A4',t:5400},{note:'A#4',t:6000},{note:'A4',t:6600},
+        {note:'G4',t:7200},{note:'F4',t:7800},{note:'D4',t:8400},{note:'C4',t:9000},
+        {note:'D4',t:9600},{note:'F4',t:10200},{note:'G4',t:10800},{note:'A4',t:11400},
+        {note:'A#4',t:12000},{note:'A4',t:12600},{note:'G4',t:13200},{note:'F4',t:13800},
+        {note:'D4',t:14400},{note:'F4',t:15000},{note:'G4',t:15600},{note:'A4',t:16200},
+        {note:'A#4',t:16800},{note:'A4',t:17400},{note:'G4',t:18000},{note:'F4',t:18600},
+        {note:'D4',t:19200},{note:'C4',t:19800},{note:'D4',t:20400},{note:'F4',t:21000},
+        {note:'G4',t:21600},{note:'A4',t:22200},{note:'A#4',t:22800},{note:'F4',t:23400},
+      ]},
+      { inst: 'pluck', events: [
+        // Pizzicato countermelody between chords
+        {note:'F4',t:300},{note:'D4',t:900},{note:'A#4',t:1500},{note:'G4',t:2100},
+        {note:'D4',t:2700},{note:'F4',t:3300},{note:'A4',t:3900},{note:'C4',t:4500},
+        {note:'D4',t:5100},{note:'F4',t:5700},{note:'G4',t:6300},{note:'A#4',t:6900},
+        {note:'A4',t:7500},{note:'G4',t:8100},{note:'F4',t:8700},{note:'D4',t:9300},
+        {note:'F4',t:9900},{note:'G4',t:10500},{note:'A#4',t:11100},{note:'A4',t:11700},
+        {note:'G4',t:12300},{note:'F4',t:12900},{note:'D4',t:13500},{note:'F4',t:14100},
+        {note:'A4',t:14700},{note:'G4',t:15300},{note:'D4',t:15900},{note:'A#4',t:16500},
+        {note:'A4',t:17100},{note:'G4',t:17700},{note:'F4',t:18300},{note:'D4',t:18900},
+        {note:'F4',t:19500},{note:'G4',t:20100},{note:'A4',t:20700},{note:'A#4',t:21300},
+        {note:'G4',t:21900},{note:'F4',t:22500},{note:'D4',t:23100},
+      ]},
+      { inst: 'pad', events: [
+        // Warm Bb wash
+        {note:'A#3',t:0},{note:'D4',t:400},{note:'F4',t:800},
+        {note:'D#3',t:9600},{note:'G3',t:10000},{note:'A#3',t:10400},
+        {note:'F3',t:16800},{note:'A3',t:17200},{note:'C4',t:17600},
+        {note:'A#3',t:21600},{note:'D4',t:22000},{note:'F4',t:22400},
+      ]},
+    ],
+  },
+
+  // ── SPACE GOSPEL ──────────────────────────────────────────────────────────
+  {
+    name: 'SPACE GOSPEL', emoji: '🌌',
+    desc: 'Organ + Strings + Soprano + Synth + Bass + Drums · D minor · 80 BPM · 24s',
+    dur: 24000,
+    tracks: [
+      { inst: 'drums', events: [
+        // Gospel stomp: kick+snare heavy
+        ...seq('kick',  0,    24000, 1500),
+        ...seq('kick',  750,  24000, 3000),
+        ...seq('snare', 750,  24000, 1500),
+        {note:'cymbal',t:0},{note:'cymbal',t:6000},{note:'cymbal',t:12000},{note:'cymbal',t:18000},
+        {note:'clap',t:750},{note:'clap',t:2250},{note:'clap',t:3750},{note:'clap',t:5250},
+        {note:'clap',t:6750},{note:'clap',t:8250},{note:'clap',t:9750},{note:'clap',t:11250},
+        {note:'clap',t:12750},{note:'clap',t:14250},{note:'clap',t:15750},{note:'clap',t:17250},
+        {note:'clap',t:18750},{note:'clap',t:20250},{note:'clap',t:21750},{note:'clap',t:23250},
+      ]},
+      { inst: 'bass', events: [
+        // Deep D pedal with cosmic movement
+        {note:'D2',t:0},{note:'A2',t:1500},{note:'D2',t:3000},{note:'A2',t:4500},
+        {note:'G2',t:6000},{note:'A2',t:7500},{note:'D2',t:9000},{note:'A2',t:10500},
+        {note:'A#2',t:12000},{note:'A2',t:13500},{note:'G2',t:15000},{note:'A2',t:16500},
+        {note:'D2',t:18000},{note:'A2',t:19500},{note:'G2',t:21000},{note:'D2',t:22500},
+      ]},
+      { inst: 'organ', events: [
+        // Big Dm–Gm–Am–Dm drawbar chords
+        {note:'D3',t:0},{note:'F3',t:100},{note:'A3',t:200},
+        {note:'G3',t:6000},{note:'A#3',t:6100},{note:'D4',t:6200},
+        {note:'A3',t:12000},{note:'C4',t:12100},{note:'E4',t:12200},
+        {note:'D3',t:18000},{note:'F3',t:18100},{note:'A3',t:18200},
+        // Second pass with octave doublings
+        {note:'D3',t:3000},{note:'F3',t:3100},{note:'A3',t:3200},{note:'D4',t:3300},
+        {note:'G3',t:9000},{note:'A#3',t:9100},{note:'D4',t:9200},
+        {note:'A3',t:15000},{note:'C4',t:15100},{note:'E4',t:15200},
+        {note:'D3',t:21000},{note:'F3',t:21100},{note:'A3',t:21200},{note:'D4',t:21300},
+      ]},
+      { inst: 'strings', events: [
+        // Soaring countermelody in D minor
+        {note:'A4',t:0},{note:'G4',t:750},{note:'F4',t:1500},{note:'E4',t:2250},
+        {note:'D4',t:3000},{note:'F4',t:3750},{note:'A4',t:4500},{note:'C5',t:5250},
+        {note:'A#4',t:6000},{note:'A4',t:6750},{note:'G4',t:7500},{note:'F4',t:8250},
+        {note:'E4',t:9000},{note:'F4',t:9750},{note:'G4',t:10500},{note:'A4',t:11250},
+        {note:'C5',t:12000},{note:'A4',t:12750},{note:'G4',t:13500},{note:'F4',t:14250},
+        {note:'E4',t:15000},{note:'D4',t:15750},{note:'F4',t:16500},{note:'A4',t:17250},
+        {note:'A#4',t:18000},{note:'A4',t:18750},{note:'G4',t:19500},{note:'F4',t:20250},
+        {note:'E4',t:21000},{note:'F4',t:21750},{note:'A4',t:22500},{note:'D4',t:23250},
+      ]},
+      { inst: 'soprano', events: [
+        // High floating melody, D minor
+        {note:'D4',t:750},{note:'F4',t:2250},{note:'A4',t:3750},
+        {note:'C5',t:5250},{note:'A4',t:6750},{note:'G4',t:8250},
+        {note:'F4',t:9750},{note:'A4',t:11250},{note:'C5',t:12750},
+        {note:'A4',t:14250},{note:'G4',t:15750},{note:'F4',t:17250},
+        {note:'A4',t:18750},{note:'C5',t:20250},{note:'A4',t:21750},{note:'D4',t:23250},
+      ]},
+      { inst: 'synth', events: [
+        // Ethereal arpeggio: D4→F4→A4→C5 cycling
+        ...Array.from({length:24}, (_,i) => [
+          {note:'D4',t:i*1000+0},{note:'F4',t:i*1000+250},
+          {note:'A4',t:i*1000+500},{note:'C5',t:i*1000+750},
+        ]).flat(),
+      ]},
+    ],
+  },
+
+  // ── HACKATHON ─────────────────────────────────────────────────────────────
+  {
+    name: 'HACKATHON', emoji: '💻',
+    desc: 'Synth + Pluck + Electric + Piano + Bass + Drums · A minor · 120 BPM · 24s',
+    dur: 24000,
+    tracks: [
+      { inst: 'drums', events: [
+        ...seq('hihat', 0, 24000, 250),
+        ...seq('kick',  0, 24000, 1000),
+        ...seq('snare', 500, 24000, 1000),
+        {note:'snare',t:750},{note:'snare',t:1750},{note:'snare',t:2750},
+        {note:'snare',t:3750},{note:'snare',t:4750},{note:'snare',t:5750},
+        {note:'cymbal',t:0},{note:'cymbal',t:6000},{note:'cymbal',t:12000},{note:'cymbal',t:18000},
+        {note:'tom',t:1875},{note:'tom',t:3875},{note:'tom',t:5875},{note:'tom',t:7875},
+        {note:'tom',t:9875},{note:'tom',t:11875},{note:'tom',t:13875},{note:'tom',t:15875},
+        {note:'tom',t:17875},{note:'tom',t:19875},{note:'tom',t:21875},{note:'tom',t:23875},
+      ]},
+      { inst: 'bass', events: [
+        // Syncopated Am bass: A2→E3→G3 with off-beats
+        ...Array.from({length:8}, (_,r) => [
+          {note:'A2',t:r*3000+0},{note:'A2',t:r*3000+250},{note:'E2',t:r*3000+750},
+          {note:'G2',t:r*3000+1000},{note:'A2',t:r*3000+1500},{note:'E2',t:r*3000+2000},
+          {note:'G2',t:r*3000+2500},
+        ]).flat(),
+      ]},
+      { inst: 'electric', events: [
+        // Tense Am power chords, driving rhythm
+        ...Array.from({length:12}, (_,r) => [
+          {note:'A3',t:r*2000+0},{note:'E4',t:r*2000+50},
+          {note:'A3',t:r*2000+500},{note:'E4',t:r*2000+550},
+          {note:'G3',t:r*2000+1000},{note:'D4',t:r*2000+1050},
+          {note:'A3',t:r*2000+1500},{note:'E4',t:r*2000+1550},
+        ]).flat(),
+      ]},
+      { inst: 'synth', events: [
+        // Urgent Am ostinato — repeating driving figure
+        ...Array.from({length:8}, (_,r) => [
+          {note:'A4',t:r*3000+0},{note:'C5',t:r*3000+250},{note:'E4',t:r*3000+500},
+          {note:'G4',t:r*3000+750},{note:'A4',t:r*3000+1000},{note:'C5',t:r*3000+1250},
+          {note:'B4',t:r*3000+1500},{note:'A4',t:r*3000+1750},{note:'G4',t:r*3000+2000},
+          {note:'E4',t:r*3000+2250},{note:'A4',t:r*3000+2500},{note:'C5',t:r*3000+2750},
+        ]).flat(),
+      ]},
+      { inst: 'pluck', events: [
+        // Fast Am arpeggios — A4→C5→E4→G4
+        ...Array.from({length:24}, (_,i) => [
+          {note:'A4',t:i*1000+0},{note:'C5',t:i*1000+125},
+          {note:'E4',t:i*1000+250},{note:'G4',t:i*1000+375},
+          {note:'A4',t:i*1000+500},{note:'E4',t:i*1000+625},
+          {note:'G4',t:i*1000+750},{note:'C5',t:i*1000+875},
+        ]).flat(),
+      ]},
+      { inst: 'piano', events: [
+        // Accent stabs — Am chord hits on the 3
+        {note:'A3',t:500},{note:'C4',t:550},{note:'E4',t:600},
+        {note:'A3',t:1500},{note:'C4',t:1550},{note:'E4',t:1600},
+        {note:'G3',t:2500},{note:'B3',t:2550},{note:'D4',t:2600},
+        {note:'A3',t:3500},{note:'C4',t:3550},{note:'E4',t:3600},
+        {note:'F3',t:4500},{note:'A3',t:4550},{note:'C4',t:4600},
+        {note:'E3',t:5500},{note:'G3',t:5550},{note:'B3',t:5600},
+        ...Array.from({length:6}, (_,r) => [
+          {note:'A3',t:6000+r*3000+500},{note:'C4',t:6000+r*3000+550},{note:'E4',t:6000+r*3000+600},
+          {note:'G3',t:6000+r*3000+1500},{note:'B3',t:6000+r*3000+1550},{note:'D4',t:6000+r*3000+1600},
+          {note:'F3',t:6000+r*3000+2500},{note:'A3',t:6000+r*3000+2550},{note:'C4',t:6000+r*3000+2600},
+        ]).flat(),
+      ]},
+    ],
+  },
+
+  // ── MOUNTAIN CHURCH ───────────────────────────────────────────────────────
+  {
+    name: 'MOUNTAIN CHURCH', emoji: '⛪',
+    desc: 'Organ + Strings + Soprano + Acoustic + Bass + Drums · G major · 80 BPM · 24s',
+    dur: 24000,
+    tracks: [
+      { inst: 'drums', events: [
+        // Country gospel — kick 1+3, snare 2+4, cymbal on 1
+        ...seq('kick',  0,    24000, 1500),
+        ...seq('kick',  750,  24000, 3000),
+        ...seq('snare', 750,  24000, 1500),
+        {note:'cymbal',t:0},{note:'cymbal',t:6000},{note:'cymbal',t:12000},{note:'cymbal',t:18000},
+        {note:'hihat',t:375},{note:'hihat',t:1125},{note:'hihat',t:1875},{note:'hihat',t:2625},
+        {note:'hihat',t:3375},{note:'hihat',t:4125},{note:'hihat',t:4875},{note:'hihat',t:5625},
+        ...Array.from({length:16}, (_,i) => ({note:'hihat',t:6000+i*1125})),
+      ]},
+      { inst: 'bass', events: [
+        // G–D root-five gospel bass
+        ...Array.from({length:8}, (_,r) => [
+          {note:'G2',t:r*3000+0},{note:'D2',t:r*3000+750},
+          {note:'G2',t:r*3000+1500},{note:'D2',t:r*3000+2250},
+        ]).flat(),
+      ]},
+      { inst: 'organ', events: [
+        // Full drawbar G major chords: G–C–D–G
+        {note:'G3',t:0},{note:'B3',t:100},{note:'D4',t:200},
+        {note:'C3',t:6000},{note:'E3',t:6100},{note:'G3',t:6200},
+        {note:'D3',t:12000},{note:'F#3',t:12100},{note:'A3',t:12200},
+        {note:'G3',t:18000},{note:'B3',t:18100},{note:'D4',t:18200},
+        // Repeat fills
+        {note:'G3',t:3000},{note:'B3',t:3100},{note:'D4',t:3200},
+        {note:'C3',t:9000},{note:'E3',t:9100},{note:'G3',t:9200},
+        {note:'D3',t:15000},{note:'F#3',t:15100},{note:'A3',t:15200},
+        {note:'G3',t:21000},{note:'B3',t:21100},{note:'D4',t:21200},
+      ]},
+      { inst: 'strings', events: [
+        // Sweeping fiddle-style melody in G major
+        {note:'D4',t:0},{note:'E4',t:750},{note:'G4',t:1500},{note:'A4',t:2250},
+        {note:'B4',t:3000},{note:'A4',t:3750},{note:'G4',t:4500},{note:'E4',t:5250},
+        {note:'D4',t:6000},{note:'G4',t:6750},{note:'A4',t:7500},{note:'B4',t:8250},
+        {note:'A4',t:9000},{note:'G4',t:9750},{note:'E4',t:10500},{note:'D4',t:11250},
+        {note:'G4',t:12000},{note:'A4',t:12750},{note:'B4',t:13500},{note:'A4',t:14250},
+        {note:'G4',t:15000},{note:'F#4',t:15750},{note:'E4',t:16500},{note:'D4',t:17250},
+        {note:'G4',t:18000},{note:'A4',t:18750},{note:'B4',t:19500},{note:'A4',t:20250},
+        {note:'G4',t:21000},{note:'E4',t:21750},{note:'D4',t:22500},{note:'G4',t:23250},
+      ]},
+      { inst: 'soprano', events: [
+        // High gospel lead — soaring G major
+        {note:'G4',t:750},{note:'B4',t:2250},{note:'D4',t:3750},
+        {note:'G4',t:5250},{note:'A4',t:6750},{note:'B4',t:8250},
+        {note:'A4',t:9750},{note:'G4',t:11250},{note:'D4',t:12750},
+        {note:'G4',t:14250},{note:'B4',t:15750},{note:'A4',t:17250},
+        {note:'G4',t:18750},{note:'B4',t:20250},{note:'A4',t:21750},{note:'G4',t:23250},
+      ]},
+      { inst: 'acoustic', events: [
+        // Rhythm strum on 2 and 4
+        ...Array.from({length:16}, (_,i) => [
+          {note:'G3',t:750+i*1500},{note:'B3',t:800+i*1500},{note:'D4',t:850+i*1500},
+        ]).flat(),
+      ]},
+    ],
+  },
+
+  // ── FULL ORCHESTRA ────────────────────────────────────────────────────────
+  {
+    name: 'FULL ORCHESTRA', emoji: '🎼',
+    desc: 'Piano + Strings + Soprano + Organ + Pad + Bass · C major · 80 BPM · 24s',
+    dur: 24000,
+    tracks: [
+      { inst: 'bass', events: [
+        // Very slow orchestral bass movement
+        {note:'C2',t:0},{note:'G2',t:3000},{note:'F2',t:6000},{note:'G2',t:9000},
+        {note:'C2',t:12000},{note:'G2',t:15000},{note:'A2',t:18000},{note:'G2',t:21000},
+      ]},
+      { inst: 'organ', events: [
+        // Dark low C major chords
+        {note:'C3',t:0},{note:'E3',t:150},{note:'G3',t:300},
+        {note:'F3',t:6000},{note:'A3',t:6150},{note:'C4',t:6300},
+        {note:'G3',t:12000},{note:'B3',t:12150},{note:'D4',t:12300},
+        {note:'C3',t:18000},{note:'E3',t:18150},{note:'G3',t:18300},
+      ]},
+      { inst: 'pad', events: [
+        // Grand slow C major sustain
+        {note:'C3',t:0},{note:'G3',t:500},{note:'E3',t:1000},
+        {note:'C3',t:12000},{note:'G3',t:12500},{note:'E3',t:13000},
+      ]},
+      { inst: 'strings', events: [
+        // Broad sweeping orchestral melody
+        {note:'E4',t:0},{note:'G4',t:750},{note:'C5',t:1500},{note:'B4',t:2250},
+        {note:'A4',t:3000},{note:'G4',t:3750},{note:'E4',t:4500},{note:'F4',t:5250},
+        {note:'G4',t:6000},{note:'A4',t:6750},{note:'C5',t:7500},{note:'B4',t:8250},
+        {note:'A4',t:9000},{note:'G4',t:9750},{note:'F4',t:10500},{note:'E4',t:11250},
+        {note:'G4',t:12000},{note:'A4',t:12750},{note:'B4',t:13500},{note:'C5',t:14250},
+        {note:'B4',t:15000},{note:'A4',t:15750},{note:'G4',t:16500},{note:'E4',t:17250},
+        {note:'F4',t:18000},{note:'G4',t:18750},{note:'A4',t:19500},{note:'C5',t:20250},
+        {note:'B4',t:21000},{note:'A4',t:21750},{note:'G4',t:22500},{note:'C5',t:23250},
+      ]},
+      { inst: 'piano', events: [
+        // Arpeggiated C major runs — rising phrases
+        ...Array.from({length:8}, (_,r) => [
+          {note:'C4',t:r*3000+0},{note:'E4',t:r*3000+187},{note:'G4',t:r*3000+375},{note:'C5',t:r*3000+562},
+          {note:'G4',t:r*3000+750},{note:'E4',t:r*3000+937},{note:'C4',t:r*3000+1125},{note:'E4',t:r*3000+1312},
+          {note:'G4',t:r*3000+1500},{note:'C5',t:r*3000+1687},{note:'B4',t:r*3000+1875},{note:'G4',t:r*3000+2062},
+          {note:'E4',t:r*3000+2250},{note:'G4',t:r*3000+2437},{note:'C5',t:r*3000+2625},{note:'E4',t:r*3000+2812},
+        ]).flat(),
+      ]},
+      { inst: 'soprano', events: [
+        // Long soaring high notes — slow and expressive
+        {note:'G4',t:1500},{note:'A4',t:4500},{note:'C5',t:7500},
+        {note:'B4',t:10500},{note:'A4',t:13500},{note:'G4',t:15000},
+        {note:'A4',t:16500},{note:'C5',t:18000},{note:'B4',t:19500},
+        {note:'A4',t:21000},{note:'G4',t:22500},{note:'C5',t:23500},
+      ]},
+    ],
+  },
+
   // ── CATHEDRAL ECHO ────────────────────────────────────────────────────────
   {
     name: 'CATHEDRAL ECHO', emoji: '🕌',
@@ -999,14 +1406,14 @@ const EXAMPLES: Example[] = [
     tracks: [
       { inst: 'organ', events: [
         // Am - F - C - G chord progression, 80 BPM (750ms per beat)
-        {note:'A2',t:0},{note:'C3',t:150},{note:'E3',t:300},
-        {note:'F2',t:3000},{note:'A2',t:3150},{note:'C3',t:3300},
-        {note:'C2',t:6000},{note:'E2',t:6150},{note:'G2',t:6300},
-        {note:'G2',t:9000},{note:'B2',t:9150},{note:'D3',t:9300},
-        {note:'A2',t:12000},{note:'C3',t:12150},{note:'E3',t:12300},
-        {note:'F2',t:15000},{note:'A2',t:15150},{note:'C3',t:15300},
-        {note:'C2',t:18000},{note:'E2',t:18150},{note:'G2',t:18300},
-        {note:'G2',t:21000},{note:'B2',t:21150},{note:'D3',t:21300},
+        {note:'A3',t:0},{note:'C4',t:150},{note:'E4',t:300},
+        {note:'F3',t:3000},{note:'A3',t:3150},{note:'C4',t:3300},
+        {note:'C3',t:6000},{note:'E3',t:6150},{note:'G3',t:6300},
+        {note:'G3',t:9000},{note:'B3',t:9150},{note:'D4',t:9300},
+        {note:'A3',t:12000},{note:'C4',t:12150},{note:'E4',t:12300},
+        {note:'F3',t:15000},{note:'A3',t:15150},{note:'C4',t:15300},
+        {note:'C3',t:18000},{note:'E3',t:18150},{note:'G3',t:18300},
+        {note:'G3',t:21000},{note:'B3',t:21150},{note:'D4',t:21300},
       ]},
       { inst: 'strings', events: [
         // Slow bowing melody on A natural minor scale
@@ -1022,11 +1429,6 @@ const EXAMPLES: Example[] = [
         {note:'A4',t:750},{note:'C5',t:4500},{note:'E5',t:9000},
         {note:'D5',t:13500},{note:'C5',t:16500},{note:'A4',t:19500},
         {note:'B4',t:21750},{note:'A4',t:23250},
-      ]},
-      { inst: 'bass', events: [
-        // Pedal tones — root on each chord change
-        {note:'A2',t:0},{note:'F2',t:3000},{note:'C2',t:6000},{note:'G2',t:9000},
-        {note:'A2',t:12000},{note:'F2',t:15000},{note:'C2',t:18000},{note:'G2',t:21000},
       ]},
     ],
   },
@@ -1226,7 +1628,7 @@ const EXAMPLES: Example[] = [
   // ── APPALACHIAN ───────────────────────────────────────────────────────────
   {
     name: 'APPALACHIAN', emoji: '⛰️',
-    desc: 'Banjo + acoustic + bass + drums · G major · 100 BPM · 24s',
+    desc: 'Banjo + strings (fiddle) + bass + drums · G major · 100 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -1237,33 +1639,36 @@ const EXAMPLES: Example[] = [
         ...seq('hihat', 0,    24000, 300),
       ]},
       { inst: 'banjo', events: [
-        // G major melodic roll — Scruggs style
+        // Scruggs-style roll in G — forward-reverse pattern
         {note:'G3',t:0},{note:'B3',t:100},{note:'D4',t:200},{note:'G4',t:300},
         {note:'D4',t:400},{note:'B3',t:500},{note:'G3',t:600},{note:'D4',t:700},
         {note:'C4',t:800},{note:'E4',t:900},{note:'G4',t:1000},{note:'C5',t:1100},
         {note:'G4',t:1200},{note:'E4',t:1300},{note:'C4',t:1400},{note:'G4',t:1500},
-        {note:'D4',t:1600},{note:'F#4',t:1700},{note:'A4',t:1800},{note:'D5',t:1900},
+        {note:'D4',t:1600},{note:'F#4',t:1700},{note:'A4',t:1800},{note:'D4',t:1900},
         {note:'A4',t:2000},{note:'F#4',t:2100},{note:'D4',t:2200},{note:'A3',t:2300},
-        {note:'G3',t:2400},{note:'B3',t:2500},{note:'D4',t:2600},{note:'G4',t:2700},
-        {note:'B4',t:2800},{note:'D5',t:2900},{note:'G5',t:3000},{note:'D5',t:3100},
-        // Repeat x6 with variations
-        ...Array.from({length:6}, (_,rep) => [
-          {note:'G3',t:3200+rep*3500+0},{note:'B3',t:3200+rep*3500+100},{note:'D4',t:3200+rep*3500+200},{note:'G4',t:3200+rep*3500+300},
-          {note:'D4',t:3200+rep*3500+400},{note:'B3',t:3200+rep*3500+500},{note:'G3',t:3200+rep*3500+600},{note:'D3',t:3200+rep*3500+700},
-          {note:'C4',t:3200+rep*3500+800},{note:'E4',t:3200+rep*3500+900},{note:'G4',t:3200+rep*3500+1000},{note:'C5',t:3200+rep*3500+1100},
-          {note:'G4',t:3200+rep*3500+1200},{note:'E4',t:3200+rep*3500+1300},{note:'C4',t:3200+rep*3500+1400},{note:'E4',t:3200+rep*3500+1500},
-          {note:'D4',t:3200+rep*3500+1600},{note:'A4',t:3200+rep*3500+1800},{note:'D5',t:3200+rep*3500+2000},{note:'A4',t:3200+rep*3500+2200},
-          {note:'G3',t:3200+rep*3500+2500},{note:'B3',t:3200+rep*3500+2700},{note:'D4',t:3200+rep*3500+2900},{note:'G4',t:3200+rep*3500+3100},
+        ...Array.from({length:7}, (_,rep) => [
+          {note:'G3',t:2400+rep*3000+0},{note:'B3',t:2400+rep*3000+100},{note:'D4',t:2400+rep*3000+200},{note:'G4',t:2400+rep*3000+300},
+          {note:'D4',t:2400+rep*3000+400},{note:'B3',t:2400+rep*3000+500},{note:'G3',t:2400+rep*3000+600},{note:'D3',t:2400+rep*3000+700},
+          {note:'C4',t:2400+rep*3000+800},{note:'E4',t:2400+rep*3000+900},{note:'G4',t:2400+rep*3000+1000},{note:'C5',t:2400+rep*3000+1100},
+          {note:'G4',t:2400+rep*3000+1200},{note:'E4',t:2400+rep*3000+1300},{note:'C4',t:2400+rep*3000+1400},{note:'E4',t:2400+rep*3000+1500},
+          {note:'D4',t:2400+rep*3000+1600},{note:'A4',t:2400+rep*3000+1800},{note:'F#4',t:2400+rep*3000+2000},{note:'D4',t:2400+rep*3000+2200},
         ]).flat(),
       ]},
-      { inst: 'acoustic', events: [
-        // Rhythm guitar — strum on 2 and 4
-        ...Array.from({length:16}, (_,i) => [
-          {note:'G3',t:600+i*1500},{note:'B3',t:650+i*1500},{note:'D4',t:700+i*1500},
-        ]).flat(),
+      { inst: 'strings', events: [
+        // Fiddle melody — mountain minor pentatonic singalong over the banjo roll
+        {note:'D4',t:0},{note:'E4',t:600},{note:'G4',t:1200},{note:'A4',t:1800},
+        {note:'B4',t:2400},{note:'A4',t:3000},{note:'G4',t:3600},{note:'E4',t:4200},
+        {note:'D4',t:4800},{note:'G4',t:5400},{note:'A4',t:6000},{note:'B4',t:6600},
+        {note:'A4',t:7200},{note:'G4',t:7800},{note:'E4',t:8400},{note:'D4',t:9000},
+        {note:'G3',t:9600},{note:'A3',t:10200},{note:'B3',t:10800},{note:'D4',t:11400},
+        {note:'E4',t:12000},{note:'F#4',t:12600},{note:'G4',t:13200},{note:'A4',t:13800},
+        {note:'B4',t:14400},{note:'A4',t:15000},{note:'G4',t:15600},{note:'F#4',t:16200},
+        {note:'E4',t:16800},{note:'D4',t:17400},{note:'E4',t:18000},{note:'G4',t:18600},
+        {note:'A4',t:19200},{note:'G4',t:19800},{note:'E4',t:20400},{note:'D4',t:21000},
+        {note:'G4',t:21600},{note:'A4',t:22200},{note:'B4',t:22800},{note:'G4',t:23400},
       ]},
       { inst: 'bass', events: [
-        // Root-five bass movement
+        // Root-five walking bass
         ...Array.from({length:8}, (_,i) => [
           {note:'G2',t:i*3000+0},{note:'D2',t:i*3000+750},{note:'G2',t:i*3000+1500},{note:'D2',t:i*3000+2250},
         ]).flat(),
@@ -1272,7 +1677,7 @@ const EXAMPLES: Example[] = [
   },
 
   // ── DREAM STATE ───────────────────────────────────────────────────────────
-  {
+  /* {
     name: 'DREAM STATE', emoji: '💫',
     desc: 'Pad + soprano + strings · F major · 80 BPM · 24s',
     dur: 24000,
@@ -1307,7 +1712,7 @@ const EXAMPLES: Example[] = [
         {note:'C5',t:19500},{note:'F4',t:22500},
       ]},
     ],
-  },
+  }, */
 
   // ── KOTO NIGHT ────────────────────────────────────────────────────────────
   {
@@ -1463,9 +1868,9 @@ const EXAMPLES: Example[] = [
       ]},
       { inst: 'bass', events: [
         // Sparse, ghostly bass movement
-        {note:'D2',t:0},{note:'A2',t:3000},{note:'G2',t:6000},
-        {note:'F2',t:9000},{note:'D2',t:12000},{note:'A2',t:15000},
-        {note:'A#2',t:18000},{note:'A2',t:21000},{note:'D2',t:23500},
+        {note:'D3',t:0},{note:'A3',t:3000},{note:'G3',t:6000},
+        {note:'F3',t:9000},{note:'D3',t:12000},{note:'A3',t:15000},
+        {note:'A#3',t:18000},{note:'A3',t:21000},{note:'D3',t:23500},
       ]},
     ],
   },
@@ -2216,11 +2621,11 @@ function PianoSection() {
         {tracks.length > 0 && (
           <div className="track-manager">
             <div className="track-manager-label">▶ TRACKS</div>
-            {tracks.map((tr, i) => {
+            {tracks.map((tr) => {
               const inst = INSTRUMENTS.find(ii => ii.id === tr.inst);
               return (
                 <div key={tr.id} className={`studio-track ${tr.muted ? 'muted' : ''}`}
-                  style={{'--track-color': TRACK_COLORS[i % TRACK_COLORS.length]} as React.CSSProperties}>
+                  style={{'--track-color': inst?.color ?? '#39ff14'} as React.CSSProperties}>
                   <span className="studio-track-icon">{inst?.icon}</span>
                   <span className="studio-track-name">{inst?.name}</span>
                   <span className="studio-track-events">{tr.events.length} events · {(tr.dur/1000).toFixed(1)}s</span>
