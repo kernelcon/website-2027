@@ -648,54 +648,41 @@ function PianoSection() {
         ps.connect(pf); pf.connect(pg); wire(pg); ps.start(t);
       }
       else if (inst === 'acoustic') {
-        // Acoustic guitar: noise excitation → resonant harmonic bank + body resonances
-        const dur = 1.8;
-        const exciteMs = Math.min(1000 / freq, 15); // ~one string period, capped at 15ms
-        const exciteLen = Math.floor(ctx.sampleRate * exciteMs / 1000);
-        const exciteBuf = ctx.createBuffer(1, exciteLen, ctx.sampleRate);
-        const ed = exciteBuf.getChannelData(0);
-        for (let i = 0; i < exciteLen; i++)
-          ed[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / exciteLen, 1.5);
-        // Harmonic resonators — higher harmonics decay progressively faster
+        // Acoustic guitar: triangle harmonics (warm soundboard) + pluck envelope + pick transient
+        const dur = 2.2;
+        // Pick attack noise
+        const aLen = Math.floor(ctx.sampleRate * 0.025);
+        const aBuf = ctx.createBuffer(1, aLen, ctx.sampleRate);
+        const aData = aBuf.getChannelData(0);
+        for (let i = 0; i < aLen; i++)
+          aData[i] = (Math.random() * 2 - 1) * Math.exp(-i / aLen * 8);
+        const aSrc = ctx.createBufferSource(); aSrc.buffer = aBuf;
+        const aFilt = ctx.createBiquadFilter(); aFilt.type = 'bandpass'; aFilt.frequency.value = 2800; aFilt.Q.value = 1.5;
+        const aGain = ctx.createGain(); aGain.gain.value = 0.5;
+        aSrc.connect(aFilt); aFilt.connect(aGain); wire(aGain); aSrc.start(t);
+        // Harmonic series with pluck envelope: instant on, fast 55% drop, slow ring
         ([
-          [1, 0.50, 1.00, 35],
-          [2, 0.28, 0.70, 28],
-          [3, 0.16, 0.50, 22],
-          [4, 0.09, 0.35, 16],
-          [5, 0.05, 0.22, 12],
-        ] as [number,number,number,number][]).forEach(([h, vol, decayFrac, Q]) => {
-          const src = ctx.createBufferSource(); src.buffer = exciteBuf;
-          const bp = ctx.createBiquadFilter();
-          bp.type = 'bandpass'; bp.frequency.value = freq * h; bp.Q.value = Q;
-          const g = ctx.createGain();
+          [1,   0.55, dur],
+          [2,   0.25, dur * 0.75],
+          [3,   0.12, dur * 0.55],
+          [4,   0.06, dur * 0.38],
+          [5,   0.03, dur * 0.25],
+        ] as [number, number, number][]).forEach(([mult, vol, hdur]) => {
+          const o = ctx.createOscillator(); const g = ctx.createGain();
+          o.type = 'triangle'; o.frequency.setValueAtTime(freq * mult, t);
           g.gain.setValueAtTime(vol, t);
-          g.gain.exponentialRampToValueAtTime(0.001, t + dur * decayFrac);
-          src.connect(bp); bp.connect(g); wire(g); src.start(t); src.stop(t + dur);
+          g.gain.exponentialRampToValueAtTime(vol * 0.45, t + 0.08);
+          g.gain.exponentialRampToValueAtTime(0.001, t + hdur);
+          o.connect(g); wire(g); o.start(t); o.stop(t + hdur);
         });
-        // Body resonances: dreadnought air cavity ~95Hz, top plate ~190Hz, brace ~380Hz
-        ([
-          [95,  0.30, 0.55, 7],
-          [190, 0.18, 0.40, 6],
-          [380, 0.09, 0.28, 5],
-        ] as [number,number,number,number][]).forEach(([bFreq, vol, decayFrac, Q]) => {
-          const src = ctx.createBufferSource(); src.buffer = exciteBuf;
-          const bp = ctx.createBiquadFilter();
-          bp.type = 'bandpass'; bp.frequency.value = bFreq; bp.Q.value = Q;
-          const g = ctx.createGain();
-          g.gain.setValueAtTime(vol, t);
-          g.gain.exponentialRampToValueAtTime(0.001, t + dur * decayFrac);
-          src.connect(bp); bp.connect(g); wire(g); src.start(t); src.stop(t + dur);
+        // Body chorus: two slight-detuned voices add room/soundboard resonance
+        [-5, 5].forEach(det => {
+          const o = ctx.createOscillator(); const g = ctx.createGain();
+          o.type = 'triangle'; o.frequency.setValueAtTime(freq, t); o.detune.setValueAtTime(det, t);
+          g.gain.setValueAtTime(0.14, t);
+          g.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.85);
+          o.connect(g); wire(g); o.start(t); o.stop(t + dur * 0.85);
         });
-        // Steel string sparkle transient (fingernail/pick on wound string)
-        const sparkLen = Math.floor(ctx.sampleRate * 0.018);
-        const sparkBuf = ctx.createBuffer(1, sparkLen, ctx.sampleRate);
-        const sd = sparkBuf.getChannelData(0);
-        for (let i = 0; i < sparkLen; i++)
-          sd[i] = (Math.random() * 2 - 1) * Math.exp(-i / sparkLen * 6);
-        const ss = ctx.createBufferSource(); ss.buffer = sparkBuf;
-        const sf = ctx.createBiquadFilter(); sf.type = 'bandpass'; sf.frequency.value = 5500; sf.Q.value = 1.0;
-        const sg = ctx.createGain(); sg.gain.value = 0.15;
-        ss.connect(sf); sf.connect(sg); wire(sg); ss.start(t); ss.stop(t + dur);
       }
       else if (inst === 'banjo') {
         // Banjo: sawtooth (all harmonics, bright/metallic) + drum-head resonance + loud pick attack
