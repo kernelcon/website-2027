@@ -139,6 +139,16 @@
       "mastodon": "",
       "mastodon_url": "",
       "oc": true
+    },
+    {
+      "id": 18,
+      "name": "Andrew",
+      "title": "Events Chair",
+      "image": "andrew.png",
+      "twitter": "",
+      "mastodon": "",
+      "mastodon_url": "",
+      "oc": true
     }
   ]
 }]
