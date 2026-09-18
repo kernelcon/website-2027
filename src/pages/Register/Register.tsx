@@ -1,103 +1,62 @@
-import { Component } from "react";
 import "./Register.scss";
 
-class Register extends Component {
-	static displayName = "Register";
+const Register = () => {
+  return (
+    <div className="reg-page">
 
-	render() {
-		return (
-			<div className="container">
-				<div className="con-page">
-					<div className="venue-section">
-						<h3 className="title">Register</h3>
-						<p className="tab-paragraph">
-							Welcome! We are happy to have your interest. Below is
-							the registration page for Kernelcon 2027!
-						</p>
+      {/* ── Hero ── */}
+      <div className="reg-hero">
+        <p className="reg-pre-label">Algo(Rhythm) 2027 · Omaha, NE</p>
+        <h1 className="reg-title">Get Your Pass</h1>
+        <p className="reg-subtitle">Secure your spot at the stage. Mar 4–5, 2027.</p>
+        <a
+          className="reg-cta"
+          href="https://reg.kernelcon.org/e/2138684337"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Register Now
+        </a>
+      </div>
 
+      {/* ── Info cards ── */}
+      <div className="reg-cards">
 
-						<div className='order-button'>
-							<a
-								className="cybr-btn btn-bottom"
-								target="_blank"
-								rel="noopener noreferrer"
-								href="https://reg.kernelcon.org/e/2138684337">
-								Register Now
-								<span aria-hidden className="cybr-btn__glitch">
-									Register Now
-								</span>
-							</a>
-						</div><br />
-					</div>
-					<div className="venue-section">
-						<h3 className="title">Registering as a Group?</h3>
-						<p className="tab-paragraph">
-							We give discounts at 10 or more signups! Contact us
-							about our group rates here:{" "}
-							<a
-								className="text-highlight"
-								href="mailto:info@kernelcon.org">
-								info@kernelcon.org
-							</a>
-						</p>
-					</div>
-					<div className="venue-section">
-						<h3 className="title">Students</h3>
-						<p className="tab-paragraph text-highlight">
-							<a href="/dates">
-								Student scholarships for Kernelcon 2027 are now closed.
-							</a>
-						</p>
-						<p className="tab-paragraph">
-							Please check back next year for updated information on student registration opportunities.
-						</p>
-						{/*
-						Previous open-call content preserved for reference:
-						<p className="text-highlight">
-							Are you interested in attending Kernelcon, but cannot
-							afford the con?
-						</p>
-						<p className="tab-paragraph">
-							Students, aged 18 and over, who are interested in
-							applying for this opportunity will need the following:
-						</p>
-						<ul className="students-list">
-							<li>
-								Proof that you are a student. Picture at school with
-								your student ID.
-							</li>
-							<li>
-								Letter of recommendation from an advisor or
-								instructor from your institution.
-							</li>
-							<li>
-								A brief letter of interest, telling us why you are
-								interested in attending Kernelcon and what you hope
-								to learn.
-							</li>
-							<li>
-								Lastly, one or both of the letters should be sent
-								from a school email address.
-							</li>
-						</ul>
-						<p className="tab-paragraph">
-							Students should submit the above information along with
-							any questions or concerns to{" "}
-							<a
-								className="text-highlight"
-								href="mailto:students@kernelcon.org">
-								students@kernelcon.org
-							</a>
-							. Accepted students will receive admission to the
-							conference, a hotel room (for traveling students), and
-							this year's "hacker education kit".
-						</p>
-						*/}
-					</div>
-				</div>
-			</div>
-		);
-	}
-}
+        <div className="reg-card">
+          <p className="reg-card-label">Group Admission</p>
+          <h2 className="reg-card-title">Rolling with a Crew?</h2>
+          <p className="reg-card-body">
+            Bring 10 or more and we'll cut you a deal. Groups get discounted
+            passes — reach out and we'll sort the details.
+          </p>
+          <a className="reg-card-link" href="mailto:info@kernelcon.org">
+            info@kernelcon.org
+          </a>
+        </div>
+
+        <div className="reg-card">
+          <p className="reg-card-label">Student Passes</p>
+          <h2 className="reg-card-title">Student Scholarships</h2>
+          <p className="reg-card-body">
+            Can't afford the con? We've got you. Students 18 and over can
+            apply for a scholarship — accepted students get conference
+            admission, a hotel room if traveling, and this year's hacker
+            education kit.
+          </p>
+          <p className="reg-card-label" style={{marginTop: '1rem'}}>To apply, send the following to{' '}
+            <a className="reg-card-link" href="mailto:students@kernelcon.org">students@kernelcon.org</a>
+          </p>
+          <ul className="reg-scholarship-list">
+            <li>Photo proof of enrollment — you + your student ID at school</li>
+            <li>Letter of recommendation from an advisor or instructor</li>
+            <li>Brief letter of interest — why Kernelcon, what you hope to learn</li>
+            <li>At least one letter sent from a school email address</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  );
+};
 
 export default Register;

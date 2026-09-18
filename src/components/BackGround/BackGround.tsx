@@ -209,7 +209,7 @@ export default class BackGround extends Component<object, BackGroundState> {
               Get Your Pass
             </a>
             <a
-              href="#speakers"
+              href="/agenda"
               className="algo-btn-secondary"
             >
               See the Lineup
