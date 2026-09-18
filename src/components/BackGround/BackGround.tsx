@@ -209,10 +209,10 @@ export default class BackGround extends Component<object, BackGroundState> {
               Register
             </a>
             <a
-              href="/open-calls"
+              href="/agenda"
               className="algo-btn-secondary"
             >
-              Submit a Proposal
+              View Agenda
             </a>
           </div>
         </div>
