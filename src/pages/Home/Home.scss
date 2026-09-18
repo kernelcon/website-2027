@@ -1444,9 +1444,9 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
   .inst-name { white-space: nowrap; text-transform: uppercase; }
 
   &:hover {
-    color: var(--inst-color);
+    color: #000;
     &::before { background: var(--inst-color); }
-    &::after  { background: rgba(255,255,255,0.08); }
+    &::after  { background: rgba(255,255,255,0.92); }
   }
 
   &.active {
