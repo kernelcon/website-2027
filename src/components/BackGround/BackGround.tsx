@@ -206,13 +206,13 @@ export default class BackGround extends Component<object, BackGroundState> {
               href="/register"
               className="algo-btn-primary"
             >
-              Get Your Pass
+              Register
             </a>
             <a
-              href="#speakers"
+              href="/open-calls"
               className="algo-btn-secondary"
             >
-              See the Lineup
+              Submit a Proposal
             </a>
           </div>
         </div>

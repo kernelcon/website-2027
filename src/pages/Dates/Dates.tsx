@@ -59,7 +59,7 @@ class Dates extends Component {
         <div className='container'>
           <div className='venue-section'>
             <div className='page-header'>
-              <span className='page-pre-label'>Tour Dates</span>
+              <span className='page-pre-label'>Kernelcon 2027</span>
               <h1>Important <span>Dates</span></h1>
               <div className='page-sub'>MAR 4–5, 2027 · Omaha, NE · All times Central</div>
               <div className='page-rule' />

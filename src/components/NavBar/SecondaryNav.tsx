@@ -22,12 +22,12 @@ export default class SecondaryNav extends Component {
 							<div className="nav-links">
 								<Link to="/agenda">Agenda</Link>
 								{/* <Link to="/robo-race">Robo Race</Link> */}
-								<Link to="/venue">The Stage</Link>
-								<Link to="/dates">Tour Dates</Link>
-								<Link to="/open-calls">Submit a Track</Link>
-								<Link to="/sponsors">Label Support</Link>
+								<Link to="/venue">Venue</Link>
+								<Link to="/dates">Dates</Link>
+								<Link to="/open-calls">Open Calls</Link>
+								<Link to="/sponsors">Sponsors</Link>
 								{/* <Link to="/safety">Safety</Link> */}
-								<Link to="/about">Credits</Link>
+								<Link to="/about">About</Link>
 							</div>
 						}
 					/>
