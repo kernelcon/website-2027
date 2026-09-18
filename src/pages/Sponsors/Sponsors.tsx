@@ -11,7 +11,7 @@ export default class Sponsors extends Component {
           <div className="sponsors">
             <div className="page-header">
               <span className="page-pre-label">Sponsorships Available</span>
-              <h1>Label <span>Support</span></h1>
+              <h1>Our <span>Sponsors</span></h1>
               <div className="page-sub">The organizations that make Algo(Rhythm) possible</div>
               <div className="page-rule" />
             </div>

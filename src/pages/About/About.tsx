@@ -306,7 +306,7 @@ export default class About extends Component<LegacyRouteProps, AboutState> {
           <div className='venue-section'>
             <div className="page-header">
               <span className="page-pre-label">The Crew</span>
-              <h1>The <span>Credits</span></h1>
+              <h1>About <span>Kernelcon</span></h1>
               <div className="page-sub">Who we are and what we stand for</div>
               <div className="page-rule" />
             </div>

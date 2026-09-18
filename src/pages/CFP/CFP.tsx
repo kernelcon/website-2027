@@ -9,7 +9,7 @@ return (
     <div className="text-area">
     <div>
       {/* Opening */}
-      <p className="tab-paragraph">Calling all Signal Makers!</p>
+      <p className="tab-paragraph">Calling all hackers, researchers, and builders!</p>
   	  <p className="tab-paragraph">TL;DR - submit via  {" "}
 			<a
 				href="https://forms.gle/EJr4EK7NjZeDyBZb8"
@@ -24,9 +24,8 @@ return (
         held at the Hilton Downtown in Omaha, NE, March 4-5, 2027.
       </p>
       <p className="tab-paragraph">
-        Have you built something that slaps? Dropped a track the community needs to hear?
-        Whether you're exploiting beats or exploiting binaries, if your work hits hard and
-        teaches something real, we want it on our stage. Submit your talk to the CFP!
+        Have you built, broken, or discovered something the community needs to hear about?
+        If your work teaches something real, we want it on our stage. Submit your talk to the CFP!
       </p>
       <p className="tab-paragraph">
         As you plan your submission, feel free to peruse the{" "}

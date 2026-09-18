@@ -4,15 +4,31 @@ import "./Home.scss";
 
 // ── DATA ──────────────────────────────────────────────────────────────────────
 
+// `start` (YYYY-MM-DD) drives the status: the most recent milestone that has
+// started is highlighted as "playing", earlier ones are done, later ones pending.
 const KEY_DATES = [
-  { num: "01", date: "SEP 2026",  title: "Signal Detected",      sub: "Registration Opens",        status: "finale" },
-  { num: "02", date: "SEP 2026",  title: "Open Channel",         sub: "Call for Papers, Training & Villages Open", status: "finale" },
-  { num: "03", date: "NOV 2026",  title: "Buffer Overflow",      sub: "Call for Training Closes",  status: "coming" },
-  { num: "04", date: "DEC 2026",  title: "Final Commit",         sub: "CFP Closes",                status: "coming" },
-  { num: "05", date: "FEB 2027",  title: "Headliners Drop",      sub: "Keynotes Announced",        status: "coming" },
-  { num: "06", date: "MAR 2–3",  title: "Pre-show Soundcheck",  sub: "Pre-conference Training",   status: "coming" },
-  { num: "07", date: "MAR 4–5",  title: "EXECUTE PAYLOAD",      sub: "Kernelcon 2027 Main Event", status: "coming" },
+  { num: "01", date: "SEP 2026",  start: "2026-09-01", title: "Registration Opens",       sub: "Conference and training passes on sale" },
+  { num: "02", date: "SEP 2026",  start: "2026-09-01", title: "Open Calls Open",          sub: "Call for papers, training, and villages" },
+  { num: "03", date: "NOV 2026",  start: "2026-11-14", title: "Call for Training Closes", sub: "Last day to submit training proposals" },
+  { num: "04", date: "DEC 2026",  start: "2026-12-19", title: "Call for Papers Closes",   sub: "Last day to submit talks" },
+  { num: "05", date: "JAN 2027",  start: "2027-01-27", title: "Keynotes Announced",       sub: "Keynote speakers revealed" },
+  { num: "06", date: "MAR 2–3",  start: "2027-03-02", title: "Training",                 sub: "Pre-conference training at the Hilton Omaha" },
+  { num: "07", date: "MAR 4–5",  start: "2027-03-04", title: "Kernelcon 2027",           sub: "Main conference at the Hilton Omaha" },
 ];
+
+function getKeyDateStatuses(today = new Date()) {
+  const toDate = (s: string) => {
+    const [y, m, d] = s.split("-").map(Number);
+    return new Date(y, m - 1, d);
+  };
+  const started = KEY_DATES.filter((k) => toDate(k.start) <= today);
+  const currentStart = started.length ? started[started.length - 1].start : null;
+  return KEY_DATES.map((k) => {
+    if (k.start === currentStart) return { ...k, status: "finale" };
+    if (toDate(k.start) <= today) return { ...k, status: "done" };
+    return { ...k, status: "coming" };
+  });
+}
 
 // const KEYNOTES = [
 //   { name: "Casey Ellis",    org: "cje.io",      badge: "Keynote" },
@@ -41,13 +57,13 @@ const TRAININGS = [
 ];
 
 const STAGES = [
-  { icon: "🎫", name: "Badge Channel",    tag: "Badge Village",          desc: "Hardware quests and interactive badge challenges. Solve puzzles. Unlock achievements." },
-  { icon: "📻", name: "Analog Channel",   tag: "HAM Radio Village",      desc: "Old-school frequencies. The original wireless hacks. Before WiFi there was RF." },
-  { icon: "🔧", name: "Workshop Channel", tag: "Hardware Hacking",       desc: "Embedded systems, IoT, and hardware exploitation. Build and break in equal measure." },
-  { icon: "🔐", name: "Pick & Roll",      tag: "Lockpicking Village",    desc: "Physical security, locks, vaults. The original social engineering is a tension wrench." },
-  { icon: "📡", name: "RF Channel",       tag: "Radio Hacking Outpost",  desc: "SDR, WiFi, signal exploitation. The airwaves are never safe when we're around." },
-  { icon: "💚", name: "Chill Room",       tag: "Mental Health Village",  desc: "Recharge between sets. Talk to humans. Rest is part of the craft." },
-  { icon: "🎨", name: "Art Channel",      tag: "Hack/Craft Village",     desc: "Screen printing, DTF, making things. Because hackers make art too." },
+  { icon: "🎫", name: "Badge Village",          desc: "Hardware quests and interactive badge challenges. Solve puzzles. Unlock achievements." },
+  { icon: "📻", name: "HAM Radio Village",      desc: "Old-school frequencies. The original wireless hacks. Before WiFi there was RF." },
+  { icon: "🔧", name: "Hardware Hacking",       desc: "Embedded systems, IoT, and hardware exploitation. Build and break in equal measure." },
+  { icon: "🔐", name: "Lockpicking Village",    desc: "Physical security, locks, vaults. The original social engineering is a tension wrench." },
+  { icon: "📡", name: "Radio Hacking Outpost",  desc: "SDR, WiFi, signal exploitation. The airwaves are never safe when we're around." },
+  { icon: "💚", name: "Mental Health Village",  desc: "Recharge between sets. Talk to humans. Rest is part of the craft." },
+  { icon: "🎨", name: "Hack/Craft Village",     desc: "Screen printing, DTF, making things. Because hackers make art too." },
 ];
 
 const EVENTS = [
@@ -3112,7 +3128,7 @@ function FaqSection() {
       <div className="rhythm-inner faq-inner">
         <div className="faq-header">
           <div className="rhythm-label">Help Desk</div>
-          <h2 className="rhythm-title">LINER<br /><span className="accent-yellow">NOTES</span></h2>
+          <h2 className="rhythm-title"><span className="accent-yellow">FAQ</span></h2>
           <p className="faq-desc">Read the fine print before the show starts.</p>
         </div>
         <div className="faq-list">
@@ -3157,13 +3173,13 @@ export default class Home extends Component<object, HomeState> {
             <div className="rhythm-inner">
               <div className="section-header">
                 <div>
-                  <div className="rhythm-label">Schedule</div>
-                  <h2 className="rhythm-title">THE <span className="accent-yellow">TRACKLIST</span></h2>
+                  <div className="rhythm-label">Mark Your Calendar</div>
+                  <h2 className="rhythm-title">UPCOMING <span className="accent-yellow">DATES</span></h2>
                 </div>
-                <div className="now-playing">▶ EXECUTING MAR 4–5 · OMAHA, NE</div>
+                <div className="now-playing">▶ MAR 4–5 · OMAHA, NE</div>
               </div>
               <div className="track-list">
-                {KEY_DATES.map((d) => (
+                {getKeyDateStatuses().map((d) => (
                   <div key={d.num} className={`track-item track-${d.status}`}>
                     <div className="track-num">{d.num}</div>
                     <div className="track-date">{d.date}</div>
@@ -3172,7 +3188,7 @@ export default class Home extends Component<object, HomeState> {
                       <div className="track-sub">{d.sub}</div>
                     </div>
                     <div className={`track-status status-${d.status}`}>
-                      {d.status === "finale" ? "★ PLAYING" : "PENDING"}
+                      {d.status === "finale" ? "★ PLAYING" : d.status === "done" ? "DONE" : "UPCOMING"}
                     </div>
                   </div>
                 ))}
@@ -3252,14 +3268,13 @@ export default class Home extends Component<object, HomeState> {
           {/* ── THE CHANNELS ── */}
           <div className="rhythm-section stages-section">
             <div className="rhythm-inner">
-              <div className="rhythm-label">Villages &amp; Areas</div>
-              <h2 className="rhythm-title">THE <span className="accent-purple">CHANNELS</span></h2>
+              <div className="rhythm-label">Hands-On All Weekend</div>
+              <h2 className="rhythm-title">VILLAGES <span className="accent-purple">&amp; AREAS</span></h2>
               <div className="stages-grid">
                 {STAGES.map((s) => (
                   <div key={s.name} className="stage-card">
                     <span className="stage-icon">{s.icon}</span>
                     <div className="stage-name">{s.name}</div>
-                    <div className="stage-tag">{s.tag}</div>
                     <div className="stage-desc">{s.desc}</div>
                   </div>
                 ))}
@@ -3293,8 +3308,8 @@ export default class Home extends Component<object, HomeState> {
           {/* ── BATTLE MODE ── */}
           <div className="rhythm-section battle-section">
             <div className="rhythm-inner">
-              <div className="rhythm-label">Competitions</div>
-              <h2 className="rhythm-title">BATTLE <span className="accent-pink">MODE</span></h2>
+              <div className="rhythm-label">Test Your Skills</div>
+              <h2 className="rhythm-title"><span className="accent-pink">COMPETITIONS</span></h2>
               <div className="battle-grid">
                 {BATTLES.map((b) => (
                   <div key={b.name} className={`battle-card battle-${b.color}`}>
@@ -3319,8 +3334,8 @@ export default class Home extends Component<object, HomeState> {
           <div className="rhythm-section cta-section">
             <div className="rhythm-inner cta-inner">
               <div className="cta-content">
-                <div className="rhythm-label">Join the Frequency</div>
-                <h2 className="rhythm-title">GET YOUR <span className="accent-green">PASS</span></h2>
+                <div className="rhythm-label">March 4–5, 2027 · Omaha</div>
+                <h2 className="rhythm-title"><span className="accent-green">REGISTER</span></h2>
                 <p className="cta-desc">
                   Secure your spot at the Midwest's most electric cybersecurity event.
                   Registration is live. Slots are finite. The show doesn't wait.
@@ -3332,10 +3347,10 @@ export default class Home extends Component<object, HomeState> {
                   <li>Passes are transferable (no refunds)</li>
                   <li>Training sold separately. Mar 2-3.</li>
                 </ul>
-                <a href="/register" className="cta-button">▶ Register at Kernelcon.org</a>
+                <a href="/register" className="cta-button">▶ Register Now</a>
               </div>
               <div className="cta-details">
-                <div className="cta-detail-title">SIGNAL DETAILS</div>
+                <div className="cta-detail-title">EVENT DETAILS</div>
                 <ul className="cta-detail-list">
                   <li>Hilton Omaha, Omaha, Nebraska</li>
                   <li>Training: March 2–3, 2027</li>

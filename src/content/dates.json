@@ -43,13 +43,13 @@
   },
   {
     "title": "Keynotes Announced",
-    "description": "Find out who's dropping the first beat.",
+    "description": "Keynote speakers revealed.",
     "date": "JAN 27, 2027",
     "hidden": "false"
   },
   {
     "title": "Tentative Agenda Released",
-    "description": "The full set list drops.",
+    "description": "The full talk schedule is posted.",
     "date": "FEB 3, 2027",
     "hidden": "false"
   },
@@ -67,7 +67,7 @@
   },
   {
     "title": "Kernelcon 2027",
-    "description": "Algo(Rhythm). Drop the beat. Break the algorithm.",
+    "description": "Algo(Rhythm). Two days of talks, villages, and competitions at the Hilton Omaha.",
     "date": "MAR 4-5, 2027",
     "hidden": "false"
   }
