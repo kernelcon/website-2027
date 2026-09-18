@@ -165,6 +165,196 @@ function loadPianoSamples(ctx: AudioContext) {
   });
 }
 
+// ── Guitar acoustic samples (nbrosowsky mirror) ────────────────────────────────
+const GUIT_AC_BASE = 'https://nbrosowsky.github.io/tonejs-instruments/samples/guitar-acoustic/';
+const GUIT_AC_MAP: Record<string, string> = {
+  'C2':'D2',   'C#2':'D2',  'D2':'D2',   'D#2':'Ds2', 'E2':'E2',   'F2':'F2',
+  'F#2':'Fs2', 'G2':'G2',   'G#2':'Gs2', 'A2':'A2',   'A#2':'As2', 'B2':'B2',
+  'C3':'C3',   'C#3':'Cs3', 'D3':'D3',   'D#3':'Ds3', 'E3':'E3',   'F3':'F3',
+  'F#3':'Fs3', 'G3':'G3',   'G#3':'G3',  'A3':'A3',   'A#3':'A3',  'B3':'C4',
+  'C4':'C4',   'C#4':'C4',  'D4':'C4',   'D#4':'E4',  'E4':'E4',   'F4':'E4',
+  'F#4':'Fs4', 'G4':'G4',   'G#4':'Gs4', 'A4':'A4',   'A#4':'As4', 'B4':'B4',
+  'C5':'C5',
+};
+const GUIT_AC_HZ: Record<string, number> = {
+  'D2':73.42,'Ds2':77.78,'E2':82.41,'F2':87.31,'Fs2':92.50,'G2':98.00,'Gs2':103.83,
+  'A2':110.00,'As2':116.54,'B2':123.47,
+  'C3':130.81,'Cs3':138.59,'D3':146.83,'Ds3':155.56,'E3':164.81,'F3':174.61,'Fs3':185.00,'G3':196.00,
+  'A3':220.00,'C4':261.63,'E4':329.63,'Fs4':369.99,'G4':392.00,'Gs4':415.30,
+  'A4':440.00,'As4':466.16,'B4':493.88,'C5':523.25,
+};
+const acousticCache = new Map<string, AudioBuffer>();
+let acousticLoadStarted = false;
+function loadAcousticSamples(ctx: AudioContext) {
+  if (acousticLoadStarted) return;
+  acousticLoadStarted = true;
+  const keys = [...new Set(Object.values(GUIT_AC_MAP))];
+  keys.forEach(async (k) => {
+    try {
+      const r = await fetch(`${GUIT_AC_BASE}${k}.mp3`);
+      if (!r.ok) return;
+      acousticCache.set(k, await ctx.decodeAudioData(await r.arrayBuffer()));
+    } catch {}
+  });
+}
+
+// ── Guitar electric samples (nbrosowsky mirror) ────────────────────────────────
+const GUIT_EL_BASE = 'https://nbrosowsky.github.io/tonejs-instruments/samples/guitar-electric/';
+const GUIT_EL_MAP: Record<string, string> = {
+  'C2':'A2',   'C#2':'A2',  'D2':'A2',   'D#2':'A2',  'E2':'A2',   'F2':'A2',
+  'F#2':'A2',  'G2':'A2',   'G#2':'A2',  'A2':'A2',   'A#2':'C3',  'B2':'C3',
+  'C3':'C3',   'C#3':'C3',  'D3':'Ds3',  'D#3':'Ds3', 'E3':'Ds3',  'F3':'Fs3',
+  'F#3':'Fs3', 'G3':'Fs3',  'G#3':'A3',  'A3':'A3',   'A#3':'A3',  'B3':'C4',
+  'C4':'C4',   'C#4':'C4',  'D4':'C4',   'D#4':'Fs4', 'E4':'Fs4',  'F4':'Fs4',
+  'F#4':'Fs4', 'G4':'Fs4',  'G#4':'A4',  'A4':'A4',   'A#4':'A4',  'B4':'A4',
+  'C5':'A4',
+};
+const GUIT_EL_HZ: Record<string, number> = {
+  'A2':110.00,'C3':130.81,'Ds3':155.56,'Fs3':185.00,'A3':220.00,'C4':261.63,'Fs4':369.99,'A4':440.00,
+};
+const guitarElCache = new Map<string, AudioBuffer>();
+let guitarElLoadStarted = false;
+function loadGuitarElSamples(ctx: AudioContext) {
+  if (guitarElLoadStarted) return;
+  guitarElLoadStarted = true;
+  const keys = [...new Set(Object.values(GUIT_EL_MAP))];
+  keys.forEach(async (k) => {
+    try {
+      const r = await fetch(`${GUIT_EL_BASE}${k}.mp3`);
+      if (!r.ok) return;
+      guitarElCache.set(k, await ctx.decodeAudioData(await r.arrayBuffer()));
+    } catch {}
+  });
+}
+
+// ── Bass electric samples (nbrosowsky mirror) ──────────────────────────────────
+const BASS_BASE = 'https://nbrosowsky.github.io/tonejs-instruments/samples/bass-electric/';
+const BASS_MAP: Record<string, string> = {
+  'C2':'Cs2',  'C#2':'Cs2', 'D2':'Cs2',  'D#2':'E2',  'E2':'E2',   'F2':'E2',
+  'F#2':'G2',  'G2':'G2',   'G#2':'G2',  'A2':'As2',  'A#2':'As2', 'B2':'As2',
+  'C3':'Cs3',  'C#3':'Cs3', 'D3':'Cs3',  'D#3':'E3',  'E3':'E3',   'F3':'E3',
+  'F#3':'G3',  'G3':'G3',   'G#3':'G3',  'A3':'As3',  'A#3':'As3', 'B3':'As3',
+  'C4':'Cs4',  'C#4':'Cs4', 'D4':'Cs4',  'D#4':'Cs4',
+};
+const BASS_HZ: Record<string, number> = {
+  'As1':58.27,'Cs2':69.30,'E2':82.41,'G2':98.00,
+  'As2':116.54,'Cs3':138.59,'E3':164.81,'G3':196.00,
+  'As3':233.08,'Cs4':277.18,
+};
+const bassCache = new Map<string, AudioBuffer>();
+let bassLoadStarted = false;
+function loadBassSamples(ctx: AudioContext) {
+  if (bassLoadStarted) return;
+  bassLoadStarted = true;
+  const keys = [...new Set(Object.values(BASS_MAP))];
+  keys.forEach(async (k) => {
+    try {
+      const r = await fetch(`${BASS_BASE}${k}.mp3`);
+      if (!r.ok) return;
+      bassCache.set(k, await ctx.decodeAudioData(await r.arrayBuffer()));
+    } catch {}
+  });
+}
+
+// ─── Soprano "Choir Ah" samples — Sonatina Symphonic Orchestra (real recordings) ─
+// CDN: jsDelivr via peastman/sso; files are WAV, ~1.5MB each, female chorus
+// # in filenames must be URL-encoded as %23
+const SSO_BASE = 'https://cdn.jsdelivr.net/gh/peastman/sso@master/Sonatina%20Symphonic%20Orchestra/Samples-looped/Chorus/';
+// Dense sample set G4–C6 (every 1-3 semitones where demos typically play)
+const CHOIR_KEYS: {sKey: string; fileName: string; hz: number}[] = [
+  {sKey:'G4',  fileName:'chorus-female-g4',    hz:392.00},
+  {sKey:'A4',  fileName:'chorus-female-a4',    hz:440.00},
+  {sKey:'B4',  fileName:'chorus-female-b4',    hz:493.88},
+  {sKey:'C5',  fileName:'chorus-female-c5',    hz:523.25},
+  {sKey:'D5',  fileName:'chorus-female-d5',    hz:587.33},
+  {sKey:'E5',  fileName:'chorus-female-e5',    hz:659.25},
+  {sKey:'G5',  fileName:'chorus-female-g5',    hz:784.00},
+  {sKey:'A#5', fileName:'chorus-female-a%235', hz:932.33},
+  {sKey:'C6',  fileName:'chorus-female-c6',    hz:1046.50},
+];
+const CHOIR_HZ: Record<string, number> = Object.fromEntries(CHOIR_KEYS.map(k => [k.sKey, k.hz]));
+// Map G4–C6 to nearest sample (notes below F4 fall through to synthesis)
+const CHOIR_MAP: Record<string, string> = {
+  'F4':'G4','F#4':'G4',              // 1-2 semitones up — fine
+  'G4':'G4','G#4':'G4',
+  'A4':'A4','A#4':'A4',
+  'B4':'B4',
+  'C5':'C5','C#5':'C5',
+  'D5':'D5','D#5':'D5',
+  'E5':'E5','F5':'E5','F#5':'E5',
+  'G5':'G5','G#5':'G5',
+  'A5':'A#5','A#5':'A#5','B5':'A#5',
+  'C6':'C6',
+};
+const choirCache = new Map<string, AudioBuffer>();
+let choirLoadStarted = false;
+function loadChoirSamples(ctx: AudioContext) {
+  if (choirLoadStarted) return;
+  choirLoadStarted = true;
+  CHOIR_KEYS.forEach(async ({sKey, fileName}) => {
+    try {
+      const r = await fetch(`${SSO_BASE}${fileName}.wav`);
+      if (!r.ok) return;
+      choirCache.set(sKey, await ctx.decodeAudioData(await r.arrayBuffer()));
+    } catch {}
+  });
+}
+
+// ─── Male Choir — SSO real orchestral male chorus recordings (C3–F4) ──────────
+// SSO male chorus — real orchestral recordings, C3–F4 range
+const VOX_BASE = 'https://cdn.jsdelivr.net/gh/peastman/sso@master/Sonatina%20Symphonic%20Orchestra/Samples-looped/Chorus/';
+const VOX_KEYS: {sKey: string; fileName: string; hz: number}[] = [
+  {sKey:'C3',  fileName:'chorus-male-c3',    hz:130.81},
+  {sKey:'D#3', fileName:'chorus-male-d%233', hz:155.56},
+  {sKey:'F#3', fileName:'chorus-male-f%233', hz:185.00},
+  {sKey:'A3',  fileName:'chorus-male-a3',    hz:220.00},
+  {sKey:'C4',  fileName:'chorus-male-c4',    hz:261.63},
+  {sKey:'D#4', fileName:'chorus-male-d%234', hz:311.13},
+  {sKey:'F4',  fileName:'chorus-male-f4',    hz:349.23},
+];
+const VOX_HZ: Record<string, number> = Object.fromEntries(VOX_KEYS.map(k => [k.sKey, k.hz]));
+// Male SSO samples cover C3–F4; notes above are silent (soprano handles G4+)
+const VOX_MAP: Record<string, string> = {
+  'C3':'C3','C#3':'C3',
+  'D3':'D#3','D#3':'D#3',
+  'E3':'D#3','F3':'F#3','F#3':'F#3',
+  'G3':'F#3','G#3':'A3',
+  'A3':'A3','A#3':'A3',
+  'B3':'C4',
+  'C4':'C4','C#4':'C4',
+  'D4':'D#4','D#4':'D#4',
+  'E4':'D#4','F4':'F4',
+};
+const voxCache = new Map<string, AudioBuffer>();
+let voxLoadStarted = false;
+function loadVoxSamples(ctx: AudioContext) {
+  if (voxLoadStarted) return;
+  voxLoadStarted = true;
+  VOX_KEYS.forEach(async ({sKey, fileName}) => {
+    try {
+      const r = await fetch(`${VOX_BASE}${fileName}.wav`);
+      if (!r.ok) return;
+      voxCache.set(sKey, await ctx.decodeAudioData(await r.arrayBuffer()));
+    } catch {}
+  });
+}
+
+// ── KERNELCON! voice bank — Web Speech API (Chrome's online Google TTS voices) ─
+let cornVoices: SpeechSynthesisVoice[] = [];
+function initCornVoices() {
+  if (typeof window === 'undefined' || !window.speechSynthesis) return;
+  const load = () => {
+    cornVoices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+  };
+  load();
+  window.speechSynthesis.addEventListener('voiceschanged', load);
+}
+// All piano keys in order, used to assign one voice per key
+const ALL_PIANO_KEYS = [
+  'C3','C#3','D3','D#3','E3','F3','F#3','G3','G#3','A3','A#3','B3',
+  'C4','C#4','D4','D#4','E4','F4','F#4','G4','G#4','A4','A#4','B4','C5',
+];
+
 const WHITE_KEYS = ['C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4','A4','B4','C5'];
 const BLACK_KEYS = [
   {note:'C#3',left:56},{note:'D#3',left:136},
@@ -180,16 +370,19 @@ const DRUM_KB: Record<string,string> = {z:'kick',x:'snare',c:'hihat',v:'tom',b:'
 const INSTRUMENTS = [
   {id:'piano',   name:'Piano',    icon:'🎹',color:'#39ff14'},
   {id:'synth',   name:'Synth',   icon:'◈', color:'#7b2fff'},
-  {id:'bass',    name:'Bass',    icon:'〰',color:'#ff006e'},
+  {id:'bass',    name:'Bass Guitar', icon:'〰',color:'#ff006e'},
+  {id:'basetone',name:'Base Tone',   icon:'◎', color:'#aa2266'},
   {id:'pad',     name:'Pad',     icon:'∿', color:'#ffe600'},
   {id:'pluck',   name:'Pluck',   icon:'✦', color:'#00cfff'},
   {id:'drums',   name:'Drums',   icon:'🥁',color:'#ff8800'},
-  {id:'guitar',  name:'Electric',icon:'⚡',color:'#ff4400'},
+  {id:'guitar',  name:'Electric',icon:'⊛', color:'#ff4400'},
   {id:'acoustic',name:'Acoustic',icon:'🎸',color:'#c8a050'},
   {id:'banjo',   name:'Banjo',   icon:'🪕',color:'#d4a050'},
   {id:'organ',   name:'Organ',   icon:'⚙', color:'#cc00ff'},
   {id:'strings', name:'Strings', icon:'🎻',color:'#ffaaff'},
-  {id:'soprano', name:'Soprano', icon:'🎤',color:'#ffccff'},
+  {id:'soprano',  name:'Choir Ah',  icon:'🎤',color:'#ffccff'},
+  {id:'vocalOoh', name:'Choir Ooh', icon:'≈', color:'#ffbbee'},
+  {id:'corn',     name:'KERNELCON!',icon:'🌽',color:'#ffe600'},
 ];
 const DRUM_PADS = [
   {id:'kick',  name:'KICK',  key:'Z',color:'#ff006e'},
@@ -203,7 +396,7 @@ const DRUM_PADS = [
 interface NoteEvent { note: string; t: number; }
 interface Track { id: number; inst: string; events: NoteEvent[]; dur: number; muted: boolean; }
 interface ExampleTrack { inst: string; events: NoteEvent[]; }
-interface Example { name: string; emoji: string; desc: string; dur: number; tracks: ExampleTrack[]; }
+interface Example { name: string; emoji: string; desc: string; dur: number; tracks: ExampleTrack[]; chorus?: boolean; }
 
 // Generates repeated note events at regular intervals — used for drum patterns
 const seq = (note: string, s: number, e: number, step: number): NoteEvent[] =>
@@ -211,7 +404,7 @@ const seq = (note: string, s: number, e: number, step: number): NoteEvent[] =>
 
 const EXAMPLES: Example[] = [
   {
-    name: 'SYSTEM BREACH', emoji: '⚡', desc: 'Dark cyberpunk techno · C minor · 120 BPM · 24s',
+    name: 'SYSTEM BREACH', emoji: '⚡', desc: 'Dark techno with driving kick and synths · C minor · 120 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -243,6 +436,11 @@ const EXAMPLES: Example[] = [
         {note:'F4',t:22000},{note:'D#4',t:22250},{note:'C4',t:22500},{note:'A#3',t:22750},
         {note:'C4',t:23000},{note:'D#4',t:23250},{note:'G4',t:23500},{note:'A#4',t:23750},
       ]},
+      { inst: 'basetone', events: [
+        // Sub-bass pedal (plays one octave below): C2 rumble under each section root
+        {note:'C3',t:0},{note:'C3',t:4000},{note:'F3',t:8000},
+        {note:'C3',t:12000},{note:'G3',t:16000},{note:'C3',t:20000},
+      ]},
       { inst: 'bass', events: [
         // Section A: driving Cm pulse (0-8s)
         {note:'C3',t:0},{note:'G3',t:500},{note:'A#3',t:1000},{note:'G3',t:1500},
@@ -265,7 +463,7 @@ const EXAMPLES: Example[] = [
   {
     // 100 BPM · beat=600ms · 8th=300ms · bar=2400ms · 10 bars = 24s
     // A blues scale (A C D D# E G) — original tune, not based on any existing song
-    name: 'ALGO BLUES', emoji: '🎸', desc: 'Electric blues · A blues scale · 100 BPM · 24s',
+    name: 'ALGO BLUES', emoji: '🎸', desc: 'Electric blues shuffle with guitar riffs · A blues · 100 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -324,10 +522,11 @@ const EXAMPLES: Example[] = [
       ]},
     ],
   },
+  /* DRAGON GATE — commented out
   {
     // 80 BPM, D major pentatonic (D E F# A B), 8 bars = 24s
     // Deliberate call-and-response phrases, builds from sparse to full then resolves
-    name: 'DRAGON GATE', emoji: '🐉', desc: 'Far Eastern koto · D pentatonic · call and response · 24s',
+    name: 'DRAGON GATE', emoji: '🐉', desc: 'Eastern koto with call and response · D pentatonic · 80 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'pluck', events: [
@@ -386,10 +585,11 @@ const EXAMPLES: Example[] = [
       ]},
     ],
   },
+  */ // end DRAGON GATE
   {
     // STALK OVERFLOW — G Dorian (G A Bb C D E F), 100 BPM, 8th=300ms, bar=2400ms, 10 bars=24s
     // Banjo-driven folk melody meets synth pads — original composition
-    name: 'STALK OVERFLOW', emoji: '🌽', desc: 'G Dorian folk-electronic · banjo + synth · 100 BPM · 24s',
+    name: 'STALK OVERFLOW', emoji: '🌽', desc: 'Banjo meets synth in a folk groove · G Dorian · 100 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'banjo', events: [
@@ -455,72 +655,91 @@ const EXAMPLES: Example[] = [
 
   // ── 10 NEW DEMOS ──────────────────────────────────────────────────────────
 
+  /* KERNEL PIG — commented out
   {
-    // 120 BPM, C minor — boom-bap kick with bounce, singable 2-bar hook
-    // beat=500, 8th=250, bar=2000, 12 bars=24s
+    // Pig Step-inspired: F minor · 120 BPM · lo-fi jazz hip-hop
+    // beat=500ms, 8th=250ms, 16th=125ms, bar=2000ms, 12 bars=24s
+    // F minor scale: F G G# A# C D# (using sharps: G#=Ab, A#=Bb, C#=Db, D#=Eb)
     name: 'KERNEL PIG', emoji: '🐷',
-    desc: 'Hip-hop bounce · C minor · 120 BPM · Pig Step energy · 24s',
+    desc: 'Lazy lo-fi hip-hop with jazzy piano · F minor · 120 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
-        ...seq('kick',  0,    24000, 2000),  // beat 1 every bar
-        ...seq('kick',  1000, 24000, 2000),  // beat 3 every bar
-        ...seq('kick',  750,  24000, 2000),  // "and of 2" — the bounce
+        // Pig Step groove: kick 1+3, syncopated "and-of-2" kick, snare 2+4, off-beat hihats
+        ...seq('kick',  0,    24000, 2000),  // beat 1
+        ...seq('kick',  1000, 24000, 2000),  // beat 3
+        ...Array.from({length:12}, (_, b) => ({note:'kick', t: b*2000 + 750})), // "and of 2" — the signature bounce
         ...seq('snare', 500,  24000, 1000),  // beats 2+4
         ...seq('hihat', 250,  24000, 500),   // 8th-note off-beats
         {note:'cymbal',t:0},{note:'cymbal',t:8000},{note:'cymbal',t:16000},
-        {note:'clap',t:500},{note:'clap',t:2500},{note:'clap',t:8500},
-        {note:'clap',t:12500},{note:'clap',t:16500},{note:'clap',t:20500},
+        {note:'clap',t:4000},{note:'clap',t:12000},{note:'clap',t:20000},
       ]},
       { inst: 'bass', events: [
-        // Cm funk bass: root-5th-b7 bounce, 2-bar loop × 6
-        {note:'C3',t:0},{note:'G3',t:500},{note:'A#3',t:1000},{note:'G3',t:1500},
-        {note:'F3',t:2000},{note:'G3',t:2500},{note:'A#3',t:3000},{note:'G3',t:3500},
-        {note:'C3',t:4000},{note:'G3',t:4500},{note:'A#3',t:5000},{note:'G3',t:5500},
-        {note:'F3',t:6000},{note:'G3',t:6500},{note:'A#3',t:7000},{note:'C4',t:7500},
-        {note:'C3',t:8000},{note:'G3',t:8500},{note:'A#3',t:9000},{note:'G3',t:9500},
-        {note:'F3',t:10000},{note:'G3',t:10500},{note:'A#3',t:11000},{note:'G3',t:11500},
-        {note:'C3',t:12000},{note:'G3',t:12500},{note:'D#3',t:13000},{note:'G3',t:13500},
-        {note:'F3',t:14000},{note:'A#3',t:14500},{note:'C4',t:15000},{note:'G3',t:15500},
-        {note:'C3',t:16000},{note:'G3',t:16500},{note:'A#3',t:17000},{note:'G3',t:17500},
-        {note:'F3',t:18000},{note:'G3',t:18500},{note:'A#3',t:19000},{note:'C4',t:19500},
-        {note:'C3',t:20000},{note:'D#3',t:20500},{note:'G3',t:21000},{note:'A#3',t:21500},
-        {note:'C4',t:22000},{note:'A#3',t:22500},{note:'G3',t:23000},{note:'C3',t:23500},
+        // F minor walking bass: F→C→D#→C / A#→F→C→F (2-bar loop × 6)
+        ...Array.from({length:6}, (_, r) => [
+          {note:'F3', t:r*4000+0},    {note:'C3',  t:r*4000+500},
+          {note:'D#3',t:r*4000+1000}, {note:'C3',  t:r*4000+1500},
+          {note:'A#3',t:r*4000+2000}, {note:'F3',  t:r*4000+2500},
+          {note:'C3', t:r*4000+3000}, {note:'F3',  t:r*4000+3500},
+        ]).flat(),
       ]},
-      { inst: 'synth', events: [
-        // Catchy 2-bar hook enters bar 3 (4s): C D# F G A# G F D# / C D D# F G A# G F
-        {note:'C4',t:4000},{note:'D#4',t:4250},{note:'F4',t:4500},{note:'G4',t:4750},
-        {note:'A#4',t:5000},{note:'G4',t:5250},{note:'F4',t:5500},{note:'D#4',t:5750},
-        {note:'C4',t:6000},{note:'D4',t:6250},{note:'D#4',t:6500},{note:'F4',t:7000},
-        {note:'G4',t:7250},{note:'A#4',t:7500},{note:'G4',t:7750},
-        {note:'C4',t:8000},{note:'D#4',t:8250},{note:'F4',t:8500},{note:'G4',t:8750},
-        {note:'A#4',t:9000},{note:'G4',t:9250},{note:'F4',t:9500},{note:'D#4',t:9750},
-        {note:'C4',t:10000},{note:'D4',t:10250},{note:'D#4',t:10500},{note:'F4',t:11000},
-        {note:'G4',t:11250},{note:'A#4',t:11500},{note:'G4',t:11750},
-        // Bar 9-10: octave climb variation
-        {note:'C4',t:16000},{note:'D#4',t:16250},{note:'F4',t:16500},{note:'G4',t:16750},
-        {note:'A#4',t:17000},{note:'C5',t:17250},{note:'A#4',t:17500},{note:'G4',t:17750},
-        {note:'F4',t:18000},{note:'D#4',t:18250},{note:'C4',t:18500},{note:'D4',t:18750},
-        {note:'D#4',t:19000},{note:'F4',t:19500},{note:'G4',t:19750},
-        // Final bars: full resolve
-        {note:'C4',t:20000},{note:'D#4',t:20250},{note:'G4',t:20500},{note:'A#4',t:20750},
-        {note:'C5',t:21000},{note:'A#4',t:21500},{note:'G4',t:22000},{note:'F4',t:22500},
-        {note:'D#4',t:23000},{note:'C4',t:23500},
+      { inst: 'piano', events: [
+        // Pig Step-inspired 2-bar riff: syncopated, jazzy, chromatic ♭9 crunch on bar 2
+        ...Array.from({length:6}, (_, r) => [
+          // Bar 1: ascending bounce F→G#→A#→C5→A#→G#→F→D#→C
+          {note:'F4', t:r*4000+0},
+          {note:'G#4',t:r*4000+250},
+          {note:'A#4',t:r*4000+500},
+          {note:'C5', t:r*4000+625},
+          {note:'A#4',t:r*4000+750},
+          {note:'G#4',t:r*4000+1000},
+          {note:'F4', t:r*4000+1250},
+          {note:'D#4',t:r*4000+1500},
+          {note:'C4', t:r*4000+1750},
+          // Bar 2: chromatic ♭9 crunch — C#5 bends into C5 (the Pig Step spice)
+          {note:'F4', t:r*4000+2000},
+          {note:'G#4',t:r*4000+2250},
+          {note:'C5', t:r*4000+2500},
+          {note:'C#5',t:r*4000+2625},
+          {note:'C5', t:r*4000+2750},
+          {note:'A#4',t:r*4000+3000},
+          {note:'G#4',t:r*4000+3250},
+          {note:'F4', t:r*4000+3500},
+          {note:'D#4',t:r*4000+3750},
+        ]).flat(),
       ]},
       { inst: 'pad', events: [
-        {note:'C3',t:0},{note:'D#3',t:80},{note:'G3',t:160},
-        {note:'F3',t:8000},{note:'G#3',t:8080},{note:'C4',t:8160},
-        {note:'G3',t:16000},{note:'A#3',t:16080},{note:'D4',t:16160},
-        {note:'C3',t:20000},{note:'D#3',t:20080},{note:'G3',t:20160},
+        // Fm7 → A#m → G# → D# — warm chord wash, one chord per 6s
+        {note:'F3', t:0},    {note:'G#3',t:80},  {note:'C4', t:160}, {note:'D#4',t:240},
+        {note:'A#3',t:6000}, {note:'C#4',t:6080},{note:'F4', t:6160},
+        {note:'G#3',t:12000},{note:'C4', t:12080},{note:'D#4',t:12160},
+        {note:'D#3',t:18000},{note:'G3', t:18080},{note:'A#3',t:18160},
+      ]},
+      { inst: 'pluck', events: [
+        // Vibraphone-style counter-melody — enters at 8s (bar 5), builds through end
+        {note:'F4',t:8000},{note:'G#4',t:8500},{note:'C5',t:9000},{note:'A#4',t:9500},
+        {note:'F4',t:10000},{note:'D#4',t:10500},{note:'C4',t:11000},{note:'D#4',t:11500},
+        {note:'F4',t:16000},{note:'G#4',t:16500},{note:'C5',t:17000},{note:'A#4',t:17500},
+        {note:'G#4',t:18000},{note:'F4',t:18500},{note:'D#4',t:19000},{note:'F4',t:19500},
+        {note:'F4',t:20000},{note:'C5',t:20250},{note:'A#4',t:20500},{note:'G#4',t:20750},
+        {note:'F4',t:21000},{note:'D#4',t:21250},{note:'C4',t:21500},{note:'D#4',t:21750},
+        {note:'F4',t:22000},{note:'G#4',t:22250},{note:'C5',t:22500},{note:'C#5',t:22625},
+        {note:'C5',t:22750},{note:'A#4',t:23000},{note:'G#4',t:23250},{note:'F4',t:23500},
+      ]},
+      { inst: 'basetone', events: [
+        // Sub-bass pedal tones (plays one octave below): F→F→A#→G# root anchors
+        {note:'F3',t:0},{note:'F3',t:6000},{note:'A#3',t:12000},{note:'G#3',t:18000},
       ]},
     ],
   },
+  */
 
+  /* NEON SOUL — commented out
   {
     // 100 BPM, A minor — neo-soul piano over a groove kit, warm chord pads
     // beat=600, 8th=300, bar=2400, 10 bars=24s
     name: 'NEON SOUL', emoji: '✨',
-    desc: 'Neo-soul · A minor · piano + pads · 100 BPM · 24s',
+    desc: 'Warm neo-soul with piano melody and pads · A minor · 100 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -575,12 +794,14 @@ const EXAMPLES: Example[] = [
       ]},
     ],
   },
+  */
 
+  /* MIDNIGHT FUNK — commented out
   {
     // 100 BPM, E minor — funk with organ stabs and guitar riff, classic feel
     // beat=600, 8th=300, bar=2400, 10 bars=24s
     name: 'MIDNIGHT FUNK', emoji: '🌙',
-    desc: 'E minor funk · guitar + organ stabs · 100 BPM · 24s',
+    desc: 'Funk groove with organ stabs and guitar · E minor · 100 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -639,12 +860,13 @@ const EXAMPLES: Example[] = [
       ]},
     ],
   },
+  */
 
   {
     // 120 BPM, G major — bright pop synth, pentatonic melody, pluck lead
     // beat=500, 8th=250, bar=2000, 12 bars=24s
     name: 'PACKET BOUNCE', emoji: '📡',
-    desc: 'Synth-pop · G major pentatonic · pluck lead · 120 BPM · 24s',
+    desc: 'Bright synth-pop with a bouncy pluck lead · G major · 120 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -707,7 +929,7 @@ const EXAMPLES: Example[] = [
     // 80 BPM, D minor — lo-fi hip-hop aesthetic: lazy swing, warm piano
     // beat=750, 8th=375, bar=3000, 8 bars=24s
     name: 'LO-FI ROOT', emoji: '🌿',
-    desc: 'Lo-fi hip-hop · D minor · lazy piano groove · 80 BPM · 24s',
+    desc: 'Slow lo-fi hip-hop with lazy piano swing · D minor · 80 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -757,11 +979,12 @@ const EXAMPLES: Example[] = [
     ],
   },
 
+  /* ACID STACK — commented out
   {
     // 120 BPM, F minor — hypnotic acid synth line, 4-on-floor techno energy
     // beat=500, 8th=250, bar=2000, 12 bars=24s
     name: 'ACID STACK', emoji: '🧪',
-    desc: 'Acid techno · F minor · hypnotic 303 line · 120 BPM · 24s',
+    desc: 'Acid techno with a driving 303 bassline · F minor · 120 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -806,12 +1029,14 @@ const EXAMPLES: Example[] = [
       ]},
     ],
   },
+  */
 
+  /* JAZZ KERNEL — commented out
   {
     // 100 BPM, G major — jazz swing with piano chords, walking bass, ride cymbal feel
     // beat=600, 8th=300 (swing: long-short 400/200), bar=2400, 10 bars=24s
     name: 'JAZZ KERNEL', emoji: '🎷',
-    desc: 'Jazz swing · G major · piano comping · 100 BPM · 24s',
+    desc: 'Jazz swing with piano and walking bass · G major · 100 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -867,12 +1092,14 @@ const EXAMPLES: Example[] = [
       ]},
     ],
   },
+  */
 
+  /* GHOST ROOT — commented out
   {
     // 80 BPM, B minor — haunting soprano over dark pads, sparse and cinematic
     // beat=750, 8th=375, bar=3000, 8 bars=24s
     name: 'GHOST ROOT', emoji: '👻',
-    desc: 'Ethereal · B minor · soprano + dark pads · 80 BPM · 24s',
+    desc: 'Ethereal soprano over dark ambient pads · B minor · 80 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -880,6 +1107,10 @@ const EXAMPLES: Example[] = [
         {note:'kick',t:0},{note:'kick',t:3000},{note:'kick',t:6000},
         {note:'cymbal',t:0},{note:'cymbal',t:9000},{note:'cymbal',t:18000},
         {note:'tom',t:4500},{note:'tom',t:7500},{note:'tom',t:13500},{note:'tom',t:22500},
+      ]},
+      { inst: 'basetone', events: [
+        // Sub-bass pedal (plays at B1/F#1): spectral depth under the haunting pads
+        {note:'B3',t:0},{note:'F#3',t:6000},{note:'G3',t:12000},{note:'D3',t:18000},
       ]},
       { inst: 'bass', events: [
         // Deep, slow Bm bass: B→F#→A→E descend
@@ -913,12 +1144,13 @@ const EXAMPLES: Example[] = [
       ]},
     ],
   },
+  */
 
   {
     // 120 BPM, C major — bright afrobeat with pluck, acoustic guitar, interlocking rhythms
     // beat=500, 8th=250, bar=2000, 12 bars=24s
     name: 'HOT PATCH', emoji: '🔥',
-    desc: 'Afrobeat · C major · pluck + acoustic guitar · 120 BPM · 24s',
+    desc: 'Afrobeat groove with pluck and acoustic · C major · 120 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -968,7 +1200,7 @@ const EXAMPLES: Example[] = [
     // 100 BPM, D minor — dark synthwave, pulsing bass, strings drama
     // beat=600, 8th=300, bar=2400, 10 bars=24s
     name: 'PRIVILEGE ESC', emoji: '🔑',
-    desc: 'Synthwave · D minor · pulsing arpeggios + strings · 100 BPM · 24s',
+    desc: 'Synthwave arpeggios with cinematic strings · D minor · 100 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -1025,10 +1257,11 @@ const EXAMPLES: Example[] = [
     ],
   },
 
+  /* FULL SEND — commented out
   // ── FULL SEND ─────────────────────────────────────────────────────────────
   {
-    name: 'FULL SEND', emoji: '🔥',
-    desc: 'Piano + Synth + Electric + Bass + Pad + Drums · C major · 120 BPM · 24s',
+    name: 'FULL SEND', emoji: '🔥', chorus: true,
+    desc: 'Six instruments locked in at full energy · C major · 120 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -1078,7 +1311,7 @@ const EXAMPLES: Example[] = [
           {note:'G4',t:12000+r*500+250},{note:'A4',t:12000+r*500+375},
         ]).flat(),
       ]},
-      { inst: 'electric', events: [
+      { inst: 'guitar', events: [
         // CHORUS only (12000–24000ms): power chord stab every 500ms
         ...Array.from({length:24}, (_,i) => [
           {note:'A#3',t:12000+i*500+0},{note:'F4',t:12000+i*500+30},
@@ -1090,11 +1323,12 @@ const EXAMPLES: Example[] = [
       ]},
     ],
   },
+  */
 
   // ── MIDNIGHT JAZZ ─────────────────────────────────────────────────────────
   {
-    name: 'MIDNIGHT JAZZ', emoji: '🎷',
-    desc: 'Piano + Bass + Strings + Pluck + Pad + Drums · Bb major · 100 BPM · 24s',
+    name: 'MIDNIGHT JAZZ', emoji: '🎷', chorus: true,
+    desc: 'Rich jazz ensemble with lush voicings · Bb major · 100 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -1150,10 +1384,11 @@ const EXAMPLES: Example[] = [
     ],
   },
 
+  /* SPACE GOSPEL — commented out
   // ── SPACE GOSPEL ──────────────────────────────────────────────────────────
   {
-    name: 'SPACE GOSPEL', emoji: '🌌',
-    desc: 'Organ + Strings + Soprano + Synth + Bass + Drums · D minor · 80 BPM · 24s',
+    name: 'SPACE GOSPEL', emoji: '🌌', chorus: true,
+    desc: 'Cosmic gospel with swelling organ and choir · D minor · 80 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -1166,6 +1401,11 @@ const EXAMPLES: Example[] = [
         ...seq('snare', 12750, 24000, 1500),
         {note:'clap',t:12750},{note:'clap',t:14250},{note:'clap',t:15750},{note:'clap',t:17250},
         {note:'clap',t:18750},{note:'clap',t:20250},{note:'clap',t:21750},{note:'clap',t:23250},
+      ]},
+      { inst: 'basetone', events: [
+        // Sub-bass beneath the gospel: D pedal in verse, rises into chorus
+        {note:'D3',t:0},{note:'D3',t:6000},
+        {note:'D3',t:12000},{note:'G3',t:15000},{note:'A3',t:18000},{note:'D3',t:21000},
       ]},
       { inst: 'bass', events: [
         // VERSE (0–12000ms): deep D2 pedal, breathes slowly
@@ -1211,11 +1451,12 @@ const EXAMPLES: Example[] = [
       ]},
     ],
   },
+  */
 
   // ── HACKATHON ─────────────────────────────────────────────────────────────
   {
-    name: 'HACKATHON', emoji: '💻',
-    desc: 'Synth + Pluck + Electric + Piano + Bass + Drums · A minor · 120 BPM · 24s',
+    name: 'HACKATHON', emoji: '💻', chorus: true,
+    desc: 'Full band crunch with synths and electric · A minor · 120 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -1251,7 +1492,7 @@ const EXAMPLES: Example[] = [
         // CHORUS only (12000–24000ms): rapid A4→G4→E4→C4 arpeggios every 125ms
         ...Array.from({length:96}, (_,i) => ({note:(['A4','G4','E4','C4'] as const)[i%4],t:12000+i*125})),
       ]},
-      { inst: 'electric', events: [
+      { inst: 'guitar', events: [
         // CHORUS only (12000–24000ms): Am power chord stab every 500ms
         ...Array.from({length:24}, (_,i) => [
           {note:'A3',t:12000+i*500+0},{note:'E4',t:12000+i*500+30},
@@ -1266,10 +1507,11 @@ const EXAMPLES: Example[] = [
     ],
   },
 
+  /* MOUNTAIN CHURCH — commented out
   // ── MOUNTAIN CHURCH ───────────────────────────────────────────────────────
   {
     name: 'MOUNTAIN CHURCH', emoji: '⛪',
-    desc: 'Organ + Strings + Soprano + Acoustic + Bass + Drums · G major · 80 BPM · 24s',
+    desc: 'Gospel with organ, choir and steady rhythm · G major · 80 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -1328,11 +1570,13 @@ const EXAMPLES: Example[] = [
       ]},
     ],
   },
+  */
 
+  /* FULL ORCHESTRA — commented out
   // ── FULL ORCHESTRA ────────────────────────────────────────────────────────
   {
-    name: 'FULL ORCHESTRA', emoji: '🎼',
-    desc: 'Piano + Strings + Soprano + Organ + Pad + Bass · C major · 80 BPM · 24s',
+    name: 'FULL ORCHESTRA', emoji: '🎼', chorus: true,
+    desc: 'Soaring orchestra with choir and strings · C major · 80 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'bass', events: [
@@ -1383,13 +1627,19 @@ const EXAMPLES: Example[] = [
       ]},
     ],
   },
+  */
 
+  /* CATHEDRAL ECHO — commented out
   // ── CATHEDRAL ECHO ────────────────────────────────────────────────────────
   {
     name: 'CATHEDRAL ECHO', emoji: '🕌',
-    desc: 'Organ + strings + soprano · A minor · 80 BPM · 24s',
+    desc: 'Cathedral organ with strings and soprano · A minor · 80 BPM · 24s',
     dur: 24000,
     tracks: [
+      { inst: 'basetone', events: [
+        // Sub-bass pedal under the cathedral: A→F→C→G root tones, one per chord (6s each)
+        {note:'A3',t:0},{note:'F3',t:6000},{note:'C3',t:12000},{note:'G3',t:18000},
+      ]},
       { inst: 'organ', events: [
         // Am - F - C - G chord progression, 80 BPM (750ms per beat)
         {note:'A3',t:0},{note:'C4',t:150},{note:'E4',t:300},
@@ -1418,11 +1668,13 @@ const EXAMPLES: Example[] = [
       ]},
     ],
   },
+  */
 
+  /* BANJO BREAKDOWN — commented out
   // ── BANJO BREAKDOWN ───────────────────────────────────────────────────────
   {
     name: 'BANJO BREAKDOWN', emoji: '🪕',
-    desc: 'Banjo + acoustic + drums + bass · D major · 120 BPM · 24s',
+    desc: 'Bluegrass breakdown with banjo and rhythm · D major · 120 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -1452,11 +1704,27 @@ const EXAMPLES: Example[] = [
           {note:'D4',t:7000+rep*4000},{note:'F#4',t:7250+rep*4000},{note:'A4',t:7500+rep*4000},{note:'D5',t:7750+rep*4000},
         ]).flat(),
       ]},
-      { inst: 'acoustic', events: [
-        // Rhythmic strum on beats 2 and 4 (off-beats)
-        ...Array.from({length:12}, (_,i) => [
-          {note:'F#3',t:500+i*2000},{note:'A3',t:550+i*2000},{note:'D4',t:600+i*2000},
-          {note:'G3',t:2500+i*2000},{note:'B3',t:2550+i*2000},{note:'D4',t:2600+i*2000},
+      { inst: 'piano', events: [
+        // Honky-tonk fills: D/G/A chord hits + passing notes — bops with the banjo
+        ...Array.from({length:6}, (_, r) => [
+          // Bar 1: D chord, G pass, A chord, D resolve
+          {note:'D4',t:r*4000+0},   {note:'F#4',t:r*4000+50},  {note:'A4',t:r*4000+100},
+          {note:'G4',t:r*4000+375},
+          {note:'G3',t:r*4000+500}, {note:'B3',t:r*4000+550},  {note:'D4',t:r*4000+600},
+          {note:'A3',t:r*4000+875},
+          {note:'A3',t:r*4000+1000},{note:'C#4',t:r*4000+1050},{note:'E4',t:r*4000+1100},
+          {note:'G3',t:r*4000+1375},
+          {note:'D4',t:r*4000+1500},{note:'F#4',t:r*4000+1550},
+          {note:'E4',t:r*4000+1750},
+          // Bar 2: G chord, A chord, D home
+          {note:'G3',t:r*4000+2000},{note:'B3',t:r*4000+2050}, {note:'D4',t:r*4000+2100},
+          {note:'A3',t:r*4000+2375},
+          {note:'A3',t:r*4000+2500},{note:'C#4',t:r*4000+2550},{note:'E4',t:r*4000+2600},
+          {note:'D4',t:r*4000+2875},
+          {note:'D4',t:r*4000+3000},{note:'F#4',t:r*4000+3050},{note:'A4',t:r*4000+3100},
+          {note:'A3',t:r*4000+3375},
+          {note:'D3',t:r*4000+3500},{note:'F#3',t:r*4000+3550},{note:'A3',t:r*4000+3600},
+          {note:'D4',t:r*4000+3875},
         ]).flat(),
       ]},
       { inst: 'bass', events: [
@@ -1468,11 +1736,12 @@ const EXAMPLES: Example[] = [
       ]},
     ],
   },
+  */
 
   // ── SILK STRINGS ──────────────────────────────────────────────────────────
   {
     name: 'SILK STRINGS', emoji: '🎻',
-    desc: 'Strings + pluck + soprano · E minor · 80 BPM · 24s',
+    desc: 'Gentle strings and soprano over soft pluck · E minor · 80 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'strings', events: [
@@ -1513,7 +1782,7 @@ const EXAMPLES: Example[] = [
   // ── GARDEN PATH ───────────────────────────────────────────────────────────
   {
     name: 'GARDEN PATH', emoji: '🌻',
-    desc: 'Acoustic + pluck + pad · C major · 80 BPM · 24s',
+    desc: 'Acoustic folk with soft pluck and pad wash · C major · 80 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'acoustic', events: [
@@ -1560,10 +1829,11 @@ const EXAMPLES: Example[] = [
     ],
   },
 
+  /* PIPE DREAM — commented out
   // ── PIPE DREAM ────────────────────────────────────────────────────────────
   {
     name: 'PIPE DREAM', emoji: '⛪',
-    desc: 'Organ + strings + bass + drums · G Dorian · 100 BPM · 24s',
+    desc: 'Soulful organ over steady bass and drums · G Dorian · 100 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -1610,11 +1880,12 @@ const EXAMPLES: Example[] = [
       ]},
     ],
   },
+  */
 
   // ── APPALACHIAN ───────────────────────────────────────────────────────────
   {
     name: 'APPALACHIAN', emoji: '⛰️',
-    desc: 'Banjo + strings (fiddle) + bass + drums · G major · 100 BPM · 24s',
+    desc: 'Banjo and fiddle in a mountain groove · G major · 100 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -1665,7 +1936,7 @@ const EXAMPLES: Example[] = [
   // ── DREAM STATE ───────────────────────────────────────────────────────────
   /* {
     name: 'DREAM STATE', emoji: '💫',
-    desc: 'Pad + soprano + strings · F major · 80 BPM · 24s',
+    desc: 'Dreamy choir over shimmering strings · F major · 80 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'pad', events: [
@@ -1703,7 +1974,7 @@ const EXAMPLES: Example[] = [
   // ── KOTO NIGHT ────────────────────────────────────────────────────────────
   {
     name: 'KOTO NIGHT', emoji: '🌕',
-    desc: 'Pluck + strings + pad · A hirajoshi · 80 BPM · 24s',
+    desc: 'Moonlit koto over ambient strings · A hirajoshi · 80 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'pluck', events: [
@@ -1743,7 +2014,7 @@ const EXAMPLES: Example[] = [
   // ── SWAMP GOSPEL ──────────────────────────────────────────────────────────
   {
     name: 'SWAMP GOSPEL', emoji: '🐊',
-    desc: 'Organ + acoustic + bass + drums · C blues · 100 BPM · 24s',
+    desc: 'Swamp gospel with gritty organ and blues · C blues · 100 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'drums', events: [
@@ -1817,10 +2088,11 @@ const EXAMPLES: Example[] = [
     ],
   },
 
+  /* PHANTOM SIGNAL — commented out
   // ── PHANTOM SIGNAL ────────────────────────────────────────────────────────
   {
     name: 'PHANTOM SIGNAL', emoji: '👁️',
-    desc: 'Soprano + strings + pad + bass · D minor · 80 BPM · 24s',
+    desc: 'Haunting soprano over spectral strings · D minor · 80 BPM · 24s',
     dur: 24000,
     tracks: [
       { inst: 'soprano', events: [
@@ -1860,6 +2132,7 @@ const EXAMPLES: Example[] = [
       ]},
     ],
   },
+  */
 ];
 
 function PianoSection() {
@@ -1868,6 +2141,7 @@ function PianoSection() {
   const [tracks, setTracks] = useState<Track[]>([]);
   const [isRecording, setIsRecording] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [activeDemo, setActiveDemo] = useState<string | null>(null);
   const [videoUrl, setVideoUrl] = useState<string|null>(null);
 
   const audioCtxRef = useRef<AudioContext|null>(null);
@@ -1881,6 +2155,7 @@ function PianoSection() {
   const loopDurRef = useRef(4000);
   const trackIdRef = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement|null>(null);
+  const demoScrollRef = useRef<HTMLDivElement|null>(null);
   const activeNotesRef = useRef<Map<string,{note:string;birth:number}>>(new Map());
   const tracksVizRef  = useRef<Track[]>([]);
   const particlesRef = useRef<{x:number;y:number;vy:number;life:number;color:string}[]>([]);
@@ -1890,7 +2165,13 @@ function PianoSection() {
     if (!audioCtxRef.current) {
       audioCtxRef.current = new (window.AudioContext ||
         (window as unknown as {webkitAudioContext:typeof AudioContext}).webkitAudioContext)();
-      loadPianoSamples(audioCtxRef.current); // fire-and-forget; falls back to synthesis
+      loadPianoSamples(audioCtxRef.current);   // fire-and-forget; falls back to synthesis
+      loadAcousticSamples(audioCtxRef.current);
+      loadGuitarElSamples(audioCtxRef.current);
+      loadBassSamples(audioCtxRef.current);
+      loadChoirSamples(audioCtxRef.current);
+      loadVoxSamples(audioCtxRef.current);
+      initCornVoices();
     }
     if (audioCtxRef.current.state === 'suspended') audioCtxRef.current.resume();
     return audioCtxRef.current;
@@ -2040,10 +2321,28 @@ function PianoSection() {
         o.connect(lp); lp.connect(g); wireChorus(g, 1.8); o.start(t); o.stop(t+1.8);
       }
       else if (inst === 'bass') {
-        // Bass plays at the actual frequency (freq/2 was an octave error)
-        mk('sine', freq, 0.55, 2.0);
-        mk('sine', freq * 2, 0.15, 1.2);   // 2nd harmonic for warmth
-        mk('triangle', freq, 0.18, 0.8);   // odd harmonics for body
+        const sKey = BASS_MAP[note];
+        const sBuf = sKey ? bassCache.get(sKey) : undefined;
+        if (sBuf) {
+          const dur = 2.5;
+          const src = ctx.createBufferSource(); src.buffer = sBuf;
+          src.playbackRate.value = freq / BASS_HZ[sKey];
+          const g = ctx.createGain();
+          g.gain.setValueAtTime(0.8, t);
+          g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+          src.connect(g); wire(g); src.start(t); src.stop(t + dur + 0.3);
+        } else {
+          mk('sine', freq, 0.55, 2.0);
+          mk('sine', freq * 2, 0.15, 1.2);
+          mk('triangle', freq, 0.18, 0.8);
+        }
+      }
+      else if (inst === 'basetone') {
+        // Deep sub-bass tone: pure sine fundamentals, no resonance, punchy decay
+        const subFreq = freq / 2; // one octave down for true sub-bass depth
+        mk('sine',     subFreq,     0.70, 2.0);
+        mk('sine',     subFreq * 2, 0.20, 1.2);
+        mk('triangle', subFreq,     0.22, 0.9);
       }
       else if (inst === 'pad') {
         // Triangle voices (warmer than sine) + octave shimmer, all through chorus bus
@@ -2076,6 +2375,17 @@ function PianoSection() {
         mk('sawtooth', freq * 2, 0.2, dur * 0.5);
       }
       else if (inst === 'guitar') {
+        const sKey = GUIT_EL_MAP[note];
+        const sBuf = sKey ? guitarElCache.get(sKey) : undefined;
+        if (sBuf) {
+          const dur = 1.8;
+          const src = ctx.createBufferSource(); src.buffer = sBuf;
+          src.playbackRate.value = freq / GUIT_EL_HZ[sKey];
+          const g = ctx.createGain();
+          g.gain.setValueAtTime(0.7, t);
+          g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+          src.connect(g); wire(g); src.start(t); src.stop(t + dur + 0.3);
+        } else {
         // Electric: tanh soft-clip, mid scoop, realistic cab sim, tighter detuning
         const dur = 1.2;
         const ws = ctx.createWaveShaper();
@@ -2116,8 +2426,20 @@ function PianoSection() {
         const pf = ctx.createBiquadFilter(); pf.type = 'bandpass'; pf.frequency.value = 4500; pf.Q.value = 1.5;
         const pg = ctx.createGain(); pg.gain.value = 0.20;
         ps.connect(pf); pf.connect(pg); wire(pg); ps.start(t);
+        } // end synthesis fallback
       }
       else if (inst === 'acoustic') {
+        const sKey = GUIT_AC_MAP[note];
+        const sBuf = sKey ? acousticCache.get(sKey) : undefined;
+        if (sBuf) {
+          const dur = 3.2;
+          const src = ctx.createBufferSource(); src.buffer = sBuf;
+          src.playbackRate.value = freq / GUIT_AC_HZ[sKey];
+          const g = ctx.createGain();
+          g.gain.setValueAtTime(0.75, t);
+          g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+          src.connect(g); wire(g); src.start(t); src.stop(t + dur + 0.5);
+        } else {
         // Acoustic guitar: triangle harmonics (warm soundboard) + pluck envelope + pick transient
         const dur = 2.2;
         // Pick attack noise
@@ -2153,6 +2475,7 @@ function PianoSection() {
           g.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.85);
           o.connect(g); wire(g); o.start(t); o.stop(t + dur * 0.85);
         });
+        } // end synthesis fallback
       }
       else if (inst === 'banjo') {
         // Banjo: sawtooth (all harmonics, bright/metallic) + drum-head resonance + loud pick attack
@@ -2235,44 +2558,71 @@ function PianoSection() {
         wireChorus(strBus, dur);
       }
       else if (inst === 'soprano') {
-        // Soprano "ooh": sawtooth source → two formant bandpass filters (F1=300Hz, F2=870Hz)
-        // These are the textbook formant frequencies for the "oo" vowel
-        const dur = 2.8;
-        const src = ctx.createOscillator();
-        src.type = 'sawtooth';
-        src.frequency.setValueAtTime(freq, t);
-        // Vibrato: soprano characteristic ~5.5Hz, kicks in after 200ms
-        const lfo = ctx.createOscillator(); const lfoG = ctx.createGain();
-        lfo.type = 'sine'; lfo.frequency.value = 5.5;
-        lfoG.gain.setValueAtTime(0, t);
-        lfoG.gain.linearRampToValueAtTime(freq * 0.012, t + 0.5); // ~20 cents peak depth
-        lfo.connect(lfoG); lfoG.connect(src.frequency);
-        lfo.start(t); lfo.stop(t + dur);
-        // Formant filters (bandpass = vocal tract resonance)
-        const f1 = ctx.createBiquadFilter(); f1.type = 'bandpass'; f1.frequency.value = 300; f1.Q.value = 6;
-        const f2 = ctx.createBiquadFilter(); f2.type = 'bandpass'; f2.frequency.value = 870; f2.Q.value = 10;
-        // F1 louder than F2 for "ooh" (front-cavity resonance dominates)
-        const f1g = ctx.createGain(); f1g.gain.value = 1.0;
-        const f2g = ctx.createGain(); f2g.gain.value = 0.5;
-        // Shared envelope: soft attack, full sustain, gentle release
-        const env = ctx.createGain();
-        env.gain.setValueAtTime(0, t);
-        env.gain.linearRampToValueAtTime(0.55, t + 0.07);  // 70ms attack
-        env.gain.setValueAtTime(0.50, t + 0.4);
-        env.gain.exponentialRampToValueAtTime(0.001, t + dur);
-        src.connect(f1); f1.connect(f1g); f1g.connect(env);
-        src.connect(f2); f2.connect(f2g); f2g.connect(env);
-        wireChorus(env, dur);
-        // Breath noise: a touch of air at the start
-        const bLen = Math.floor(ctx.sampleRate * 0.06);
-        const bBuf = ctx.createBuffer(1, bLen, ctx.sampleRate);
-        const bd = bBuf.getChannelData(0);
-        for (let i = 0; i < bLen; i++) bd[i] = (Math.random() * 2 - 1) * Math.exp(-i / bLen * 5);
-        const bSrc = ctx.createBufferSource(); bSrc.buffer = bBuf;
-        const bFilt = ctx.createBiquadFilter(); bFilt.type = 'bandpass'; bFilt.frequency.value = 2500; bFilt.Q.value = 0.8;
-        const bGain = ctx.createGain(); bGain.gain.value = 0.07;
-        bSrc.connect(bFilt); bFilt.connect(bGain); wire(bGain); bSrc.start(t);
-        src.start(t); src.stop(t + dur);
+        const sKey = CHOIR_MAP[note];
+        const sBuf = sKey ? choirCache.get(sKey) : undefined;
+        if (sBuf) {
+          const dur = 3.2;
+          const src = ctx.createBufferSource(); src.buffer = sBuf;
+          src.playbackRate.value = freq / CHOIR_HZ[sKey];
+          const env = ctx.createGain();
+          env.gain.setValueAtTime(0, t);
+          env.gain.linearRampToValueAtTime(0.65, t + 0.12);
+          env.gain.setValueAtTime(0.55, t + 0.6);
+          env.gain.exponentialRampToValueAtTime(0.001, t + dur);
+          src.connect(env); wireChorus(env, dur); src.start(t); src.stop(t + dur + 0.3);
+        }
+      }
+      else if (inst === 'vocalOoh') {
+        // High notes (F4+): SSO female chorus with ooh formant shaping
+        // Low notes (C3–E4): SSO male chorus real recordings
+        const femKey = CHOIR_MAP[note];
+        const femBuf = femKey ? choirCache.get(femKey) : undefined;
+        if (femBuf) {
+          const dur = 3.5;
+          const src = ctx.createBufferSource(); src.buffer = femBuf;
+          src.playbackRate.value = freq / CHOIR_HZ[femKey];
+          const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2800; lp.Q.value = 0.7;
+          const f1 = ctx.createBiquadFilter(); f1.type = 'peaking'; f1.frequency.value = 350; f1.gain.value = 7; f1.Q.value = 2.5;
+          const ahCut = ctx.createBiquadFilter(); ahCut.type = 'peaking'; ahCut.frequency.value = 1100; ahCut.gain.value = -10; ahCut.Q.value = 2;
+          const env = ctx.createGain();
+          env.gain.setValueAtTime(0, t);
+          env.gain.linearRampToValueAtTime(0.70, t + 0.20);
+          env.gain.setValueAtTime(0.58, t + 1.0);
+          env.gain.exponentialRampToValueAtTime(0.001, t + dur);
+          src.connect(lp); lp.connect(f1); f1.connect(ahCut); ahCut.connect(env);
+          wireChorus(env, dur); src.start(t); src.stop(t + dur + 0.3);
+        } else {
+          const malKey = VOX_MAP[note];
+          const malBuf = malKey ? voxCache.get(malKey) : undefined;
+          if (malBuf) {
+            const dur = 3.2;
+            const src = ctx.createBufferSource(); src.buffer = malBuf;
+            src.playbackRate.value = freq / VOX_HZ[malKey];
+            const env = ctx.createGain();
+            env.gain.setValueAtTime(0, t);
+            env.gain.linearRampToValueAtTime(0.60, t + 0.18);
+            env.gain.setValueAtTime(0.50, t + 0.8);
+            env.gain.exponentialRampToValueAtTime(0.001, t + dur);
+            src.connect(env); wireChorus(env, dur); src.start(t); src.stop(t + dur + 0.3);
+          }
+        }
+      }
+      else if (inst === 'corn') {
+        // Each key = a different AI voice shouting "Kernelcon!"
+        // Web Speech API — Chrome's Google TTS voices are fetched from Google's servers
+        if (cornVoices.length === 0) initCornVoices();
+        const keyIndex = ALL_PIANO_KEYS.indexOf(note);
+        // Multiply by prime to spread voices so adjacent keys sound distinct
+        const voiceIndex = cornVoices.length > 0
+          ? (keyIndex * 7) % cornVoices.length
+          : 0;
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance('Kernel-con!');
+        if (cornVoices[voiceIndex]) u.voice = cornVoices[voiceIndex];
+        u.volume = 1;
+        u.rate  = 0.85 + (keyIndex / ALL_PIANO_KEYS.length) * 0.55;
+        u.pitch = 0.5  + (keyIndex / ALL_PIANO_KEYS.length) * 1.3;
+        window.speechSynthesis.speak(u);
       }
     }
 
@@ -2490,6 +2840,10 @@ function PianoSection() {
     loopIntervalRef.current = setInterval(() => { loopTimersRef.current.forEach(clearTimeout); loopTimersRef.current = []; fire(); }, maxDur);
   }, [stopAll, scheduleTrack]);
 
+  const scrollDemos = (dir: number) => {
+    demoScrollRef.current?.scrollBy({ left: dir * 280, behavior: 'smooth' });
+  };
+
   const loadExample = (ex: Example) => {
     stopAll();
     let id = trackIdRef.current;
@@ -2498,6 +2852,7 @@ function PianoSection() {
     })));
     trackIdRef.current = id;
     loopDurRef.current = ex.dur;
+    setActiveDemo(ex.name);
   };
 
   const startRecord = () => {
@@ -2515,6 +2870,7 @@ function PianoSection() {
       id: ++trackIdRef.current, inst: recInstRef.current,
       events: [...recEventsRef.current], dur: Math.max(dur, 500), muted: false,
     }]);
+    setActiveDemo(null);
   };
 
   const captureVideo = () => {
@@ -2565,19 +2921,41 @@ function PianoSection() {
 
         {/* Example loops */}
         <div className="example-strip">
-          <span className="example-strip-label">▶ DEMO LOOPS</span>
-          {EXAMPLES.map(ex => (
-            <button key={ex.name} className="example-card" onClick={() => loadExample(ex)}>
-              <span className="example-emoji">{ex.emoji}</span>
-              <span className="example-info">
-                <span className="example-name">{ex.name}</span>
-                <span className="example-desc">{ex.desc}</span>
-                <span className="example-insts">
-                  {ex.tracks.map(tr => INSTRUMENTS.find(i => i.id === tr.inst)?.icon).join(' ')}
-                </span>
-              </span>
-            </button>
-          ))}
+          <div className="example-strip-header">
+            <span className="example-strip-label">▶ DEMO LOOPS</span>
+            {!isPlaying
+              ? <button className="piano-btn play" onClick={() => playAll(tracks)} disabled={tracks.length === 0}>▶ Play Loop</button>
+              : <button className="piano-btn stop"  onClick={stopAll}>⏹ Stop</button>
+            }
+          </div>
+          <div className="example-carousel">
+            <button className="carousel-arrow carousel-arrow-left" onClick={() => scrollDemos(-1)} aria-label="Scroll left">◀</button>
+            <div className="example-cards-row" ref={demoScrollRef}>
+              {EXAMPLES.map(ex => {
+                const metaMatch = ex.desc.match(/^(.*?)\s*·\s*(\d+ BPM\s*·\s*\d+s)$/);
+                const descText = metaMatch ? metaMatch[1] : ex.desc;
+                const metaText = metaMatch ? metaMatch[2] : '';
+                return (
+                  <button key={ex.name} className={`example-card${activeDemo === ex.name ? ' active' : ''}`} onClick={() => loadExample(ex)}>
+                    <span className="example-info">
+                      <span className="example-title-row">
+                        <span className="example-emoji">{ex.emoji}</span>
+                        <span className="example-name">{ex.name}</span>
+                      </span>
+                      <span className="example-desc">{descText}</span>
+                      <span className="example-bottom-row">
+                        <span className="example-insts">
+                          {ex.tracks.map(tr => INSTRUMENTS.find(i => i.id === tr.inst)?.icon).join(' ')}
+                        </span>
+                        {metaText && <span className="example-meta">{metaText}</span>}
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            <button className="carousel-arrow carousel-arrow-right" onClick={() => scrollDemos(1)} aria-label="Scroll right">▶</button>
+          </div>
         </div>
 
         {/* Instrument selector */}
@@ -2586,9 +2964,10 @@ function PianoSection() {
             <button key={inst.id}
               className={`inst-btn ${instrument === inst.id ? 'active' : ''}`}
               style={{'--inst-color': inst.color} as React.CSSProperties}
+              title={inst.name}
               onClick={() => setInstrument(inst.id)}>
               <span className="inst-icon">{inst.icon}</span>
-              <span className="inst-name">{inst.name}</span>
+              {inst.id !== 'corn' && <span className="inst-name">{inst.name}</span>}
             </button>
           ))}
         </div>
@@ -2613,22 +2992,36 @@ function PianoSection() {
         ) : (
           <div className="piano-keyboard-wrapper">
             <div className="piano-keyboard">
-              {WHITE_KEYS.map(note => (
-                <div key={note} className={`piano-white-key ${pressedKeys.has(note) ? 'pressed' : ''}`}
-                  onMouseDown={() => press(note)} onMouseUp={() => release(note)} onMouseLeave={() => release(note)}
-                  onTouchStart={e => { e.preventDefault(); press(note); }} onTouchEnd={() => release(note)}>
-                  <span className="key-label">{note}</span>
-                  <span className="key-kb">{Object.entries(KB_MAP).find(([,v]) => v === note)?.[0]?.toUpperCase() ?? ''}</span>
-                </div>
-              ))}
-              {BLACK_KEYS.map(({note, left}) => (
-                <div key={note} className={`piano-black-key ${pressedKeys.has(note) ? 'pressed' : ''}`}
-                  style={{left: `${left}px`}}
-                  onMouseDown={e => { e.stopPropagation(); press(note); }} onMouseUp={() => release(note)} onMouseLeave={() => release(note)}
-                  onTouchStart={e => { e.preventDefault(); e.stopPropagation(); press(note); }} onTouchEnd={() => release(note)}>
-                  <span className="key-label">{note.replace(/\d/g,'').replace('#','♯')}</span>
-                </div>
-              ))}
+              {(() => {
+                const allKeys = [...WHITE_KEYS, ...BLACK_KEYS.map(k => k.note)];
+                const disabledKeys = instrument === 'soprano'
+                  ? new Set(allKeys.filter(n => !CHOIR_MAP[n]))
+                  : new Set<string>(); // vocalOoh covers full range; all other instruments play every key
+                return (<>
+                  {WHITE_KEYS.map(note => {
+                    const off = disabledKeys.has(note);
+                    return (
+                      <div key={note} className={`piano-white-key ${pressedKeys.has(note) ? 'pressed' : ''} ${off ? 'key-disabled' : ''}`}
+                        onMouseDown={() => !off && press(note)} onMouseUp={() => release(note)} onMouseLeave={() => release(note)}
+                        onTouchStart={e => { e.preventDefault(); if (!off) press(note); }} onTouchEnd={() => release(note)}>
+                        <span className="key-label">{note}</span>
+                        <span className="key-kb">{Object.entries(KB_MAP).find(([,v]) => v === note)?.[0]?.toUpperCase() ?? ''}</span>
+                      </div>
+                    );
+                  })}
+                  {BLACK_KEYS.map(({note, left}) => {
+                    const off = disabledKeys.has(note);
+                    return (
+                      <div key={note} className={`piano-black-key ${pressedKeys.has(note) ? 'pressed' : ''} ${off ? 'key-disabled' : ''}`}
+                        style={{left: `${left}px`}}
+                        onMouseDown={e => { e.stopPropagation(); if (!off) press(note); }} onMouseUp={() => release(note)} onMouseLeave={() => release(note)}
+                        onTouchStart={e => { e.preventDefault(); e.stopPropagation(); if (!off) press(note); }} onTouchEnd={() => release(note)}>
+                        <span className="key-label">{note.replace(/\d/g,'').replace('#','♯')}</span>
+                      </div>
+                    );
+                  })}
+                </>);
+              })()}
             </div>
           </div>
         )}
@@ -2645,10 +3038,14 @@ function PianoSection() {
                   <span className="studio-track-icon">{inst?.icon}</span>
                   <span className="studio-track-name">{inst?.name}</span>
                   <span className="studio-track-events">{tr.events.length} events · {(tr.dur/1000).toFixed(1)}s</span>
-                  <button className="studio-track-btn" onClick={() => setTracks(p => p.map(t => t.id === tr.id ? {...t, muted: !t.muted} : t))}>
+                  <button className="studio-track-btn" onClick={() => {
+                    const updated = tracks.map(t => t.id === tr.id ? {...t, muted: !t.muted} : t);
+                    setTracks(updated);
+                    if (isPlaying) playAll(updated);
+                  }}>
                     {tr.muted ? '🔇' : '🔊'}
                   </button>
-                  <button className="studio-track-btn delete" onClick={() => { stopAll(); setTracks(p => p.filter(t => t.id !== tr.id)); }}>✕</button>
+                  <button className="studio-track-btn delete" onClick={() => { stopAll(); setTracks(p => p.filter(t => t.id !== tr.id)); setActiveDemo(null); }}>✕</button>
                 </div>
               );
             })}

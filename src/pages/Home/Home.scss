@@ -1392,40 +1392,69 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
 // ── Instrument selector
 .inst-selector {
   display: flex;
-  gap: 0.6rem;
-  flex-wrap: wrap;
+  gap: 0.4rem;
+  flex-wrap: nowrap;
+  overflow-x: auto;
   margin-bottom: 1.4rem;
+  padding-bottom: 4px; // room for scrollbar
+  scrollbar-width: none; // Firefox
+  &::-webkit-scrollbar { display: none; } // Chrome/Safari
 }
 
 .inst-btn {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.55rem 1.1rem;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.15);
+  gap: 0.3rem;
+  padding: 0.35rem 0.5rem;
+  flex-shrink: 0;
+  position: relative;
+  isolation: isolate;
+  background: transparent;
+  border: none;
   color: rgba(255,255,255,0.65);
   font-family: 'Space Mono', monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
   cursor: pointer;
-  transition: all 0.15s;
-  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+  transition: color 0.15s, filter 0.15s;
 
-  .inst-icon { font-size: 1rem; }
-  .inst-name { text-transform: uppercase; }
+  // Outer shape — border color fill
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.15);
+    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+    z-index: -2;
+    transition: background 0.15s;
+  }
+
+  // Inner shape — button fill (1px ring visible between them)
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    background: rgba(255,255,255,0.04);
+    clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px));
+    z-index: -1;
+    transition: background 0.15s;
+  }
+
+  .inst-icon { font-size: 0.9rem; }
+  .inst-name { white-space: nowrap; text-transform: uppercase; }
 
   &:hover {
-    border-color: var(--inst-color);
     color: var(--inst-color);
-    background: rgba(255,255,255,0.08);
+    &::before { background: var(--inst-color); }
+    &::after  { background: rgba(255,255,255,0.08); }
   }
 
   &.active {
-    background: rgba(0,0,0,0.4);
-    border-color: var(--inst-color);
-    color: var(--inst-color);
-    box-shadow: 0 0 12px var(--inst-color), inset 0 0 8px rgba(0,0,0,0.5);
+    color: #fff;
+    text-shadow: 0 0 8px #fff, 0 0 16px rgba(255,255,255,0.6);
+    filter: drop-shadow(0 0 8px var(--inst-color));
+    &::before { background: var(--inst-color); }
+    &::after  { background: rgba(0,0,0,0.4); box-shadow: inset 0 0 8px rgba(0,0,0,0.5); }
   }
 }
 
@@ -1523,12 +1552,40 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
   &.stop-rec  { background: $rhythm-yellow; color: #0d0520 !important; font-weight: 700; &:hover { box-shadow: 0 0 16px $rhythm-yellow; } }
   &.play      { background: $rhythm-green; color: #0d0520 !important; font-weight: 700; &:hover { box-shadow: 0 0 16px $rhythm-green; } }
   &.stop-play { background: $rhythm-purple; color: #fff; &:hover { box-shadow: 0 0 16px $rhythm-purple; } }
-  &.capture   { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.3);
-    &:hover:not(:disabled) { border-color: $rhythm-green; color: $rhythm-green; }
+  &.capture {
+    position: relative; isolation: isolate; background: transparent; border: none; clip-path: none;
+    color: #fff;
+    &::before { content: ''; position: absolute; inset: 0; z-index: -2; transition: background .15s;
+      background: rgba(255,255,255,0.3);
+      clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px)); }
+    &::after  { content: ''; position: absolute; inset: 1px; z-index: -1; transition: background .15s;
+      background: rgba(255,255,255,0.1);
+      clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px)); }
+    &:hover:not(:disabled) { color: $rhythm-green; &::before { background: $rhythm-green; } }
     &:disabled { opacity: 0.4; cursor: not-allowed; }
   }
-  &.download  { background: rgba(57,255,20,0.15); color: $rhythm-green; border: 1px solid $rhythm-green; &:hover { box-shadow: 0 0 12px $rhythm-green; } }
-  &.tweet     { background: #000; color: #fff; border: 1px solid #555; &:hover { border-color: #fff; } }
+  &.download {
+    position: relative; isolation: isolate; background: transparent; border: none; clip-path: none;
+    color: $rhythm-green;
+    &::before { content: ''; position: absolute; inset: 0; z-index: -2; transition: filter .15s;
+      background: $rhythm-green;
+      clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px)); }
+    &::after  { content: ''; position: absolute; inset: 1px; z-index: -1;
+      background: rgba(57,255,20,0.15);
+      clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px)); }
+    &:hover { filter: drop-shadow(0 0 6px $rhythm-green); }
+  }
+  &.tweet {
+    position: relative; isolation: isolate; background: transparent; border: none; clip-path: none;
+    color: #fff;
+    &::before { content: ''; position: absolute; inset: 0; z-index: -2; transition: background .15s;
+      background: #555;
+      clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px)); }
+    &::after  { content: ''; position: absolute; inset: 1px; z-index: -1;
+      background: #000;
+      clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px)); }
+    &:hover::before { background: #fff; }
+  }
   &.linkedin  { background: #0a66c2; color: #fff; &:hover { box-shadow: 0 0 12px #0a66c2; } }
 }
 
@@ -1642,6 +1699,22 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
   &.pressed .key-label { color: rgba(255,255,255,0.9); }
 }
 
+// ── Disabled keys (instrument doesn't have a sample for this note)
+.piano-white-key.key-disabled {
+  background: linear-gradient(180deg, #2a2535 0%, #1e1a2a 50%, #252030 100%);
+  cursor: not-allowed;
+  opacity: 0.45;
+  &:active, &.pressed { background: linear-gradient(180deg, #2a2535 0%, #1e1a2a 50%, #252030 100%); box-shadow: none; }
+  .key-label, .key-kb { color: rgba(255,255,255,0.2); }
+}
+.piano-black-key.key-disabled {
+  background: #0a0810;
+  cursor: not-allowed;
+  opacity: 0.35;
+  border-color: rgba(80,60,110,0.3);
+  &:active, &.pressed { background: #0a0810; box-shadow: none; }
+}
+
 // ── Drum pads
 .drum-pads {
   display: grid;
@@ -1659,11 +1732,34 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  background: rgba(255,255,255,0.04);
-  border: 2px solid rgba(255,255,255,0.12);
+  position: relative;
+  isolation: isolate;
+  background: transparent;
+  border: none;
   cursor: pointer;
-  transition: all 0.06s;
-  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  transition: transform 0.06s, filter 0.06s;
+
+  // Outer shape — border color fill
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.12);
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    z-index: -2;
+    transition: background 0.06s;
+  }
+
+  // Inner shape — button fill (2px ring visible)
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: rgba(255,255,255,0.04);
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    z-index: -1;
+    transition: background 0.06s;
+  }
 
   .pad-name {
     font-family: 'Bebas Neue', sans-serif;
@@ -1681,22 +1777,70 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
   }
 
   &.active, &:active {
-    background: rgba(255,255,255,0.1);
-    border-color: var(--pad-color);
-    box-shadow: 0 0 24px var(--pad-color), inset 0 0 12px rgba(0,0,0,0.4);
     transform: scale(0.97);
+    filter: drop-shadow(0 0 12px var(--pad-color));
+    &::before { background: var(--pad-color); }
+    &::after  { background: rgba(255,255,255,0.1); box-shadow: inset 0 0 12px rgba(0,0,0,0.4); }
   }
-  &:hover { border-color: var(--pad-color); background: rgba(255,255,255,0.07); }
+  &:hover {
+    &::before { background: var(--pad-color); }
+    &::after  { background: rgba(255,255,255,0.07); }
+  }
 }
 
 // ── Always-visible share strip
 // ── Demo examples strip
 .example-strip {
   display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-bottom: 1.4rem;
+}
+
+.example-strip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.example-carousel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.carousel-arrow {
+  flex-shrink: 0;
+  background: rgba(123,47,255,0.15);
+  border: 1px solid rgba(123,47,255,0.4);
+  color: $rhythm-purple;
+  font-size: 0.85rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: rgba(123,47,255,0.35);
+    color: #fff;
+  }
+}
+
+.example-cards-row {
+  display: flex;
   align-items: stretch;
   gap: 0.7rem;
-  flex-wrap: wrap;
-  margin-bottom: 1.4rem;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  flex: 1;
+
+  &::-webkit-scrollbar { display: none; }
 }
 
 .example-strip-label {
@@ -1711,6 +1855,7 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
 }
 
 .example-card {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -1721,8 +1866,18 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
   cursor: pointer;
   text-align: left;
   transition: all 0.18s;
-  flex: 1;
-  min-width: 200px;
+  flex-shrink: 0;
+  flex: none;
+  width: 220px;
+  scroll-snap-align: start;
+
+  &.active {
+    background: rgba(57,255,20,0.08);
+    border-left-color: $rhythm-green;
+    box-shadow: 0 0 0 1px rgba(57,255,20,0.25), inset 0 0 12px rgba(57,255,20,0.05);
+
+    .example-name { color: $rhythm-green; }
+  }
 
   &:hover {
     background: rgba(123,47,255,0.12);
@@ -1731,10 +1886,26 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
     box-shadow: 0 4px 20px rgba(123,47,255,0.25);
   }
 
+  .example-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    line-height: 1;
+  }
+
   .example-emoji {
-    font-size: 1.6rem;
+    font-size: 1.1rem;
     flex-shrink: 0;
-    color: rgba(255,255,255,0.9);
+  }
+
+  .example-chorus-badge {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 0.7rem;
+    color: #ff69b4;
+    text-shadow: 0 0 6px rgba(255,105,180,0.8);
+    pointer-events: none;
   }
 
   .example-info {
@@ -1759,11 +1930,26 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
     letter-spacing: 0.03em;
   }
 
+  .example-bottom-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.1rem;
+  }
+
   .example-insts {
     font-size: 0.85rem;
     letter-spacing: 0.1em;
-    margin-top: 0.1rem;
     color: rgba(255,255,255,0.75);
+  }
+
+  .example-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.52rem;
+    letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.35);
+    white-space: nowrap;
+    text-align: right;
   }
 }
 
@@ -1951,8 +2137,7 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
   .track-item { grid-template-columns: 40px 90px 1fr; gap: 0.8rem; }
   .stages-grid { grid-template-columns: 1fr 1fr; }
   .piano-canvas { height: 120px; }
-  .inst-selector { gap: 0.4rem; }
-  .inst-btn { padding: 0.4rem 0.7rem; font-size: 0.65rem; }
+  .inst-btn { padding: 0.35rem 0.55rem; font-size: 0.58rem; }
   .piano-white-key { width: 60px; height: 150px; }
   .piano-black-key { width: 36px; height: 90px; }
 }

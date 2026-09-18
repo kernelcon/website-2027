@@ -222,17 +222,41 @@ $glow-yellow: 0 0 12px #ffe600, 0 0 24px #ffe600, 0 0 48px rgba(255,230,0,.4);
   font-size: 1.5rem;
   letter-spacing: 0.14em;
   padding: 0.75rem 2.2rem;
+  position: relative;
+  isolation: isolate;
+  display: inline-block;
   background: transparent;
   color: $purple;
-  border: 2px solid $purple;
+  border: none;
   text-decoration: none;
-  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
-  transition: all .15s;
+  transition: transform .15s, filter .15s;
+
+  // Outer shape — border color fill
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: $purple;
+    clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+    z-index: -2;
+    transition: filter .15s;
+  }
+
+  // Inner shape — page background fill (2px "border" ring visible between the two)
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: $bg-deep;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    z-index: -1;
+    transition: background .15s;
+  }
 
   &:hover {
-    background: rgba(123,47,255,.15);
-    box-shadow: $glow-purple;
     transform: translateY(-2px);
+    filter: drop-shadow(0 0 8px rgba(123,47,255,.8)) drop-shadow(0 0 20px rgba(123,47,255,.4));
+    &::after { background: rgba(16, 6, 42, 1); } // $bg-deep with a purple tint
   }
 }
 
@@ -257,7 +281,7 @@ $glow-yellow: 0 0 12px #ffe600, 0 0 24px #ffe600, 0 0 48px rgba(255,230,0,.4);
 
 .algo-eq-strip {
   position: absolute;
-  bottom: 0;
+  bottom: 44px; /* offset by footer height so bars sit flush on the footer */
   left: 0;
   right: 0;
   height: 80px;
