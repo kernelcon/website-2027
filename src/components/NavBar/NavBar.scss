@@ -49,6 +49,45 @@
     margin-top: 1px;
   }
 
+  .navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .navbar-player-btn {
+    font-size: 1.3rem;
+    padding: 4px 12px 3px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #7b2fff;
+    line-height: 1.5;
+    position: relative;
+    isolation: isolate;
+    transition: filter 0.15s;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: #7b2fff;
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+      z-index: -2;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      background: #0d0520;
+      clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+      z-index: -1;
+    }
+    &:hover {
+      filter: drop-shadow(0 0 6px rgba(123,47,255,0.7));
+    }
+  }
+
   .navbar-register {
     font-family: 'Bebas Neue', 'Space Mono', monospace;
     font-size: 1rem;

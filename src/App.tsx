@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.scss";
 
@@ -22,20 +22,13 @@ import Training from "./pages/Training/Training";
 import Agenda from "./pages/Agenda/Agenda";
 
 import { withRouter } from "./router-compat";
-
-import audio1 from "./static/audio/tmnt.mp3";
-import audio2 from "./static/audio/punks-not-dead.mp3";
-import audio3 from "./static/audio/jingly.mp3";
+import NowPlaying from "./components/NowPlaying/NowPlaying";
 
 // Wrap pages that expect legacy match/history props.
 const AboutR = withRouter(About);
 const BioR = withRouter(Bio);
 const VenueR = withRouter(Venue);
 const AgendaR = withRouter(Agenda);
-
-function getRandomInt(max: number) {
-  return Math.floor(Math.random() * max);
-}
 
 function ExternalRedirect({ to }: { to: string }) {
   useEffect(() => {
@@ -52,7 +45,6 @@ function useKonamiEasterEgg() {
       "b", "a",
     ];
     let current = 0;
-    const audioArray = [audio1, audio2, audio3];
     const keyHandler = (event: KeyboardEvent) => {
       if (pattern.indexOf(event.key) < 0 || event.key !== pattern[current]) {
         current = 0;
@@ -61,8 +53,6 @@ function useKonamiEasterEgg() {
       current++;
       if (pattern.length === current) {
         current = 0;
-        const player = new Audio(audioArray[getRandomInt(3)]);
-        void player.play();
         alert("Egg #2: Well done, someone is a fan of old video games.");
       }
     };
@@ -73,11 +63,13 @@ function useKonamiEasterEgg() {
 
 function App() {
   useKonamiEasterEgg();
+  const [playerOpen, setPlayerOpen] = useState(false);
 
   return (
     <BrowserRouter>
-      <NavBar />
+      <NavBar onOpenPlayer={() => setPlayerOpen(true)} />
       <SecondaryNav />
+      <NowPlaying isOpen={playerOpen} onClose={() => setPlayerOpen(false)} />
       <div className="page-box">
         <Routes>
           <Route path="/" element={<Home />} />
