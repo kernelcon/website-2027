@@ -2159,6 +2159,9 @@ function PianoSection() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeDemo, setActiveDemo] = useState<string | null>(null);
   const [videoUrl, setVideoUrl] = useState<string|null>(null);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
 
   const audioCtxRef = useRef<AudioContext|null>(null);
   const destRef = useRef<MediaStreamAudioDestinationNode|null>(null);
@@ -2875,7 +2878,6 @@ function PianoSection() {
     recEventsRef.current = []; recInstRef.current = instrument;
     recStartRef.current = Date.now(); isRecordingRef.current = true;
     setIsRecording(true);
-    if (tracks.length > 0) playAll(tracks);
   };
 
   const stopRecord = () => {
@@ -2892,6 +2894,7 @@ function PianoSection() {
   const captureVideo = () => {
     const canvas = canvasRef.current;
     if (!canvas || !tracks.some(tr => !tr.muted)) return;
+    setIsExporting(true);
     const dest = getDest();
     const combined = new MediaStream([
       ...canvas.captureStream(30).getVideoTracks(),
@@ -2902,7 +2905,13 @@ function PianoSection() {
     const recorder = new MediaRecorder(combined, {mimeType: mime});
     chunksRef.current = [];
     recorder.ondataavailable = e => { if (e.data.size > 0) chunksRef.current.push(e.data); };
-    recorder.onstop = () => setVideoUrl(URL.createObjectURL(new Blob(chunksRef.current, {type: 'video/webm'})));
+    recorder.onstop = () => {
+      stopAll();
+      setIsExporting(false);
+      const url = URL.createObjectURL(new Blob(chunksRef.current, {type: 'video/webm'}));
+      setVideoUrl(url);
+      setShareOpen(true);
+    };
     recorder.start();
     tracks.filter(tr => !tr.muted).forEach(tr => loopTimersRef.current.push(...scheduleTrack(tr)));
     setTimeout(() => {
@@ -2911,12 +2920,28 @@ function PianoSection() {
     }, loopDurRef.current + 400);
   };
 
-  const tweetLoop = () => {
-    const text = encodeURIComponent('I just composed a loop at Kernelcon 2027 Algo(Rhythm)! 🎵 #KernelCon2027 #AlgoRhythm @_kernelcon_');
-    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent('https://kernelcon.org')}`, '_blank');
+  const tweetLoop = (url?: string | null) => {
+    if (url) {
+      const a = document.createElement('a'); a.href = url;
+      a.download = 'kernelcon-algo-rhythm-loop.webm'; a.click();
+    }
+    const text = encodeURIComponent('I just composed a loop at Kernelcon 2027 Algo(Rhythm)! 🎵 Attach your downloaded video and tag us! #KernelCon2027 #AlgoRhythm @_kernelcon_');
+    window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
   };
-  const linkedInShare = () => {
-    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://kernelcon.org')}`, '_blank');
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 4000);
+  };
+
+  const linkedInShare = (url?: string | null) => {
+    const text = 'I just composed a loop at Kernelcon 2027 Algo(Rhythm)! 🎵 #KernelCon2027 #AlgoRhythm kernelcon.org';
+    navigator.clipboard.writeText(text).catch(() => {});
+    if (url) {
+      const a = document.createElement('a'); a.href = url;
+      a.download = 'kernelcon-algo-rhythm-loop.webm'; a.click();
+    }
+    window.open('https://www.linkedin.com/feed/', '_blank');
+    showToast(url ? 'Video downloaded · Share text copied — paste on LinkedIn to post!' : 'Share text copied — paste on LinkedIn to post!');
   };
 
   return (
@@ -3071,24 +3096,19 @@ function PianoSection() {
         {/* Transport controls */}
         <div className="piano-controls">
           {!isRecording
-            ? <button className="piano-btn rec" onClick={startRecord}>⏺ Record</button>
+            ? <button className="piano-btn rec" onClick={startRecord}>⏺ Record Layer</button>
             : <button className="piano-btn stop-rec" onClick={stopRecord}>⏹ Stop Recording</button>}
           {tracks.length > 0 && !isRecording && (
             <>
               {!isPlaying
                 ? <button className="piano-btn play" onClick={() => playAll(tracks)}>▶ Play Loop</button>
                 : <button className="piano-btn stop-play" onClick={stopAll}>⏸ Stop</button>}
-              <button className="piano-btn capture" onClick={captureVideo} disabled={isPlaying || isRecording}>🎬 Capture Video</button>
+              <button className="piano-btn capture" onClick={captureVideo} disabled={isPlaying || isRecording || isExporting}>
+                {isExporting ? '⏳ Exporting…' : '⬆ Export & Share'}
+              </button>
             </>
           )}
         </div>
-
-        {/* Video player */}
-        {videoUrl && (
-          <div className="piano-video-section">
-            <video src={videoUrl} controls loop className="piano-video" />
-          </div>
-        )}
 
         {/* Share strip — always visible */}
         <div className="piano-share-strip">
@@ -3102,16 +3122,34 @@ function PianoSection() {
             </span>
           </div>
           <div className="share-strip-actions">
-            {videoUrl && (
-              <button className="piano-btn download" onClick={() => {
-                const a = document.createElement('a'); a.href = videoUrl;
-                a.download = 'kernelcon-algo-rhythm-loop.webm'; a.click();
-              }}>⬇ Download Loop</button>
-            )}
-            <button className="piano-btn tweet" onClick={tweetLoop}>𝕏 Tweet to Kernelcon</button>
-            <button className="piano-btn linkedin" onClick={linkedInShare}>in Share on LinkedIn</button>
+            <button className="piano-btn tweet" onClick={() => tweetLoop()}>𝕏 Tweet to Kernelcon</button>
+            <button className="piano-btn linkedin" onClick={() => linkedInShare()}>in Share on LinkedIn</button>
           </div>
         </div>
+
+        {/* Toast */}
+        {toast && <div className="piano-toast">{toast}</div>}
+
+        {/* Export & Share modal */}
+        {shareOpen && videoUrl && (
+          <div className="share-modal-overlay" onClick={() => setShareOpen(false)}>
+            <div className="share-modal" onClick={e => e.stopPropagation()}>
+              <div className="share-modal-header">
+                <span className="share-modal-label">⬆ YOUR LOOP</span>
+                <button className="share-modal-close" onClick={() => setShareOpen(false)}>✕</button>
+              </div>
+              <video src={videoUrl} controls className="share-modal-video" />
+              <div className="share-modal-actions">
+                <button className="piano-btn download" onClick={() => {
+                  const a = document.createElement('a'); a.href = videoUrl;
+                  a.download = 'kernelcon-algo-rhythm-loop.webm'; a.click();
+                }}>⬇ Download</button>
+                <button className="piano-btn tweet" onClick={() => tweetLoop(videoUrl)}>𝕏 Tweet to Kernelcon</button>
+                <button className="piano-btn linkedin" onClick={() => linkedInShare(videoUrl)}>in LinkedIn</button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
