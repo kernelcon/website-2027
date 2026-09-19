@@ -2323,8 +2323,17 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
   .stages-grid { grid-template-columns: 1fr 1fr; }
   .piano-canvas { height: 120px; }
   .inst-btn { padding: 0.35rem 0.55rem; font-size: 0.58rem; }
+  // Keys set to 60px/150px so 15 white keys = 900px total, then zoom 0.4 → 360px wide
   .piano-white-key { width: 60px; height: 150px; }
   .piano-black-key { width: 36px; height: 90px; }
+  .piano-keyboard { zoom: 0.4; }
+  .piano-keyboard-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+
+@media (min-width: 600px) and (max-width: 900px) {
+  // 15 white keys at 80px = 1200px, zoom 0.55 → 660px — fits tablets
+  .piano-keyboard { zoom: 0.55; }
+  .piano-keyboard-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 }
 
 // this is a stupid fix to make blurry text show up on certain versions of microsoft edge because why would we ever want every browser to render things the same way thats crazy lol

@@ -2730,7 +2730,7 @@ function PianoSection() {
       // Header row
       c.font = '11px "Space Mono", monospace';
       c.fillStyle = '#3a1a8c';
-      c.fillText('⬡ ALGO(RHYTHM) 2027  ·  KERNELCON  ·  BATTLE MODE', 16, 18);
+      c.fillText('⬡ ALGO(RHYTHM) 2027  ·  KERNELCON  ·  VISUALIZER', 16, 18);
 
       instIds.forEach((instId, idx) => {
         const ly = Y0 + idx * (LANE_H + LANE_G);
@@ -3034,8 +3034,9 @@ function PianoSection() {
           ))}
         </div>
 
-        {/* Waveform canvas */}
-        <canvas ref={canvasRef} className="piano-canvas" width={1200} height={2} />
+        {/* Waveform canvas — collapsed when no tracks */}
+        <canvas ref={canvasRef} className="piano-canvas" width={1200} height={2}
+          style={tracks.length === 0 && !isRecording && !isExporting ? {height:0, border:'none', marginBottom:0} : undefined} />
 
         {/* Drum pads OR keyboard */}
         {instrument === 'drums' ? (
