@@ -379,8 +379,12 @@ const BLACK_KEYS = [
   {note:'F#4',left:856},{note:'G#4',left:936},{note:'A#4',left:1016},
 ];
 const KB_MAP: Record<string,string> = {
+  // white keys
   q:'C3',w:'D3',e:'E3',r:'F3',t:'G3',y:'A3',u:'B3',
   a:'C4',s:'D4',d:'E4',f:'F4',g:'G4',h:'A4',j:'B4',k:'C5',
+  // black keys — 1-0 consecutive
+  '1':'C#3','2':'D#3','3':'F#3','4':'G#3','5':'A#3',
+  '6':'C#4','7':'D#4','8':'F#4','9':'G#4','0':'A#4',
 };
 const DRUM_KB: Record<string,string> = {z:'kick',x:'snare',c:'hihat',v:'tom',b:'clap',n:'cymbal'};
 const INSTRUMENTS = [
@@ -605,66 +609,68 @@ const EXAMPLES: Example[] = [
   {
     // STALK OVERFLOW — G Dorian (G A Bb C D E F), 100 BPM, 8th=300ms, bar=2400ms, 10 bars=24s
     // Banjo-driven folk melody meets synth pads — original composition
+    // 1200ms intro gap lets the corn "Kernelcon!" shout land before the band kicks in
     name: 'STALK OVERFLOW', emoji: '🌽', desc: 'Banjo meets synth in a folk groove · G Dorian · 100 BPM · 24s',
-    dur: 24000,
+    dur: 25200,
     tracks: [
+      { inst: 'corn', events: [{note:'C#3',t:0}] },
       { inst: 'banjo', events: [
         // Bars 1-2: Opening motif — G ascending, Bb (the Dorian blue note), back down
-        {note:'G4',t:0},   {note:'A4',t:300}, {note:'A#4',t:600},{note:'A4',t:900},
-        {note:'G4',t:1200},{note:'E4',t:1500},{note:'D4',t:1800},{note:'G4',t:2100},
-        {note:'D4',t:2400},{note:'E4',t:2700},{note:'G4',t:3000},{note:'A4',t:3300},
-        {note:'A#4',t:3600},{note:'A4',t:3900},{note:'G4',t:4200},{note:'D4',t:4500},
+        {note:'G4',t:1200},{note:'A4',t:1500},{note:'A#4',t:1800},{note:'A4',t:2100},
+        {note:'G4',t:2400},{note:'E4',t:2700},{note:'D4',t:3000},{note:'G4',t:3300},
+        {note:'D4',t:3600},{note:'E4',t:3900},{note:'G4',t:4200},{note:'A4',t:4500},
+        {note:'A#4',t:4800},{note:'A4',t:5100},{note:'G4',t:5400},{note:'D4',t:5700},
         // Bars 3-4: Development — sweep to high C5, answer down through F4
-        {note:'G4',t:4800},{note:'A#4',t:5100},{note:'C5',t:5400},{note:'A#4',t:5700},
-        {note:'A4',t:6000},{note:'G4',t:6300},{note:'F4',t:6600},{note:'D4',t:6900},
-        {note:'G4',t:7200},{note:'A4',t:7500},{note:'G4',t:7800},{note:'E4',t:8100},
-        {note:'D4',t:8400},{note:'C4',t:8700},{note:'D4',t:9000},{note:'G3',t:9300},
+        {note:'G4',t:6000},{note:'A#4',t:6300},{note:'C5',t:6600},{note:'A#4',t:6900},
+        {note:'A4',t:7200},{note:'G4',t:7500},{note:'F4',t:7800},{note:'D4',t:8100},
+        {note:'G4',t:8400},{note:'A4',t:8700},{note:'G4',t:9000},{note:'E4',t:9300},
+        {note:'D4',t:9600},{note:'C4',t:9900},{note:'D4',t:10200},{note:'G3',t:10500},
         // Bars 5-6: Synth joins — banjo climbs with it
-        {note:'G3',t:9600},{note:'D4',t:9900},{note:'G4',t:10200},{note:'A#4',t:10500},
-        {note:'A4',t:10800},{note:'G4',t:11100},{note:'E4',t:11400},{note:'G4',t:11700},
-        {note:'A4',t:12000},{note:'A#4',t:12300},{note:'A4',t:12600},{note:'G4',t:12900},
-        {note:'F4',t:13200},{note:'G4',t:13500},{note:'A4',t:13800},{note:'A#4',t:14100},
+        {note:'G3',t:10800},{note:'D4',t:11100},{note:'G4',t:11400},{note:'A#4',t:11700},
+        {note:'A4',t:12000},{note:'G4',t:12300},{note:'E4',t:12600},{note:'G4',t:12900},
+        {note:'A4',t:13200},{note:'A#4',t:13500},{note:'A4',t:13800},{note:'G4',t:14100},
+        {note:'F4',t:14400},{note:'G4',t:14700},{note:'A4',t:15000},{note:'A#4',t:15300},
         // Bars 7-8: Full ensemble peak — fast 8ths, wide range
-        {note:'G4',t:14400},{note:'A4',t:14700},{note:'A#4',t:15000},{note:'C5',t:15300},
-        {note:'A#4',t:15600},{note:'A4',t:15900},{note:'G4',t:16200},{note:'E4',t:16500},
-        {note:'D4',t:16800},{note:'E4',t:17100},{note:'G4',t:17400},{note:'A4',t:17700},
-        {note:'G4',t:18000},{note:'A#4',t:18300},{note:'A4',t:18600},{note:'G4',t:18900},
+        {note:'G4',t:15600},{note:'A4',t:15900},{note:'A#4',t:16200},{note:'C5',t:16500},
+        {note:'A#4',t:16800},{note:'A4',t:17100},{note:'G4',t:17400},{note:'E4',t:17700},
+        {note:'D4',t:18000},{note:'E4',t:18300},{note:'G4',t:18600},{note:'A4',t:18900},
+        {note:'G4',t:19200},{note:'A#4',t:19500},{note:'A4',t:19800},{note:'G4',t:20100},
         // Bars 9-10: Outro — wind down back to root
-        {note:'G4',t:19200},{note:'E4',t:19500},{note:'D4',t:19800},{note:'C4',t:20100},
-        {note:'D4',t:20400},{note:'G3',t:20700},{note:'G4',t:21000},{note:'A4',t:21300},
-        {note:'A#4',t:21600},{note:'A4',t:21900},{note:'G4',t:22200},{note:'D4',t:22500},
-        {note:'G3',t:22800},{note:'D4',t:23100},{note:'G4',t:23400},{note:'G3',t:23700},
+        {note:'G4',t:20400},{note:'E4',t:20700},{note:'D4',t:21000},{note:'C4',t:21300},
+        {note:'D4',t:21600},{note:'G3',t:21900},{note:'G4',t:22200},{note:'A4',t:22500},
+        {note:'A#4',t:22800},{note:'A4',t:23100},{note:'G4',t:23400},{note:'D4',t:23700},
+        {note:'G3',t:24000},{note:'D4',t:24300},{note:'G4',t:24600},{note:'G3',t:24900},
       ]},
       { inst: 'synth', events: [
         // Synth chords enter bar 5 — G Dorian harmony, sustained pads
-        {note:'G3',t:9600},{note:'D4',t:9750},{note:'A#3',t:9900},   // Gm
-        {note:'G3',t:12000},{note:'C4',t:12150},{note:'E4',t:12300}, // C major (Dorian IV)
-        {note:'G3',t:14400},{note:'A#3',t:14550},{note:'D4',t:14700},{note:'F4',t:14850}, // Gm7
-        {note:'A3',t:16800},{note:'E4',t:16950},{note:'G4',t:17100}, // Am
-        {note:'G3',t:19200},{note:'D4',t:19350},{note:'A#3',t:19500}, // Gm
-        {note:'C4',t:21600},{note:'G4',t:21750},{note:'E4',t:21900}, // C
-        {note:'G3',t:22800},{note:'D4',t:22950},{note:'G4',t:23100}, // G resolve
+        {note:'G3',t:10800},{note:'D4',t:10950},{note:'A#3',t:11100},   // Gm
+        {note:'G3',t:13200},{note:'C4',t:13350},{note:'E4',t:13500}, // C major (Dorian IV)
+        {note:'G3',t:15600},{note:'A#3',t:15750},{note:'D4',t:15900},{note:'F4',t:16050}, // Gm7
+        {note:'A3',t:18000},{note:'E4',t:18150},{note:'G4',t:18300}, // Am
+        {note:'G3',t:20400},{note:'D4',t:20550},{note:'A#3',t:20700}, // Gm
+        {note:'C4',t:22800},{note:'G4',t:22950},{note:'E4',t:23100}, // C
+        {note:'G3',t:24000},{note:'D4',t:24150},{note:'G4',t:24300}, // G resolve
       ]},
       { inst: 'bass', events: [
         // Bass enters bar 3, root-fifth pattern following G Dorian chords
-        {note:'G3',t:4800},{note:'D4',t:6000},
-        {note:'G3',t:7200},{note:'A3',t:8400},
-        {note:'G3',t:9600},{note:'D4',t:10800},
-        {note:'C4',t:12000},{note:'G3',t:13200},
-        {note:'G3',t:14400},{note:'D4',t:15600},
-        {note:'A3',t:16800},{note:'G3',t:18000},
-        {note:'G3',t:19200},{note:'C4',t:20400},
-        {note:'G3',t:21600},{note:'G3',t:22800},
+        {note:'G3',t:6000},{note:'D4',t:7200},
+        {note:'G3',t:8400},{note:'A3',t:9600},
+        {note:'G3',t:10800},{note:'D4',t:12000},
+        {note:'C4',t:13200},{note:'G3',t:14400},
+        {note:'G3',t:15600},{note:'D4',t:16800},
+        {note:'A3',t:18000},{note:'G3',t:19200},
+        {note:'G3',t:20400},{note:'C4',t:21600},
+        {note:'G3',t:22800},{note:'G3',t:24000},
       ]},
       { inst: 'drums', events: [
         // Light folk groove — sparse intro, builds to full by bar 5
-        {note:'cymbal',t:0},
-        ...seq('kick',  0,    4800, 2400), // bars 1-2: just kick
-        ...seq('kick',  4800, 24000, 1200), // bars 3-10: full kick pattern
-        ...seq('snare', 5400, 24000, 1200), // snare enters bar 3
-        ...seq('hihat', 9600, 24000, 600),  // hihat enters bar 5
-        {note:'cymbal',t:9600},{note:'cymbal',t:19200},
-        {note:'tom',t:14400},{note:'tom',t:16800},{note:'tom',t:21000},
+        {note:'cymbal',t:1200},
+        ...seq('kick',  1200, 6000,  2400), // bars 1-2: just kick
+        ...seq('kick',  6000, 25200, 1200), // bars 3-10: full kick pattern
+        ...seq('snare', 6600, 25200, 1200), // snare enters bar 3
+        ...seq('hihat', 10800, 25200, 600), // hihat enters bar 5
+        {note:'cymbal',t:10800},{note:'cymbal',t:20400},
+        {note:'tom',t:15600},{note:'tom',t:18000},{note:'tom',t:22200},
       ]},
     ],
   },
@@ -2160,7 +2166,8 @@ function PianoSection() {
   const [activeDemo, setActiveDemo] = useState<string | null>(null);
   const [videoUrl, setVideoUrl] = useState<string|null>(null);
   const [shareOpen, setShareOpen] = useState(false);
-  const [isExporting, setIsExporting] = useState(false);
+  const [exportingFor, setExportingFor] = useState<'share'|'tweet'|'linkedin'|null>(null);
+  const isExporting = exportingFor !== null;
   const [toast, setToast] = useState<string | null>(null);
 
   const audioCtxRef = useRef<AudioContext|null>(null);
@@ -2859,6 +2866,16 @@ function PianoSection() {
     loopIntervalRef.current = setInterval(() => { loopTimersRef.current.forEach(clearTimeout); loopTimersRef.current = []; fire(); }, maxDur);
   }, [stopAll, scheduleTrack]);
 
+  const doubleTrack = (id: number) => {
+    const updated = tracks.map(t => {
+      if (t.id !== id) return t;
+      const extra = t.events.map(e => ({...e, t: e.t + t.dur}));
+      return {...t, events: [...t.events, ...extra], dur: t.dur * 2};
+    });
+    setTracks(updated);
+    if (isPlaying) playAll(updated);
+  };
+
   const scrollDemos = (dir: number) => {
     demoScrollRef.current?.scrollBy({ left: dir * 280, behavior: 'smooth' });
   };
@@ -2891,10 +2908,10 @@ function PianoSection() {
     setActiveDemo(null);
   };
 
-  const captureVideo = () => {
+  const captureVideo = (target: 'share'|'tweet'|'linkedin' = 'share', onDone?: (url: string) => void) => {
     const canvas = canvasRef.current;
     if (!canvas || !tracks.some(tr => !tr.muted)) return;
-    setIsExporting(true);
+    setExportingFor(target);
     const dest = getDest();
     const combined = new MediaStream([
       ...canvas.captureStream(30).getVideoTracks(),
@@ -2907,10 +2924,14 @@ function PianoSection() {
     recorder.ondataavailable = e => { if (e.data.size > 0) chunksRef.current.push(e.data); };
     recorder.onstop = () => {
       stopAll();
-      setIsExporting(false);
+      setExportingFor(null);
       const url = URL.createObjectURL(new Blob(chunksRef.current, {type: 'video/webm'}));
-      setVideoUrl(url);
-      setShareOpen(true);
+      if (onDone) {
+        onDone(url);
+      } else {
+        setVideoUrl(url);
+        setShareOpen(true);
+      }
     };
     recorder.start();
     tracks.filter(tr => !tr.muted).forEach(tr => loopTimersRef.current.push(...scheduleTrack(tr)));
@@ -2957,7 +2978,7 @@ function PianoSection() {
         <p className="piano-subtitle">
           {instrument === 'drums'
             ? '♪ Z=Kick  X=Snare  C=Hi-Hat  V=Tom  B=Clap  N=Cymbal  |  Click pads to play'
-            : '♪ Q-U = C3-B3 | A-K = C4-C5 | Click or tap | Layer instruments'}
+            : '♪ White: Q-U = C3-B3 · A-K = C4-C5 | Black: 1-5 = C#3-A#3 · 6-0 = C#4-A#4 | Layer instruments'}
         </p>
 
         {/* Example loops */}
@@ -3057,6 +3078,7 @@ function PianoSection() {
                         style={{left: `${left}px`}}
                         onMouseDown={e => { e.stopPropagation(); if (!off) press(note); }} onMouseUp={() => release(note)} onMouseLeave={() => release(note)}
                         onTouchStart={e => { e.preventDefault(); e.stopPropagation(); if (!off) press(note); }} onTouchEnd={() => release(note)}>
+                        <span className="key-kb">{Object.entries(KB_MAP).find(([,v]) => v === note)?.[0]?.toUpperCase() ?? ''}</span>
                         <span className="key-label">{note.replace(/\d/g,'').replace('#','♯')}</span>
                       </div>
                     );
@@ -3079,14 +3101,15 @@ function PianoSection() {
                   <span className="studio-track-icon">{inst?.icon}</span>
                   <span className="studio-track-name">{inst?.name}</span>
                   <span className="studio-track-events">{tr.events.length} events · {(tr.dur/1000).toFixed(1)}s</span>
-                  <button className="studio-track-btn" onClick={() => {
+                  <button className="studio-track-btn" data-tip={tr.muted ? 'Unmute' : 'Mute'} onClick={() => {
                     const updated = tracks.map(t => t.id === tr.id ? {...t, muted: !t.muted} : t);
                     setTracks(updated);
                     if (isPlaying) playAll(updated);
                   }}>
                     {tr.muted ? '🔇' : '🔊'}
                   </button>
-                  <button className="studio-track-btn delete" onClick={() => { stopAll(); setTracks(p => p.filter(t => t.id !== tr.id)); setActiveDemo(null); }}>✕</button>
+                  <button className="studio-track-btn double" data-tip="Double" onClick={() => doubleTrack(tr.id)}>+</button>
+                  <button className="studio-track-btn delete" data-tip="Delete" onClick={() => { stopAll(); setTracks(p => p.filter(t => t.id !== tr.id)); setActiveDemo(null); }}>✕</button>
                 </div>
               );
             })}
@@ -3103,8 +3126,8 @@ function PianoSection() {
               {!isPlaying
                 ? <button className="piano-btn play" onClick={() => playAll(tracks)}>▶ Play Loop</button>
                 : <button className="piano-btn stop-play" onClick={stopAll}>⏸ Stop</button>}
-              <button className="piano-btn capture" onClick={captureVideo} disabled={isPlaying || isRecording || isExporting}>
-                {isExporting ? '⏳ Exporting…' : '⬆ Export & Share'}
+              <button className="piano-btn capture" onClick={() => captureVideo('share')} disabled={isPlaying || isRecording || isExporting}>
+                {exportingFor === 'share' ? '⏳ Exporting…' : '⬆ Export & Share'}
               </button>
             </>
           )}
@@ -3122,8 +3145,12 @@ function PianoSection() {
             </span>
           </div>
           <div className="share-strip-actions">
-            <button className="piano-btn tweet" onClick={() => tweetLoop()}>𝕏 Tweet to Kernelcon</button>
-            <button className="piano-btn linkedin" onClick={() => linkedInShare()}>in Share on LinkedIn</button>
+            <button className="piano-btn tweet" onClick={() => captureVideo('tweet', url => tweetLoop(url))} disabled={isPlaying || isRecording || isExporting || tracks.length === 0}>
+              {exportingFor === 'tweet' ? '⏳ Recording…' : '𝕏 Tweet to Kernelcon'}
+            </button>
+            <button className="piano-btn linkedin" onClick={() => captureVideo('linkedin', url => linkedInShare(url))} disabled={isPlaying || isRecording || isExporting || tracks.length === 0}>
+              {exportingFor === 'linkedin' ? '⏳ Recording…' : 'in Share on LinkedIn'}
+            </button>
           </div>
         </div>
 
