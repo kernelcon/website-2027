@@ -1481,9 +1481,17 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
 
 .studio-track {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.9rem 1rem;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  // Main content row
+  .studio-track-main {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 1rem;
+    width: 100%;
+  }
   background: rgba(255,255,255,0.04);
   border-left: 4px solid var(--track-color);
   border-bottom: 1px solid rgba(255,255,255,0.06);
@@ -1509,12 +1517,32 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
     min-width: 60px;
     flex-shrink: 0;
   }
-  .studio-track-events {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.62rem;
-    color: rgba(255,255,255,0.45);
+  .track-chunks-bar {
     flex: 1;
-    letter-spacing: 0.04em;
+    display: flex;
+    gap: 3px;
+    align-items: center;
+    height: 14px;
+    min-width: 60px;
+    overflow: hidden;
+  }
+  .track-chunk {
+    height: 100%;
+    min-width: 6px;
+    background: var(--track-color);
+    opacity: 0.55;
+    border-radius: 2px;
+    flex-shrink: 0;
+    transform-origin: left center;
+    transform: scaleX(1);
+    transition: width 0.35s ease, opacity 0.15s, transform 0.3s ease;
+
+    @starting-style {
+      transform: scaleX(0);
+      opacity: 0;
+    }
+
+    &:first-child { opacity: 0.9; }
   }
   .studio-track-btn {
     background: none;
@@ -1549,12 +1577,90 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
     &[data-tip]:hover::after { opacity: 1; }
 
     &:hover { border-color: $rhythm-green; color: $rhythm-green; }
-    &.double:hover { border-color: $rhythm-purple; color: $rhythm-purple; }
+    &.add-chunk:hover { border-color: $rhythm-purple; color: $rhythm-purple; }
+    &.remove-chunk:hover { border-color: $rhythm-yellow; color: $rhythm-yellow; }
+    &.remove-chunk:disabled { opacity: 0.2; cursor: not-allowed; &:hover { border-color: rgba(255,255,255,0.15); color: rgba(255,255,255,0.6); } }
     &.delete:hover { border-color: $rhythm-pink; color: $rhythm-pink; }
+  }
+
+  // Mic modifier row — shown on audio tracks
+  .mic-track-mods {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    padding: 0.45rem 1rem 0.55rem;
+    border-top: 1px solid rgba(255,107,107,0.18);
+    background: rgba(255,107,107,0.05);
   }
 }
 
+// ── Mic modifier controls
+.mic-mod-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.47rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,107,107,0.65);
+  flex-shrink: 0;
+  margin-right: -0.1rem;
+}
+.mic-mod-pitch {
+  display: flex; align-items: center; gap: 0.4rem; margin-right: 0.3rem;
+}
+.mic-pitch-slider {
+  width: 90px; height: 3px; accent-color: #ff6b6b; cursor: pointer;
+}
+.mic-pitch-val {
+  font-family: 'Space Mono', monospace; font-size: 0.58rem;
+  color: rgba(255,255,255,0.7); min-width: 32px; text-align: left;
+}
+.mic-gain-slider {
+  width: 70px; height: 3px; accent-color: #ff6b6b; cursor: pointer; margin: 0 0.3rem 0 0;
+}
+.mic-filter-pill {
+  background: none; border: 1px solid rgba(255,107,107,0.22);
+  color: rgba(255,255,255,0.4);
+  font-family: 'Space Mono', monospace; font-size: 0.48rem; letter-spacing: 0.09em;
+  padding: 2px 6px; cursor: pointer; text-transform: uppercase; transition: all 0.12s; flex-shrink: 0;
+  &:hover { border-color: rgba(255,107,107,0.55); color: rgba(255,255,255,0.7); }
+  &.active { border-color: #ff6b6b; color: #ff6b6b; background: rgba(255,107,107,0.12); }
+}
+.mic-echo-slider {
+  width: 80px; height: 3px; accent-color: #ff6b6b; cursor: pointer;
+}
+
 // ── Control buttons
+.piano-btn-tip {
+  position: relative;
+  display: inline-flex;
+
+  &[data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a0830;
+    border: 1px solid rgba(123,47,255,0.5);
+    color: rgba(255,255,255,0.85);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.52rem;
+    letter-spacing: 0.06em;
+    white-space: normal;
+    max-width: 220px;
+    width: max-content;
+    text-align: center;
+    line-height: 1.5;
+    padding: 5px 9px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 20;
+  }
+  &[data-tip]:hover::after { opacity: 1; }
+}
+
 .piano-controls {
   display: flex;
   gap: 0.7rem;
@@ -1573,6 +1679,23 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
   clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
 
   &.rec       { background: $rhythm-pink; color: #0d0520 !important; font-weight: 700; &:hover { box-shadow: 0 0 16px $rhythm-pink; } }
+  &.overdub {
+    position: relative; isolation: isolate;
+    background: transparent; border: none; clip-path: none;
+    color: $rhythm-pink;
+    transition: filter 0.15s;
+    &::before {
+      content: ''; position: absolute; inset: 0; z-index: -2;
+      background: $rhythm-pink;
+      clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+    }
+    &::after {
+      content: ''; position: absolute; inset: 1.5px; z-index: -1;
+      background: #0d0520;
+      clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
+    }
+    &:hover { filter: drop-shadow(0 0 8px rgba(255,80,120,0.65)); }
+  }
   &.stop-rec  { background: $rhythm-yellow; color: #0d0520 !important; font-weight: 700; &:hover { box-shadow: 0 0 16px $rhythm-yellow; } }
   &.play      { background: $rhythm-green; color: #0d0520 !important; font-weight: 700; &:hover { box-shadow: 0 0 16px $rhythm-green; } }
   &.stop-play { background: $rhythm-purple; color: #fff; &:hover { box-shadow: 0 0 16px $rhythm-purple; } }
@@ -1872,6 +1995,78 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
     .drum-label  { fill: var(--pad-color); }
     .drum-center { fill: var(--pad-color); }
   }
+}
+
+// ── Mic input area
+.mic-input-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 1.4rem 1.2rem;
+  background: rgba(255,107,107,0.05);
+  border: 1px solid rgba(255,107,107,0.2);
+  border-left: 4px solid #ff6b6b;
+  margin-bottom: 0.5rem;
+}
+
+.mic-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.mic-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ff6b6b;
+  flex-shrink: 0;
+}
+
+.mic-device-select {
+  background: rgba(8,2,22,0.9);
+  border: 1px solid rgba(255,107,107,0.4);
+  color: rgba(255,255,255,0.85);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  flex: 1;
+  min-width: 160px;
+  max-width: 400px;
+  outline: none;
+
+  &:focus { border-color: #ff6b6b; box-shadow: 0 0 8px rgba(255,107,107,0.3); }
+  option { background: #0d0520; }
+}
+
+.mic-recording-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  color: #ff6b6b;
+}
+
+.mic-rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff6b6b;
+  box-shadow: 0 0 8px #ff6b6b;
+  animation: mic-pulse 0.8s ease-in-out infinite alternate;
+  flex-shrink: 0;
+}
+
+@keyframes mic-pulse {
+  from { opacity: 0.4; transform: scale(0.85); }
+  to   { opacity: 1;   transform: scale(1.15); box-shadow: 0 0 14px #ff6b6b; }
 }
 
 .drum-pads {

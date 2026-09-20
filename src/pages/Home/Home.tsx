@@ -403,6 +403,7 @@ const INSTRUMENTS = [
   {id:'soprano',  name:'Choir Ah',  icon:'🎤',color:'#ffccff'},
   {id:'vocalOoh', name:'Choir Ooh', icon:'≈', color:'#ffbbee'},
   {id:'corn',     name:'KERNELCON!',icon:'🌽',color:'#ffe600'},
+  {id:'mic',      name:'Mic Input', icon:'🎙', color:'#ff6b6b'},
 ];
 const DRUM_PADS = [
   {id:'kick',  name:'KICK',  key:'Z',color:'#ff006e'},
@@ -414,7 +415,27 @@ const DRUM_PADS = [
 ];
 
 interface NoteEvent { note: string; t: number; }
-interface Track { id: number; inst: string; events: NoteEvent[]; dur: number; muted: boolean; }
+interface MicMods { semitones: number; gain: number; filter: 'none'|'tel'|'bass'|'bright'|'robot'|'deep'; echo: boolean; echoMs: number; }
+interface MicPlayback { audio: HTMLAudioElement; gainNode?: GainNode; filterNode?: BiquadFilterNode; delayNode?: DelayNode; oscNodes?: OscillatorNode[]; }
+const DEFAULT_MIC_MODS: MicMods = { semitones: 0, gain: 1, filter: 'none', echo: false, echoMs: 200 };
+
+function makeDistortionCurve(amount: number): Float32Array {
+  const n = 256; const curve = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    const x = (i * 2) / n - 1;
+    curve[i] = ((Math.PI + amount) * x) / (Math.PI + amount * Math.abs(x));
+  }
+  return curve;
+}
+
+function ensureAudioCtx(ref: React.MutableRefObject<AudioContext|null>): AudioContext {
+  if (!ref.current) {
+    ref.current = new (window.AudioContext ||
+      (window as unknown as {webkitAudioContext:typeof AudioContext}).webkitAudioContext)();
+  }
+  return ref.current;
+}
+interface Track { id: number; inst: string; events: NoteEvent[]; dur: number; baseDur: number; chunks: number; muted: boolean; audioUrl?: string; micMods?: MicMods; }
 interface ExampleTrack { inst: string; events: NoteEvent[]; }
 interface Example { name: string; emoji: string; desc: string; dur: number; tracks: ExampleTrack[]; chorus?: boolean; }
 
@@ -2169,6 +2190,8 @@ function PianoSection() {
   const [exportingFor, setExportingFor] = useState<'share'|'tweet'|'linkedin'|null>(null);
   const isExporting = exportingFor !== null;
   const [toast, setToast] = useState<string | null>(null);
+  const [micDevices, setMicDevices] = useState<MediaDeviceInfo[]>([]);
+  const [selectedMicId, setSelectedMicId] = useState('');
 
   const audioCtxRef = useRef<AudioContext|null>(null);
   const destRef = useRef<MediaStreamAudioDestinationNode|null>(null);
@@ -2186,6 +2209,12 @@ function PianoSection() {
   const tracksVizRef  = useRef<Track[]>([]);
   const particlesRef = useRef<{x:number;y:number;vy:number;life:number;color:string}[]>([]);
   const chunksRef = useRef<Blob[]>([]);
+  const micStreamRef = useRef<MediaStream|null>(null);
+  const micStreamSrcRef = useRef<MediaStreamAudioSourceNode|null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder|null>(null);
+  const micChunksRef = useRef<Blob[]>([]);
+  const micPlaybackMapRef = useRef<Map<number, MicPlayback>>(new Map());
+  const micAnalyserRef = useRef<AnalyserNode|null>(null);
 
   const getCtx = useCallback(() => {
     if (!audioCtxRef.current) {
@@ -2679,6 +2708,15 @@ function PianoSection() {
   // Sync tracks into viz ref so the draw loop can read them without deps
   useEffect(() => { tracksVizRef.current = tracks; }, [tracks]);
 
+  useEffect(() => {
+    if (instrument !== 'mic') return;
+    navigator.mediaDevices?.enumerateDevices().then(devs => {
+      const inputs = devs.filter(d => d.kind === 'audioinput');
+      setMicDevices(inputs);
+      setSelectedMicId(prev => prev || (inputs[0]?.deviceId ?? ''));
+    }).catch(() => {});
+  }, [instrument]);
+
   // Per-instrument stream visualizer
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -2732,6 +2770,15 @@ function PianoSection() {
       c.fillStyle = '#3a1a8c';
       c.fillText('⬡ ALGO(RHYTHM) 2027  ·  KERNELCON  ·  VISUALIZER', 16, 18);
 
+      // Pre-compute mic analyser data for live waveform drawing
+      let micWaveData: Uint8Array | null = null;
+      if (micAnalyserRef.current) {
+        const buf = new Uint8Array(micAnalyserRef.current.frequencyBinCount);
+        micAnalyserRef.current.getByteTimeDomainData(buf);
+        const maxDev = buf.reduce((m, v) => Math.max(m, Math.abs(v - 128)), 0);
+        if (maxDev > 3) micWaveData = buf;
+      }
+
       instIds.forEach((instId, idx) => {
         const ly = Y0 + idx * (LANE_H + LANE_G);
         const def = INSTRUMENTS.find(d => d.id === instId);
@@ -2739,7 +2786,8 @@ function PianoSection() {
         const r = rgb(col);
         const entry = activeNotesRef.current.get(instId);
         const age = entry ? now - entry.birth : Infinity;
-        const t = age < FADE ? Math.max(0, 1 - age / FADE) : 0;
+        let t = age < FADE ? Math.max(0, 1 - age / FADE) : 0;
+        if (instId === 'mic' && micWaveData) t = 0.85;
 
         // Lane background
         c.fillStyle = `rgba(${r},${0.03 + t * 0.11})`;
@@ -2758,23 +2806,36 @@ function PianoSection() {
 
         // Waveform
         const wx = NAME_W, ww = W - NAME_W - NOTE_W - 8;
-        const amp = t > 0 ? 2 + t * 10 : 1.5;
-        const spd = 0.0008 * (idx * 0.4 + 1);
         c.strokeStyle = col;
-        c.lineWidth = t > 0.1 ? 1.8 : 0.8;
-        c.globalAlpha = 0.18 + t * 0.82;
-        c.shadowBlur = t * 16;
         c.shadowColor = col;
-        c.beginPath();
-        for (let x = 0; x <= ww; x += 2) {
-          const f = x / ww;
-          const wave =
-            Math.sin(f * Math.PI * 7  + now * spd)              * amp +
-            Math.sin(f * Math.PI * 13 + now * spd * 1.5) * 0.45 * amp +
-            Math.sin(f * Math.PI * 3  + now * spd * 0.7) * 0.22 * amp;
-          x === 0 ? c.moveTo(wx, ly + LANE_H / 2 + wave) : c.lineTo(wx + x, ly + LANE_H / 2 + wave);
+        if (instId === 'mic' && micWaveData) {
+          // Real waveform from AnalyserNode
+          c.lineWidth = 1.8; c.globalAlpha = 0.88; c.shadowBlur = 10;
+          c.beginPath();
+          const sw = ww / micWaveData.length;
+          for (let i = 0; i < micWaveData.length; i++) {
+            const v = (micWaveData[i] / 128.0) - 1;
+            const y = ly + LANE_H / 2 + v * (LANE_H / 2 - 3);
+            i === 0 ? c.moveTo(wx, y) : c.lineTo(wx + i * sw, y);
+          }
+          c.stroke();
+        } else {
+          const amp = t > 0 ? 2 + t * 10 : 1.5;
+          const spd = 0.0008 * (idx * 0.4 + 1);
+          c.lineWidth = t > 0.1 ? 1.8 : 0.8;
+          c.globalAlpha = 0.18 + t * 0.82;
+          c.shadowBlur = t * 16;
+          c.beginPath();
+          for (let x = 0; x <= ww; x += 2) {
+            const f = x / ww;
+            const wave =
+              Math.sin(f * Math.PI * 7  + now * spd)              * amp +
+              Math.sin(f * Math.PI * 13 + now * spd * 1.5) * 0.45 * amp +
+              Math.sin(f * Math.PI * 3  + now * spd * 0.7) * 0.22 * amp;
+            x === 0 ? c.moveTo(wx, ly + LANE_H / 2 + wave) : c.lineTo(wx + x, ly + LANE_H / 2 + wave);
+          }
+          c.stroke();
         }
-        c.stroke();
         c.shadowBlur = 0;
         c.globalAlpha = 1;
 
@@ -2851,29 +2912,222 @@ function PianoSection() {
     loopTimersRef.current.forEach(clearTimeout);
     loopTimersRef.current = [];
     if (loopIntervalRef.current) { clearInterval(loopIntervalRef.current); loopIntervalRef.current = null; }
+    micPlaybackMapRef.current.forEach(pb => {
+      pb.audio.pause(); pb.audio.currentTime = 0;
+      pb.oscNodes?.forEach(o => { try { o.stop(); } catch {} });
+    });
+    micPlaybackMapRef.current.clear();
     setIsPlaying(false);
   }, []);
 
   const playAll = useCallback((trs: Track[]) => {
     stopAll();
-    const active = trs.filter(tr => !tr.muted && tr.events.length > 0);
-    if (!active.length) return;
-    const maxDur = Math.max(...active.map(tr => tr.dur), 1000);
+    const noteActive = trs.filter(tr => !tr.muted && tr.events.length > 0);
+    const audioActive = trs.filter(tr => !tr.muted && !!tr.audioUrl);
+    if (!noteActive.length && !audioActive.length) return;
+    const maxDur = Math.max(
+      ...(noteActive.length ? noteActive.map(tr => tr.dur) : []),
+      ...(audioActive.length ? audioActive.map(tr => tr.dur) : []),
+      1000
+    );
     loopDurRef.current = maxDur;
-    const fire = () => active.forEach(tr => loopTimersRef.current.push(...scheduleTrack(tr)));
+
+    const fireMicAudio = () => {
+      // Stop and clean up previous playback (including any oscillators)
+      micPlaybackMapRef.current.forEach(pb => {
+        pb.audio.pause(); pb.audio.currentTime = 0;
+        pb.oscNodes?.forEach(o => { try { o.stop(); } catch {} });
+      });
+      micPlaybackMapRef.current.clear();
+      if (!audioActive.length) return;
+
+      // Always ensure AudioContext exists — mic users may never touch the keyboard
+      const ctx = ensureAudioCtx(audioCtxRef);
+      // Analyser is a monitoring tap only — never connected to destination (prevents feedback)
+      if (!micAnalyserRef.current) {
+        const a = ctx.createAnalyser(); a.fftSize = 512;
+        micAnalyserRef.current = a;
+      }
+      const analyser = micAnalyserRef.current;
+
+      audioActive.forEach(tr => {
+        const mods = tr.micMods ?? DEFAULT_MIC_MODS;
+        const audio = new Audio(tr.audioUrl!);
+        audio.playbackRate = Math.pow(2, mods.semitones / 12);
+        const src = ctx.createMediaElementSource(audio);
+        const gainNode = ctx.createGain(); gainNode.gain.value = mods.gain;
+        src.connect(gainNode);
+        let last: AudioNode = gainNode;
+        let filterNode: BiquadFilterNode|undefined;
+        const oscNodes: OscillatorNode[] = [];
+
+        if (mods.filter === 'tel') {
+          const f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1000; f.Q.value = 2;
+          last.connect(f); last = f; filterNode = f;
+        } else if (mods.filter === 'bass') {
+          const f = ctx.createBiquadFilter(); f.type = 'lowshelf'; f.frequency.value = 250; f.gain.value = 12;
+          last.connect(f); last = f; filterNode = f;
+        } else if (mods.filter === 'bright') {
+          const f = ctx.createBiquadFilter(); f.type = 'highshelf'; f.frequency.value = 3500; f.gain.value = 8;
+          last.connect(f); last = f; filterNode = f;
+        } else if (mods.filter === 'robot') {
+          // Ring modulation: carrier oscillator AM-modulates the signal, creating robotic sidebands
+          const amGain = ctx.createGain(); amGain.gain.value = 0;
+          const oscGain = ctx.createGain(); oscGain.gain.value = 0.7;
+          const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = 80;
+          osc.connect(oscGain); oscGain.connect(amGain.gain);
+          last.connect(amGain);
+          // Bandpass to sharpen the robotic quality
+          const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1200; bp.Q.value = 1.2;
+          amGain.connect(bp); last = bp;
+          osc.start(); oscNodes.push(osc);
+        } else if (mods.filter === 'deep') {
+          // Heavy bass + high cut + soft saturation for a demon/giant voice
+          const ls = ctx.createBiquadFilter(); ls.type = 'lowshelf'; ls.frequency.value = 150; ls.gain.value = 16;
+          const hs = ctx.createBiquadFilter(); hs.type = 'highshelf'; hs.frequency.value = 4500; hs.gain.value = -14;
+          const ws = ctx.createWaveShaper();
+          (ws as { curve: Float32Array | null }).curve = makeDistortionCurve(80) as unknown as Float32Array;
+          last.connect(ls); ls.connect(hs); hs.connect(ws); last = ws; filterNode = ls;
+        }
+
+        let delayNode: DelayNode|undefined;
+        if (mods.echo) {
+          const d = ctx.createDelay(1.0); d.delayTime.value = mods.echoMs / 1000;
+          const fb = ctx.createGain(); fb.gain.value = 0.4;
+          const wet = ctx.createGain(); wet.gain.value = 0.55;
+          const dry = ctx.createGain(); dry.gain.value = 0.75;
+          // Output goes to destination; analyser taps in as side branch (no feedback)
+          last.connect(dry); dry.connect(ctx.destination); dry.connect(analyser);
+          last.connect(d); d.connect(fb); fb.connect(d);
+          d.connect(wet); wet.connect(ctx.destination); wet.connect(analyser);
+          delayNode = d;
+        } else {
+          last.connect(ctx.destination);
+          last.connect(analyser);
+        }
+        audio.play().catch(() => {});
+        micPlaybackMapRef.current.set(tr.id, {audio, gainNode, filterNode, delayNode, oscNodes: oscNodes.length ? oscNodes : undefined});
+      });
+    };
+
+    const fireNotes = () => noteActive.forEach(tr => loopTimersRef.current.push(...scheduleTrack(tr)));
     setIsPlaying(true);
-    fire();
-    loopIntervalRef.current = setInterval(() => { loopTimersRef.current.forEach(clearTimeout); loopTimersRef.current = []; fire(); }, maxDur);
+    fireMicAudio();
+    fireNotes();
+    loopIntervalRef.current = setInterval(() => {
+      loopTimersRef.current.forEach(clearTimeout); loopTimersRef.current = [];
+      fireMicAudio(); fireNotes();
+    }, maxDur);
   }, [stopAll, scheduleTrack]);
 
-  const doubleTrack = (id: number) => {
+  const addChunk = (id: number) => {
     const updated = tracks.map(t => {
       if (t.id !== id) return t;
-      const extra = t.events.map(e => ({...e, t: e.t + t.dur}));
-      return {...t, events: [...t.events, ...extra], dur: t.dur * 2};
+      const base = t.events.filter(e => e.t < t.baseDur);
+      const extra = base.map(e => ({...e, t: e.t + t.dur}));
+      return {...t, events: [...t.events, ...extra], dur: t.dur + t.baseDur, chunks: t.chunks + 1};
     });
     setTracks(updated);
     if (isPlaying) playAll(updated);
+  };
+
+  const removeChunk = (id: number) => {
+    const updated = tracks.map(t => {
+      if (t.id !== id || t.chunks <= 1) return t;
+      const newDur = t.dur - t.baseDur;
+      return {...t, events: t.events.filter(e => e.t < newDur), dur: newDur, chunks: t.chunks - 1};
+    });
+    setTracks(updated);
+    if (isPlaying) playAll(updated);
+  };
+
+  const startMicRecord = async () => {
+    try {
+      const constraints: MediaStreamConstraints = {
+        audio: selectedMicId ? { deviceId: { exact: selectedMicId } } : true,
+      };
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      micStreamRef.current = stream;
+      micChunksRef.current = [];
+      // Route stream through analyser for live visualizer — NOT to destination (prevents feedback)
+      const ctx = ensureAudioCtx(audioCtxRef);
+      if (!micAnalyserRef.current) {
+        const a = ctx.createAnalyser(); a.fftSize = 512;
+        micAnalyserRef.current = a;
+      }
+      const src = ctx.createMediaStreamSource(stream);
+      src.connect(micAnalyserRef.current);
+      micStreamSrcRef.current = src;
+      const mr = new MediaRecorder(stream);
+      mr.ondataavailable = e => { if (e.data.size > 0) micChunksRef.current.push(e.data); };
+      mediaRecorderRef.current = mr;
+      recInstRef.current = 'mic';
+      recStartRef.current = Date.now();
+      isRecordingRef.current = true;
+      setIsRecording(true);
+      mr.start();
+      const devs = await navigator.mediaDevices.enumerateDevices();
+      setMicDevices(devs.filter(d => d.kind === 'audioinput'));
+    } catch {
+      setToast('Microphone access denied or unavailable');
+    }
+  };
+
+  const stopMicRecord = () => {
+    const dur = Date.now() - recStartRef.current;
+    isRecordingRef.current = false; setIsRecording(false); stopAll();
+    micStreamSrcRef.current?.disconnect(); micStreamSrcRef.current = null;
+    const mr = mediaRecorderRef.current;
+    if (!mr) return;
+    mr.onstop = () => {
+      const blob = new Blob(micChunksRef.current, { type: mr.mimeType || 'audio/webm' });
+      const url = URL.createObjectURL(blob);
+      const trackDur = Math.max(dur, 500);
+      setTracks(prev => [...prev, {
+        id: ++trackIdRef.current, inst: 'mic', events: [],
+        audioUrl: url, dur: trackDur, baseDur: trackDur, chunks: 1, muted: false,
+        micMods: {...DEFAULT_MIC_MODS},
+      }]);
+      setActiveDemo(null);
+      micStreamRef.current?.getTracks().forEach(t => t.stop());
+      micStreamRef.current = null; mediaRecorderRef.current = null;
+    };
+    mr.stop();
+  };
+
+  const startOverdub = async () => {
+    if (instrument === 'mic') { playAll(tracks); await startMicRecord(); return; }
+    playAll(tracks);
+    recEventsRef.current = []; recInstRef.current = instrument;
+    recStartRef.current = Date.now(); isRecordingRef.current = true;
+    setIsRecording(true);
+  };
+
+  const updateMicMod = (id: number, mods: Partial<MicMods>) => {
+    const updated = tracks.map(t => {
+      if (t.id !== id) return t;
+      return {...t, micMods: {...(t.micMods ?? DEFAULT_MIC_MODS), ...mods}};
+    });
+    setTracks(updated);
+    const pb = micPlaybackMapRef.current.get(id);
+    if (pb) {
+      // Live pitch update — instant
+      if (mods.semitones !== undefined) {
+        pb.audio.playbackRate = Math.pow(2, mods.semitones / 12);
+      }
+      // Live gain update — instant
+      if (mods.gain !== undefined && pb.gainNode) {
+        pb.gainNode.gain.value = mods.gain;
+      }
+      // Live echo delay update — instant
+      if (mods.echoMs !== undefined && pb.delayNode) {
+        pb.delayNode.delayTime.value = mods.echoMs / 1000;
+      }
+      // Filter / echo on-off changes need re-routing — restart playback
+      if ((mods.filter !== undefined || mods.echo !== undefined) && loopIntervalRef.current !== null) {
+        playAll(updated);
+      }
+    }
   };
 
   const scrollDemos = (dir: number) => {
@@ -2884,26 +3138,29 @@ function PianoSection() {
     stopAll();
     let id = trackIdRef.current;
     setTracks(ex.tracks.map(tr => ({
-      id: ++id, inst: tr.inst, events: tr.events, dur: ex.dur, muted: false,
+      id: ++id, inst: tr.inst, events: tr.events, dur: ex.dur, baseDur: ex.dur, chunks: 1, muted: false,
     })));
     trackIdRef.current = id;
     loopDurRef.current = ex.dur;
     setActiveDemo(ex.name);
   };
 
-  const startRecord = () => {
+  const startRecord = async () => {
+    if (instrument === 'mic') { await startMicRecord(); return; }
     recEventsRef.current = []; recInstRef.current = instrument;
     recStartRef.current = Date.now(); isRecordingRef.current = true;
     setIsRecording(true);
   };
 
   const stopRecord = () => {
+    if (recInstRef.current === 'mic') { stopMicRecord(); return; }
     const dur = Date.now() - recStartRef.current;
     isRecordingRef.current = false; setIsRecording(false); stopAll();
     if (!recEventsRef.current.length) return;
+    const trackDur = Math.max(dur, 500);
     setTracks(prev => [...prev, {
       id: ++trackIdRef.current, inst: recInstRef.current,
-      events: [...recEventsRef.current], dur: Math.max(dur, 500), muted: false,
+      events: [...recEventsRef.current], dur: trackDur, baseDur: trackDur, chunks: 1, muted: false,
     }]);
     setActiveDemo(null);
   };
@@ -2978,6 +3235,8 @@ function PianoSection() {
         <p className="piano-subtitle">
           {instrument === 'drums'
             ? '♪ Z=Kick  X=Snare  C=Hi-Hat  V=Tom  B=Clap  N=Cymbal  |  Click pads to play'
+            : instrument === 'mic'
+            ? '🎙 Select your input device, then hit Record Layer or Overdub to capture audio'
             : '♪ White: Q-U = C3-B3 · A-K = C4-C5 | Black: 1-5 = C#3-A#3 · 6-0 = C#4-A#4 | Layer instruments'}
         </p>
 
@@ -3038,8 +3297,37 @@ function PianoSection() {
         <canvas ref={canvasRef} className="piano-canvas" width={1200} height={2}
           style={tracks.length === 0 && !isRecording && !isExporting ? {height:0, border:'none', marginBottom:0} : undefined} />
 
-        {/* Drum pads OR keyboard */}
-        {instrument === 'drums' ? (
+        {/* Mic input selector */}
+        {instrument === 'mic' && (
+          <div className="mic-input-area">
+            <div className="mic-input-row">
+              <label className="mic-label" htmlFor="mic-device-select">🎙 Input Device</label>
+              <select
+                id="mic-device-select"
+                className="mic-device-select"
+                value={selectedMicId}
+                onChange={e => setSelectedMicId(e.target.value)}
+              >
+                {micDevices.length === 0
+                  ? <option value="">Default Microphone</option>
+                  : micDevices.map(d => (
+                      <option key={d.deviceId} value={d.deviceId}>
+                        {d.label || `Microphone ${d.deviceId.slice(0, 6)}`}
+                      </option>
+                    ))
+                }
+              </select>
+            </div>
+            {isRecording && (
+              <div className="mic-recording-status">
+                <span className="mic-rec-dot" /> Recording from mic — press Stop when done
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Drum pads OR keyboard (hidden for mic) */}
+        {instrument !== 'mic' && (instrument === 'drums' ? (
           <div className="drum-pads">
             {DRUM_PADS.map(pad => (
               <button key={pad.id}
@@ -3088,40 +3376,93 @@ function PianoSection() {
               })()}
             </div>
           </div>
-        )}
+        ))}
 
         {/* Track manager */}
         {tracks.length > 0 && (
           <div className="track-manager">
             <div className="track-manager-label">▶ TRACKS</div>
-            {tracks.map((tr) => {
-              const inst = INSTRUMENTS.find(ii => ii.id === tr.inst);
-              return (
-                <div key={tr.id} className={`studio-track ${tr.muted ? 'muted' : ''}`}
-                  style={{'--track-color': inst?.color ?? '#39ff14'} as React.CSSProperties}>
-                  <span className="studio-track-icon">{inst?.icon}</span>
-                  <span className="studio-track-name">{inst?.name}</span>
-                  <span className="studio-track-events">{tr.events.length} events · {(tr.dur/1000).toFixed(1)}s</span>
-                  <button className="studio-track-btn" data-tip={tr.muted ? 'Unmute' : 'Mute'} onClick={() => {
-                    const updated = tracks.map(t => t.id === tr.id ? {...t, muted: !t.muted} : t);
-                    setTracks(updated);
-                    if (isPlaying) playAll(updated);
-                  }}>
-                    {tr.muted ? '🔇' : '🔊'}
-                  </button>
-                  <button className="studio-track-btn double" data-tip="Double" onClick={() => doubleTrack(tr.id)}>+</button>
-                  <button className="studio-track-btn delete" data-tip="Delete" onClick={() => { stopAll(); setTracks(p => p.filter(t => t.id !== tr.id)); setActiveDemo(null); }}>✕</button>
-                </div>
-              );
-            })}
+            {(() => {
+              const maxLoopDur = Math.max(...tracks.map(t => t.dur), 1);
+              return tracks.map((tr) => {
+                const inst = INSTRUMENTS.find(ii => ii.id === tr.inst);
+                return (
+                  <div key={tr.id} className={`studio-track ${tr.muted ? 'muted' : ''}${tr.audioUrl ? ' mic-track' : ''}`}
+                    style={{'--track-color': inst?.color ?? '#39ff14'} as React.CSSProperties}>
+                    {/* Main row */}
+                    <div className="studio-track-main">
+                      <span className="studio-track-icon">{inst?.icon}</span>
+                      <span className="studio-track-name">{inst?.name}</span>
+                      <div className="track-chunks-bar" title={`${tr.chunks} chunk${tr.chunks !== 1 ? 's' : ''} · ${(tr.dur/1000).toFixed(1)}s`}>
+                        {Array.from({length: tr.chunks}).map((_, i) => (
+                          <div key={i} className="track-chunk" style={{width: `${(tr.baseDur / maxLoopDur) * 100}%`}} />
+                        ))}
+                      </div>
+                      <button className="studio-track-btn" data-tip={tr.muted ? 'Unmute' : 'Mute'} onClick={() => {
+                        const updated = tracks.map(t => t.id === tr.id ? {...t, muted: !t.muted} : t);
+                        setTracks(updated);
+                        if (isPlaying) playAll(updated);
+                      }}>
+                        {tr.muted ? '🔇' : '🔊'}
+                      </button>
+                      {!tr.audioUrl && <button className="studio-track-btn add-chunk" data-tip="Add chunk" onClick={() => addChunk(tr.id)}>+</button>}
+                      {!tr.audioUrl && <button className="studio-track-btn remove-chunk" data-tip="Remove chunk" onClick={() => removeChunk(tr.id)} disabled={tr.chunks <= 1}>−</button>}
+                      <button className="studio-track-btn delete" data-tip="Delete" onClick={() => { stopAll(); setTracks(p => p.filter(t => t.id !== tr.id)); setActiveDemo(null); }}>✕</button>
+                    </div>
+                    {/* Mic modifier row */}
+                    {tr.audioUrl && tr.micMods && (
+                      <div className="mic-track-mods">
+                        <span className="mic-mod-label">Pitch</span>
+                        <div className="mic-mod-pitch">
+                          <input type="range" className="mic-pitch-slider" min={-24} max={24} step={1}
+                            value={tr.micMods.semitones}
+                            onChange={e => updateMicMod(tr.id, {semitones: Number(e.target.value)})} />
+                          <span className="mic-pitch-val">{(tr.micMods.semitones > 0 ? '+' : '') + tr.micMods.semitones}st</span>
+                        </div>
+                        <span className="mic-mod-label">Vol</span>
+                        <input type="range" className="mic-gain-slider" min={0} max={2} step={0.05}
+                          value={tr.micMods.gain}
+                          onChange={e => updateMicMod(tr.id, {gain: Number(e.target.value)})} />
+                        <span className="mic-mod-label">Tone</span>
+                        {(['none','tel','bass','bright','robot','deep'] as const).map(f => (
+                          <button key={f}
+                            className={`mic-filter-pill ${tr.micMods?.filter === f ? 'active' : ''}`}
+                            onClick={() => updateMicMod(tr.id, {filter: f})}>
+                            {f === 'none' ? 'Dry' : f === 'tel' ? 'Tel' : f === 'bass' ? 'Bass' : f === 'bright' ? 'Air' : f === 'robot' ? 'Robot' : 'Deep'}
+                          </button>
+                        ))}
+                        <button className={`mic-filter-pill ${tr.micMods.echo ? 'active' : ''}`}
+                          onClick={() => updateMicMod(tr.id, {echo: !tr.micMods?.echo})}>Echo</button>
+                        {tr.micMods.echo && (
+                          <input type="range" className="mic-echo-slider" min={50} max={500} step={25}
+                            value={tr.micMods.echoMs}
+                            onChange={e => updateMicMod(tr.id, {echoMs: Number(e.target.value)})} />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              });
+            })()}
           </div>
         )}
 
         {/* Transport controls */}
         <div className="piano-controls">
-          {!isRecording
-            ? <button className="piano-btn rec" onClick={startRecord}>⏺ Record Layer</button>
-            : <button className="piano-btn stop-rec" onClick={stopRecord}>⏹ Stop Recording</button>}
+          {!isRecording ? (
+            <>
+              <span className="piano-btn-tip" data-tip="Play notes on the keyboard to add a new layer on top of your existing tracks">
+                <button className="piano-btn rec" onClick={startRecord}>⏺ Record Layer</button>
+              </span>
+              {tracks.length > 0 && (
+                <span className="piano-btn-tip" data-tip="Play all tracks while you record a new layer on top — hear the loop as you play">
+                  <button className="piano-btn overdub" onClick={startOverdub}>◉ Overdub</button>
+                </span>
+              )}
+            </>
+          ) : (
+            <button className="piano-btn stop-rec" onClick={stopRecord}>⏹ Stop Recording</button>
+          )}
           {tracks.length > 0 && !isRecording && (
             <>
               {!isPlaying
