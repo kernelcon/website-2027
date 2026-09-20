@@ -6,6 +6,8 @@ import bitcoinBaron from '../../static/audio/ytcracker - bitcoin-baron.m4a';
 import bitcoinBaronCover from '../../static/images/album-covers/bitcoin-baron-ytcracker.png';
 import manOnTheMoon from '../../static/audio/mnqn-man-on-the-moon.m4a';
 import manOnTheMoonCover from '../../static/images/album-covers/man-on-the-moon-mnqn.png';
+import halcyon from '../../static/audio/orbital-halcyon-on-and-on.mp3';
+import halcyonCover from '../../static/images/album-covers/orbital-halcyon-on-and-on.png';
 import yourProblem from '../../static/audio/bytestealer-your-problem.m4a';
 import yourProblemCover from '../../static/images/album-covers/your-problem-byte-stealer.png';
 import allTheThingsCover from '../../static/images/album-covers/all-the-things-dual-core.avif';
@@ -32,6 +34,7 @@ const TRACKS: Track[] = [
   { id: 4,  title: 'Your Problem',   artist: 'Byte Stealer', album: 'Byte Stealer',   producer: 'Byte Back Records',   src: yourProblem,  cover: yourProblemCover,  links: { spotify: 'https://open.spotify.com/artist/3t8jdJKpmhP7WvjlAkobkj' } },
   { id: 5,  title: 'Bitcoin Baron',  artist: 'ytcracker',    album: 'Bitcoin Baron',  producer: 'ytcracker',           src: bitcoinBaron, cover: bitcoinBaronCover, links: { spotify: 'https://open.spotify.com/artist/1x82Mu3wakMkldMW5kEiP4', instagram: 'https://www.instagram.com/y7cracker' } },
   { id: 6,  title: 'Man on the Moon', artist: 'MNQN',        album: 'Man on the Moon', producer: 'MNQN',               src: manOnTheMoon, cover: manOnTheMoonCover, links: { spotify: 'https://open.spotify.com/artist/3X6XpHxvQfvnp4hTE0k3wH' } },
+  { id: 7,  title: 'Halcyon On and On', artist: 'Orbital',  album: 'Orbital 2',       producer: 'London Records',     src: halcyon,      cover: halcyonCover,      links: { spotify: 'https://open.spotify.com/artist/3csPCeXsj2wezyvkRFzvmV' } },
 ];
 
 interface Props {
