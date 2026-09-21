@@ -69,7 +69,7 @@ function App() {
     <BrowserRouter>
       <NavBar onOpenPlayer={() => setPlayerOpen(true)} />
       <SecondaryNav />
-      <NowPlaying isOpen={playerOpen} onClose={() => setPlayerOpen(false)} />
+      <NowPlaying isOpen={playerOpen} onClose={() => setPlayerOpen(false)} onExpand={() => setPlayerOpen(true)} />
       <div className="page-box">
         <Routes>
           <Route path="/" element={<Home />} />

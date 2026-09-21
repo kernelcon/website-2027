@@ -367,19 +367,22 @@ function initCornVoices() {
 }
 // All piano keys in order, used to assign one voice per key
 const ALL_PIANO_KEYS = [
+  'B2',
   'C3','C#3','D3','D#3','E3','F3','F#3','G3','G#3','A3','A#3','B3',
   'C4','C#4','D4','D#4','E4','F4','F#4','G4','G#4','A4','A#4','B4','C5',
 ];
 
-const WHITE_KEYS = ['C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4','A4','B4','C5'];
+const WHITE_KEYS = ['B2','C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4','A4','B4','C5'];
 const BLACK_KEYS = [
-  {note:'C#3',left:56},{note:'D#3',left:136},
-  {note:'F#3',left:296},{note:'G#3',left:376},{note:'A#3',left:456},
-  {note:'C#4',left:616},{note:'D#4',left:696},
-  {note:'F#4',left:856},{note:'G#4',left:936},{note:'A#4',left:1016},
+  // all positions shifted +80 to account for the prepended B2 white key
+  {note:'C#3',left:136},{note:'D#3',left:216},
+  {note:'F#3',left:376},{note:'G#3',left:456},{note:'A#3',left:536},
+  {note:'C#4',left:696},{note:'D#4',left:776},
+  {note:'F#4',left:936},{note:'G#4',left:1016},{note:'A#4',left:1096},
 ];
 const KB_MAP: Record<string,string> = {
   // white keys
+  z:'B2',
   q:'C3',w:'D3',e:'E3',r:'F3',t:'G3',y:'A3',u:'B3',
   a:'C4',s:'D4',d:'E4',f:'F4',g:'G4',h:'A4',j:'B4',k:'C5',
   // black keys — 1-0 consecutive
@@ -2886,11 +2889,13 @@ function PianoSection() {
       }
     };
     const up = (e: KeyboardEvent) => {
-      const pad = DRUM_KB[e.key.toLowerCase()];
-      const note = KB_MAP[e.key.toLowerCase()];
-      const key = pad || note;
-      if (!key) return;
-      setPressedKeys(p => { const s = new Set(p); s.delete(key); return s; });
+      if (instRef.current === 'drums') {
+        const pad = DRUM_KB[e.key.toLowerCase()];
+        if (pad) setPressedKeys(p => { const s = new Set(p); s.delete(pad); return s; });
+      } else {
+        const note = KB_MAP[e.key.toLowerCase()];
+        if (note) setPressedKeys(p => { const s = new Set(p); s.delete(note); return s; });
+      }
     };
     window.addEventListener('keydown', down);
     window.addEventListener('keyup', up);
