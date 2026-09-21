@@ -25,7 +25,7 @@ export default class Villages extends Component {
             <li>Villages are expected to be open both Friday and Saturday, during conference hours.</li>
             <li>Information provided about the village will be used for art, marketing, announcements, and the program.</li>
             <li><strong>Space is physically limited</strong> — slots are first-come, first-allocated. The deadline is January 7, 2027, but don't wait on it.</li>
-            <li>If your village plans to sell any items, you must comply with applicable sales tax laws.</li>
+            <li>If your village plans to sell any items, you are solely responsible for complying with all applicable sales tax laws and regulations. Kernelcon is not responsible for any sales, transactions, or tax obligations conducted by your village.</li>
           </ul>
         </div>
         <p className='tab-heading'>Submission Requirements</p>
@@ -58,6 +58,21 @@ export default class Villages extends Component {
             <li>Submit as plain text in the email body, or attach as .docx or .txt</li>
           </ol>
         </p>
+        <p className='tab-heading'>What Kernelcon Will Provide</p>
+        <p className='tab-paragraph'>
+          <ol className='tab-ordered-list'>
+            <li>Village space on the conference floor for both Friday and Saturday during conference hours.</li>
+            <li>Setup time on Thursday prior to the event to get your village ready before doors open.</li>
+            <li>Standard tables and power at your space.</li>
+            <li>Village advertisement and promotion via website, social media, and other means.</li>
+            <li>Complimentary admission to Kernelcon for village organizers.</li>
+            <li>Snacks for village organizers (and attendees).</li>
+            <li>Wi-Fi and general venue support.</li>
+          </ol>
+        </p>
+
+        <p className='tab-heading'>In Closing</p>
+        <p className='tab-paragraph'>We will be in communication with you throughout this process. If we need more information or clarification, we will reach out. When a decision is made, we will promptly let you know whether you have been accepted. If you have any questions at any point, don't hesitate to reach out to <a href='mailto:villages@kernelcon.org' className='text-highlight' rel='noopener noreferrer'>villages@kernelcon.org</a>.</p>
         <p className='tab-paragraph'>Good luck — we can't wait to see what you're building!</p>
       </div>
     );

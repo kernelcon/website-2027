@@ -55,7 +55,7 @@ export default class OpenCalls extends Component<OpenCallsProps, OpenCallsState>
 
             <p className='tab-heading'>Length and Cost</p>
             <p className='tab-paragraph'>We're looking for proposals that fit a full one-day or two-day format. Classes follow a standard daily schedule with short morning and afternoon breaks and a one-hour lunch break.</p>
-            <p className='tab-paragraph'>One-day courses are offered to attendees at $500; two-day courses at $1,000.</p>
+            <p className='tab-paragraph'>One-day courses are offered to attendees at $600; two-day courses at $1,200.</p>
 
             <p className='tab-heading'>Proposal Due Date</p>
             <p className='tab-paragraph'>Training proposals are due no later than November 14, 2026. Acceptance notifications go out by December 1, 2026. See <a href='/dates' className='text-highlight' rel='noopener noreferrer' target='_blank'>kernelcon.org/dates</a> for the most current schedule.</p>
@@ -64,12 +64,14 @@ export default class OpenCalls extends Component<OpenCallsProps, OpenCallsState>
             <p className='tab-paragraph'>Hands-on, immersive courses that go beyond the slide deck. Kernelcon students want to leave with practical skills they can use immediately — back at the lab, on the job, or in the next CTF. Any strong security training is welcome; we are not interested in vendor pitches dressed as training.</p>
 
             <p className='tab-heading'>Preferred Topics</p>
-            <p className='tab-paragraph'>Anything where hands-on experience accelerates the learning. Examples well-suited to this year's theme:</p>
+            <p className='tab-paragraph'>Anything where hands-on experience accelerates the learning. Examples:</p>
             <div className='tab-bullets'><ul>
               <li>Penetration testing and red team operations</li>
               <li>Reverse engineering and binary analysis</li>
               <li>Hardware hacking and embedded systems</li>
               <li>Exploit development and vulnerability research</li>
+              <li>Application security and secure code review</li>
+              <li>Web and API security</li>
               <li>Incident response and threat hunting</li>
               <li>OSINT and operational security</li>
               <li>Cryptography applied to real-world systems</li>
@@ -77,8 +79,8 @@ export default class OpenCalls extends Component<OpenCallsProps, OpenCallsState>
               <li>Network protocol analysis and wireless security</li>
             </ul></div>
           
-            <p className='tab-heading'>What do I need to have ready for the training workshop submission?</p>
-            <p className='tab-paragraph'>The workshop does not need to be completely developed at the time of the submission. However, for evaluation, we do need to have very formal workflow and timing of the training you are proposing. (Detailed section below)</p>
+            <p className='tab-heading'>What do I need to have ready for the training submission?</p>
+            <p className='tab-paragraph'>The training does not need to be completely developed at the time of the submission. However, for evaluation, we do need to have very formal workflow and timing of the training you are proposing. (Detailed section below)</p>
             <p className='tab-paragraph'>You should have most of the material ready to go and have a rough idea of how it will be presented. We would also like to encourage multiple instructors <b>if</b> that is the best approach to cover the material.</p> 
           
             <p className='tab-heading'>How do I structure a training submission?</p>
@@ -122,10 +124,11 @@ export default class OpenCalls extends Component<OpenCallsProps, OpenCallsState>
               <ol className='tab-ordered-list'>
                 <li>Class advertisement and promotion via website, social media, and other means.</li>
                 <li>The venue, including a classroom-style room configuration, projector and screen, and internet access.</li>
+                <li><span style={{color:'#39ff14'}}>Breakfast, Lunch, Snacks, and Coffee</span> for instructors (and attendees).</li>
                 <li>Complimentary admission to Kernelcon for the instructor.</li>
+                <li>Results from <span style={{color:'#39ff14'}}>attendee feedback surveys</span>.</li>
                 <li>Attendee registration services.</li>
-                <li>Results from attendee feedback surveys.</li>
-                <li>Snacks for instructors (and attendees).</li>
+                <li><span style={{color:'#39ff14'}}>On-site file storage and local network distribution</span> — trainers can upload VMs, lab environments, tools, and course files ahead of time so attendees pull everything over the local network instead of the internet. This was a huge time-saver for trainers last year and we highly recommend taking advantage of it.</li>
                 <li>Payment to the instructor on NET60 terms.</li>
               </ol>
             </p>
