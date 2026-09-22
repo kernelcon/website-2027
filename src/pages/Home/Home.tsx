@@ -476,7 +476,62 @@ interface Example { name: string; emoji: string; desc: string; dur: number; trac
 const seq = (note: string, s: number, e: number, step: number): NoteEvent[] =>
   Array.from({length: Math.ceil((e - s) / step)}, (_, i) => ({note, t: s + i * step}));
 
+// BACKBONE demo helpers — E minor groove at 120 BPM
+// Bass verse riff (2000ms/pass): E–E–G–E–D–C–B
+const _bVerse = (T: number): NoteEvent[] => [
+  {note:'E3',t:T},{note:'E3',t:T+375},{note:'G3',t:T+625},{note:'E3',t:T+875},
+  {note:'D3',t:T+1250},{note:'C3',t:T+1500},{note:'B2',t:T+1875},
+];
+// Guitar verse: open E2 drone + same melodic movement
+const _gVerse = (T: number): NoteEvent[] => [
+  {note:'E2',t:T},
+  {note:'E3',t:T},{note:'E3',t:T+375},{note:'G3',t:T+625},{note:'E3',t:T+875},
+  {note:'D3',t:T+1250},{note:'C3',t:T+1500},{note:'B2',t:T+1875},
+];
+// Guitar chorus: same roots voiced as chords (distortion implied)
+const _gChorus = (T: number): NoteEvent[] => [
+  {note:'E2',t:T},{note:'B3',t:T},{note:'E4',t:T},
+  {note:'E3',t:T+375},{note:'B3',t:T+375},
+  {note:'G3',t:T+625},{note:'D4',t:T+625},
+  {note:'E3',t:T+875},{note:'B3',t:T+875},
+  {note:'D3',t:T+1250},{note:'A3',t:T+1250},
+  {note:'C3',t:T+1500},{note:'G3',t:T+1500},
+  {note:'B2',t:T+1875},{note:'F#3',t:T+1875},
+];
+
 const EXAMPLES: Example[] = [
+  {
+    name: 'BACKBONE', emoji: '🎸', desc: 'Electric bass + guitar · E minor · 120 BPM · 32s',
+    dur: 32000,
+    tracks: [
+      { inst: 'basetone', events: [
+        // Verse ×4 (0–8s)
+        ..._bVerse(0),..._bVerse(2000),..._bVerse(4000),..._bVerse(6000),
+        // Pre-Chorus — G pedal → A pedal (8–12s)
+        ...seq('G2',8000,10000,250),...seq('A2',10000,12000,250),
+        // Chorus ×4 (12–20s)
+        ..._bVerse(12000),..._bVerse(14000),..._bVerse(16000),..._bVerse(18000),
+        // Post-Chorus (20–24s)
+        ...seq('G2',20000,22000,250),...seq('A2',22000,24000,250),
+        // Verse ×4 (24–32s)
+        ..._bVerse(24000),..._bVerse(26000),..._bVerse(28000),..._bVerse(30000),
+      ]},
+      { inst: 'guitar', events: [
+        // Verse ×4 (0–8s)
+        ..._gVerse(0),..._gVerse(2000),..._gVerse(4000),..._gVerse(6000),
+        // Pre-Chorus — G major → A major chord hits (8–12s)
+        ...seq('G3',8000,10000,250),...seq('B3',8000,10000,250),
+        ...seq('A3',10000,12000,250),...seq('E4',10000,12000,250),
+        // Chorus ×4 (12–20s)
+        ..._gChorus(12000),..._gChorus(14000),..._gChorus(16000),..._gChorus(18000),
+        // Post-Chorus (20–24s)
+        ...seq('G3',20000,22000,250),...seq('B3',20000,22000,250),
+        ...seq('A3',22000,24000,250),...seq('E4',22000,24000,250),
+        // Verse ×4 (24–32s)
+        ..._gVerse(24000),..._gVerse(26000),..._gVerse(28000),..._gVerse(30000),
+      ]},
+    ],
+  },
   {
     name: 'SYSTEM BREACH', emoji: '⚡', desc: 'Dark techno with driving kick and synths · C minor · 120 BPM · 24s',
     dur: 24000,
@@ -3939,7 +3994,7 @@ export default class Home extends Component<object, HomeState> {
                   <li>Passes are transferable (no refunds)</li>
                   <li>Training sold separately. Mar 2-3.</li>
                 </ul>
-                <a href="https://reg.kernelcon.org" target="_blank" rel="noopener noreferrer" className="cta-button">▶ Register Now</a>
+                <a href="/register" className="cta-button">▶ Register Now</a>
               </div>
               <div className="cta-details">
                 <div className="cta-detail-title">EVENT DETAILS</div>

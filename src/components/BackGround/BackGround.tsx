@@ -203,9 +203,7 @@ export default class BackGround extends Component<object, BackGroundState> {
 
           <div className="algo-cta-row">
             <a
-              href="https://reg.kernelcon.org"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/register"
               className="algo-btn-primary"
             >
               Register
