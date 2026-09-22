@@ -2296,6 +2296,14 @@ function PianoSection() {
   const playSpeedRef = useRef(1.0);
   const [playSpeed, setPlaySpeed] = useState(1.0);
   const [openEditors, setOpenEditors] = useState<Set<number>>(new Set());
+  const [cdBoosted, setCdBoosted] = useState(false);
+  const cdRef = useRef<HTMLImageElement|null>(null);
+  const cdAngleRef = useRef(0);
+  const cdLastTsRef = useRef<number|null>(null);
+  const cdRafRef = useRef<number|null>(null);
+  const cdBoostStartRef = useRef<number|null>(null);
+  const CD_NORMAL = 30;   // deg/s (one rotation per 12s)
+  const CD_PEAK   = 2160; // deg/s (6 rotations per second — unreadable)
 
   const getCtx = useCallback(() => {
     if (!audioCtxRef.current) {
@@ -3034,6 +3042,35 @@ function PianoSection() {
 
   // Keyboard events
   useEffect(() => {
+    const animate = (ts: number) => {
+      const dt = cdLastTsRef.current !== null ? (ts - cdLastTsRef.current) / 1000 : 0;
+      cdLastTsRef.current = ts;
+      let speed = CD_NORMAL;
+      if (cdBoostStartRef.current !== null) {
+        const elapsed = (ts - cdBoostStartRef.current) / 1000;
+        const ACCEL = 6.0, DECEL = 14.0, total = ACCEL + DECEL;
+        if (elapsed < ACCEL) {
+          const t = elapsed / ACCEL;
+          speed = CD_NORMAL + (CD_PEAK - CD_NORMAL) * (t * t); // ease-in
+        } else if (elapsed < total) {
+          const t = (elapsed - ACCEL) / DECEL;
+          speed = CD_NORMAL + (CD_PEAK - CD_NORMAL) * Math.pow(1 - t, 3); // cubic ease-out "peter out"
+        } else {
+          cdBoostStartRef.current = null;
+          setCdBoosted(false);
+          speed = CD_NORMAL;
+        }
+      }
+      cdAngleRef.current = (cdAngleRef.current + speed * dt) % 360;
+      if (cdRef.current) cdRef.current.style.transform = `rotate(${cdAngleRef.current}deg)`;
+      cdRafRef.current = requestAnimationFrame(animate);
+    };
+    cdRafRef.current = requestAnimationFrame(animate);
+    return () => { if (cdRafRef.current !== null) cancelAnimationFrame(cdRafRef.current); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     const instRef = {current: instrument};
     instRef.current = instrument;
     const down = (e: KeyboardEvent) => {
@@ -3405,6 +3442,11 @@ function PianoSection() {
     setTimeout(() => setToast(null), 4000);
   };
 
+  const handleCdClick = () => {
+    cdBoostStartRef.current = performance.now();
+    setCdBoosted(true);
+  };
+
   const linkedInShare = (url?: string | null) => {
     const text = 'I just composed a loop at Kernelcon 2027 Algo(Rhythm)! 🎵 #KernelCon2027 #AlgoRhythm kernelcon.org';
     navigator.clipboard.writeText(text).catch(() => {});
@@ -3419,7 +3461,13 @@ function PianoSection() {
   return (
     <div className="rhythm-section piano-section">
       <div className="rhythm-inner studio-inner">
-        <img src={SocialCdUrl} className="studio-cd-img" alt="Kernelcon algoRHYTHM CD" />
+        <img
+          ref={cdRef}
+          src={SocialCdUrl}
+          className={`studio-cd-img${cdBoosted ? ' cd-boosted' : ''}`}
+          alt="Kernelcon algoRHYTHM CD"
+          onClick={handleCdClick}
+        />
         <div className="rhythm-label">Interactive // Compose a Beat</div>
         <h2 className="rhythm-title">PLAY THE <span className="accent-green">SYSTEM</span></h2>
         <p className="piano-tagline">
