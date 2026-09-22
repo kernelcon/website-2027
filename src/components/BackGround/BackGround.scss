@@ -81,7 +81,7 @@ $glow-yellow: 0 0 12px #ffe600, 0 0 24px #ffe600, 0 0 48px rgba(255,230,0,.4);
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 100px 2rem 8rem;
+  padding: 80px 2rem 14rem;
   gap: 0.4rem;
 }
 
@@ -104,33 +104,14 @@ $glow-yellow: 0 0 12px #ffe600, 0 0 24px #ffe600, 0 0 48px rgba(255,230,0,.4);
   margin-bottom: 0.6rem;
 }
 
-// ── THEME TITLE ───────────────────────────────────────────
+// ── THEME LOGO ────────────────────────────────────────────
 
-.algo-theme-line {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(3.5rem, 12vw, 10rem);
-  line-height: 0.88;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-  margin-bottom: 0.3rem;
-}
-
-.algo-word {
-  color: #fff;
-  text-shadow: 0 0 40px rgba(255,255,255,.2);
-}
-
-.algo-paren {
-  color: $green;
-  text-shadow: $glow-green;
-  font-size: 0.65em;
-  vertical-align: middle;
-  margin: 0 0.05em;
-}
-
-.algo-rhythm-word {
-  color: $purple;
-  text-shadow: $glow-purple;
+.algo-theme-img {
+  width: min(1200px, 94vw);
+  height: auto;
+  margin-bottom: 0.5rem;
+  filter: drop-shadow(0 0 24px rgba(57,255,20,0.35))
+          drop-shadow(0 0 48px rgba(123,47,255,0.25));
 }
 
 // ── TAGLINE ───────────────────────────────────────────────
@@ -411,9 +392,13 @@ $glow-yellow: 0 0 12px #ffe600, 0 0 24px #ffe600, 0 0 48px rgba(255,230,0,.4);
     font-size: 0.88rem;
     color: rgba(255,255,255,.82);
 
-    strong {
+    .algo-word-green {
       color: $green;
       text-shadow: 0 0 8px rgba(57,255,20,.4);
+    }
+    .algo-word-purple {
+      color: $purple;
+      text-shadow: 0 0 8px rgba(123,47,255,.4);
     }
   }
 
@@ -472,10 +457,7 @@ $glow-yellow: 0 0 12px #ffe600, 0 0 24px #ffe600, 0 0 48px rgba(255,230,0,.4);
     padding: 80px 1.5rem 6rem;
   }
 
-  .algo-theme-line {
-    white-space: normal;
-    font-size: clamp(3rem, 18vw, 6rem);
-  }
+  .algo-theme-img { width: min(420px, 90vw); }
 
   .algo-logo { width: min(320px, 75vw); }
 

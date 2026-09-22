@@ -621,6 +621,30 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
   .accent-pink   { color: $rhythm-pink;   text-shadow: $glow-pink;   }
 }
 
+.studio-inner {
+  position: relative;
+}
+
+.studio-cd-img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: auto;
+  height: clamp(120px, 16vw, 220px);
+  filter: drop-shadow(0 0 18px rgba(57,255,20,0.25))
+          drop-shadow(0 4px 24px rgba(0,0,0,0.6));
+  animation: cd-spin 12s linear infinite;
+  pointer-events: none;
+
+  @media (prefers-reduced-motion: reduce) { animation: none; }
+  @media (max-width: 600px) { display: none; }
+}
+
+@keyframes cd-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
 .rhythm-stripe {
   width: 100%;
   height: 3px;
@@ -2234,6 +2258,8 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin-bottom: 0.25rem;
 }
 
@@ -2241,6 +2267,17 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
   display: flex;
   align-items: center;
   gap: 0.75rem;
+
+  .piano-btn {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .example-strip-label { width: 100%; }
+  .example-strip-controls { width: 100%; justify-content: space-between; }
+  .speed-slider { width: 100px; flex: 1; max-width: 140px; }
 }
 
 .speed-control {

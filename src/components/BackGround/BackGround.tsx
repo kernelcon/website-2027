@@ -1,6 +1,6 @@
 import { Component, createRef } from 'react';
 import type { RefObject } from 'react';
-import KernelLogo from '../../static/images/logos/kernelcon_white.png';
+import AlgoLogo from '../../static/images/algo-logo.png';
 import './BackGround.scss';
 
 const HEX_CHARS = '0123456789ABCDEF';
@@ -166,18 +166,7 @@ export default class BackGround extends Component<object, BackGroundState> {
         <div className="algo-hero-center">
           <div className="algo-pre-label">♪ KERNELCON PRESENTS ♪</div>
 
-          <img
-            src={KernelLogo}
-            className="algo-logo"
-            alt="Kernelcon logo"
-          />
-
-          <div className="algo-theme-line">
-            <span className="algo-word">ALGO</span>
-            <span className="algo-paren">(</span>
-            <span className="algo-rhythm-word">RHYTHM</span>
-            <span className="algo-paren">)</span>
-          </div>
+          <img src={AlgoLogo} className="algo-theme-img" alt="algoRHYTHM" />
 
           <div className="algo-tagline">
             <span>Drop the beat.</span>
@@ -239,7 +228,7 @@ export default class BackGround extends Component<object, BackGroundState> {
             <p className="content-paragraph">
               Every hacker knows the feeling — when keystrokes stop feeling like keystrokes
               and the system starts to open up. The pattern clicks. The noise drops away.
-              That's the rhythm. <strong>Algo(Rhythm)</strong> is about that state: the intuitive
+              That's the rhythm. <strong><span className="algo-word-green">Algo</span><span className="algo-word-purple">(Rhythm)</span></strong> is about that state: the intuitive
               cadence of someone who's put in the reps, reading a system the way a musician
               reads a room.
             </p>

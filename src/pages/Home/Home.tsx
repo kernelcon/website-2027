@@ -1,11 +1,15 @@
 import { Component, useState, useRef, useEffect, useCallback } from "react";
 import BackGround from '../../components/BackGround/BackGround';
 import KernelconLogoUrl from '../../static/images/logos/kernelcon_white.png';
+import AlgoLogoUrl from '../../static/images/algo-logo.png';
+import SocialCdUrl from '../../static/images/social-cd.png';
 import "./Home.scss";
 
-// Preload logo once at module level so every draw() call can use it synchronously
+// Preload logos once at module level so every draw() call can use them synchronously
 const _logoImg = new Image();
 _logoImg.src = KernelconLogoUrl;
+const _algoLogoImg = new Image();
+_algoLogoImg.src = AlgoLogoUrl;
 
 // ── DATA ──────────────────────────────────────────────────────────────────────
 
@@ -2825,10 +2829,10 @@ function PianoSection() {
         .filter(tr => !seen.has(tr.inst) && seen.add(tr.inst) !== undefined)
         .map(tr => tr.inst);
 
-      // Dynamic canvas height: thin when empty, exact fit when loaded
+      // Dynamic canvas height: thin when empty, exact fit when loaded (+ bottom padding so play bar clears)
       const desiredH = instIds.length === 0
         ? THIN_H
-        : Y0 + instIds.length * (LANE_H + LANE_G) + 6;
+        : Y0 + instIds.length * (LANE_H + LANE_G) + 24;
       if (canvas.height !== desiredH) canvas.height = desiredH;
 
       const H = canvas.height;
@@ -2841,25 +2845,28 @@ function PianoSection() {
       }
 
       // ── Branding header ──────────────────────────────────────────────────
-      // Logo (left)
-      const logoH = 38, logoW = _logoImg.complete && _logoImg.naturalWidth
+      // Kernelcon logo (left)
+      const logoH = 38;
+      const logoW = _logoImg.complete && _logoImg.naturalWidth
         ? Math.round(logoH * _logoImg.naturalWidth / _logoImg.naturalHeight) : 0;
       if (logoW > 0) c.drawImage(_logoImg, 10, 10, logoW, logoH);
 
-      // "Algo(RHYTHM)" — Bebas Neue, coloured segments
-      const titleX = logoW ? logoW + 24 : 10;
+      // "algo(RHYTHM)" — Bebas Neue, algo=green, RHYTHM=purple
+      const titleX = logoW > 0 ? logoW + 18 : 10;
       c.font = 'bold 32px "Bebas Neue", sans-serif';
       c.shadowBlur = 0; c.globalAlpha = 1;
-      c.fillStyle = 'rgba(190,160,255,0.85)';
-      const pre = 'Algo('; const preW = c.measureText(pre).width;
-      c.fillText(pre, titleX, 42);
-      c.fillStyle = '#39ff14';
-      c.shadowBlur = 12; c.shadowColor = '#39ff14';
-      const rhy = 'RHYTHM'; const rhyW = c.measureText(rhy).width;
-      c.fillText(rhy, titleX + preW, 42);
+
+      c.fillStyle = '#39ff14'; c.shadowBlur = 10; c.shadowColor = '#39ff14';
+      const algoPart = 'algo('; const algoPartW = c.measureText(algoPart).width;
+      c.fillText(algoPart, titleX, 42);
+
+      c.fillStyle = '#7b2fff'; c.shadowBlur = 10; c.shadowColor = '#7b2fff';
+      const rhyPart = 'RHYTHM'; const rhyPartW = c.measureText(rhyPart).width;
+      c.fillText(rhyPart, titleX + algoPartW, 42);
+
+      c.fillStyle = '#39ff14'; c.shadowBlur = 10; c.shadowColor = '#39ff14';
+      c.fillText(')', titleX + algoPartW + rhyPartW, 42);
       c.shadowBlur = 0;
-      c.fillStyle = 'rgba(190,160,255,0.85)';
-      c.fillText(')', titleX + preW + rhyW, 42);
 
       // Date + location (right-aligned)
       c.font = '10px "Space Mono", monospace';
@@ -3317,8 +3324,18 @@ function PianoSection() {
     }, loopDurRef.current + 400);
   };
 
+  const TWEET_TEMPLATES = [
+    `Loop assembled. Beat compiled. 🎛️\n\n{{ Attach your downloaded video }}\n\nBuild it at Kernelcon 2027 → kernelcon.org\n#AlgoRhythm #KernelCon2027 @_kernelcon_`,
+    `I just hacked together a beat. 🎵\n\n{{ Attach your downloaded video }}\n\nCome make yours at Kernelcon 2027 → kernelcon.org\n#AlgoRhythm #KernelCon2027 @_kernelcon_`,
+    `The hacker con with a music studio.\nCome see what else we built. 🔊\n\n{{ Attach your downloaded video }}\n\nkernelcon.org — #AlgoRhythm #KernelCon2027 @_kernelcon_`,
+    `Kernelcon 2027 is different.\n\n{{ Attach your downloaded video }}\n\nFind out why → kernelcon.org\n#AlgoRhythm #KernelCon2027 @_kernelcon_`,
+    `This is what #AlgoRhythm looks like. 🎵\n\n{{ Attach your downloaded video }}\n\nJoin us at Kernelcon 2027 → kernelcon.org\n#KernelCon2027 @_kernelcon_`,
+    `I went to check out the Kernelcon site and spent 20 minutes making beats. 🎛️\n\n{{ Attach your downloaded video }}\n\nDangerous → kernelcon.org\n#AlgoRhythm #KernelCon2027 @_kernelcon_`,
+  ];
+  const randomTweetText = () => TWEET_TEMPLATES[Math.floor(Math.random() * TWEET_TEMPLATES.length)];
+
   const tweetLoop = (url?: string | null) => {
-    const text = encodeURIComponent('I just composed a loop at Kernelcon 2027 Algo(Rhythm)! 🎵 Attach your downloaded video and tag us! #KernelCon2027 #AlgoRhythm @_kernelcon_');
+    const text = encodeURIComponent(randomTweetText());
     window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
     if (url) {
       const a = document.createElement('a'); a.href = url;
@@ -3327,7 +3344,7 @@ function PianoSection() {
   };
   const tweetRecord = () => {
     // Open Twitter immediately while we have the user gesture — async callbacks can't open popups
-    const text = encodeURIComponent('I just composed a loop at Kernelcon 2027 Algo(Rhythm)! 🎵 Attach your downloaded video and tag us! #KernelCon2027 #AlgoRhythm @_kernelcon_');
+    const text = encodeURIComponent(randomTweetText());
     window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
     captureVideo('tweet', url => {
       const a = document.createElement('a'); a.href = url;
@@ -3353,7 +3370,8 @@ function PianoSection() {
 
   return (
     <div className="rhythm-section piano-section">
-      <div className="rhythm-inner">
+      <div className="rhythm-inner studio-inner">
+        <img src={SocialCdUrl} className="studio-cd-img" alt="Kernelcon algoRHYTHM CD" />
         <div className="rhythm-label">Interactive // Compose a Beat</div>
         <h2 className="rhythm-title">PLAY THE <span className="accent-green">SYSTEM</span></h2>
         <p className="piano-tagline">
