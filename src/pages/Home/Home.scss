@@ -2470,9 +2470,9 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
 
 .piano-toast {
   position: fixed;
-  bottom: 2rem;
+  top: 40%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   background: rgba(13,5,32,0.97);
   border: 1px solid #7b2fff;
   border-left: 3px solid #39ff14;

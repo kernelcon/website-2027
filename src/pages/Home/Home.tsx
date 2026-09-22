@@ -1,4 +1,6 @@
 import { Component, useState, useRef, useEffect, useCallback } from "react";
+import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { fetchFile, toBlobURL } from '@ffmpeg/util';
 import BackGround from '../../components/BackGround/BackGround';
 import KernelconLogoUrl from '../../static/images/logos/kernelcon_white.png';
 import AlgoLogoUrl from '../../static/images/algo-logo.png';
@@ -10,6 +12,42 @@ const _logoImg = new Image();
 _logoImg.src = KernelconLogoUrl;
 const _algoLogoImg = new Image();
 _algoLogoImg.src = AlgoLogoUrl;
+
+// ── MP4 CONVERSION ────────────────────────────────────────────────────────────
+// Pick the best recording format: native MP4 (Safari) > H.264 WebM (Chrome, fast remux) > VP9 WebM
+const _mp4Native  = MediaRecorder.isTypeSupported('video/mp4');
+const _h264Webm   = !_mp4Native && MediaRecorder.isTypeSupported('video/webm;codecs=h264,opus');
+const _recMime    = _mp4Native  ? 'video/mp4'
+                  : _h264Webm  ? 'video/webm;codecs=h264,opus'
+                  : MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus') ? 'video/webm;codecs=vp9,opus'
+                  : 'video/webm';
+console.log('[video] mp4Native:', _mp4Native, '| h264Webm:', _h264Webm, '| mime:', _recMime);
+
+const _ff = new FFmpeg();
+let _ffReady = false;
+
+async function toMp4(blob: Blob, onProgress?: (p: number) => void): Promise<Blob> {
+  if (!_ffReady) {
+    await _ff.load({
+      coreURL: await toBlobURL('https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm/ffmpeg-core.js', 'text/javascript'),
+      wasmURL: await toBlobURL('https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm/ffmpeg-core.wasm', 'application/wasm'),
+    });
+    _ffReady = true;
+  }
+  if (onProgress) _ff.on('progress', ({ progress }) => onProgress(Math.round(progress * 100)));
+  const inFile = _mp4Native ? 'in.mp4' : 'in.webm';
+  await _ff.writeFile(inFile, await fetchFile(blob));
+  // Scale to 1280x720 (16:9) with letterboxing — Twitter rejects aspect ratios outside 1:3–16:9
+  const scaleFilter = 'scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2,setsar=1';
+  const videoArgs = ['-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '28', '-pix_fmt', 'yuv420p', '-vf', scaleFilter];
+  const audioArgs = ['-c:a', 'aac', '-ar', '44100', '-ac', '2', '-b:a', '128k'];
+  await _ff.exec(['-i', inFile, ...videoArgs, ...audioArgs, '-movflags', '+faststart', 'out.mp4']);
+  const data = await _ff.readFile('out.mp4') as Uint8Array;
+  await _ff.deleteFile(inFile);
+  await _ff.deleteFile('out.mp4');
+  _ff.off('progress', () => {});
+  return new Blob([data.buffer.slice(0) as ArrayBuffer], { type: 'video/mp4' });
+}
 
 // ── DATA ──────────────────────────────────────────────────────────────────────
 
@@ -3300,15 +3338,21 @@ function PianoSection() {
       ...canvas.captureStream(30).getVideoTracks(),
       ...dest.stream.getAudioTracks(),
     ]);
-    const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')
-      ? 'video/webm;codecs=vp9,opus' : 'video/webm';
-    const recorder = new MediaRecorder(combined, {mimeType: mime});
+    const recorder = new MediaRecorder(combined, {mimeType: _recMime});
     chunksRef.current = [];
     recorder.ondataavailable = e => { if (e.data.size > 0) chunksRef.current.push(e.data); };
-    recorder.onstop = () => {
+    recorder.onstop = async () => {
       stopAll();
+      const raw = new Blob(chunksRef.current, {type: _recMime});
+      showToast(_mp4Native ? 'Processing…' : 'Converting to MP4…');
+      let url: string;
+      try {
+        const mp4 = await toMp4(raw, p => showToast(`Converting… ${p}%`));
+        url = URL.createObjectURL(mp4);
+      } catch {
+        url = URL.createObjectURL(raw); // fallback: serve whatever we recorded
+      }
       setExportingFor(null);
-      const url = URL.createObjectURL(new Blob(chunksRef.current, {type: 'video/webm'}));
       if (onDone) {
         onDone(url);
       } else {
@@ -3325,32 +3369,20 @@ function PianoSection() {
   };
 
   const TWEET_TEMPLATES = [
-    `Loop assembled. Beat compiled. 🎛️\n\n{{ Attach your downloaded video }}\n\nBuild it at Kernelcon 2027 → kernelcon.org\n#AlgoRhythm #KernelCon2027 @_kernelcon_`,
-    `I just hacked together a beat. 🎵\n\n{{ Attach your downloaded video }}\n\nCome make yours at Kernelcon 2027 → kernelcon.org\n#AlgoRhythm #KernelCon2027 @_kernelcon_`,
-    `The hacker con with a music studio.\nCome see what else we built. 🔊\n\n{{ Attach your downloaded video }}\n\nkernelcon.org — #AlgoRhythm #KernelCon2027 @_kernelcon_`,
-    `Kernelcon 2027 is different.\n\n{{ Attach your downloaded video }}\n\nFind out why → kernelcon.org\n#AlgoRhythm #KernelCon2027 @_kernelcon_`,
-    `This is what #AlgoRhythm looks like. 🎵\n\n{{ Attach your downloaded video }}\n\nJoin us at Kernelcon 2027 → kernelcon.org\n#KernelCon2027 @_kernelcon_`,
-    `I went to check out the Kernelcon site and spent 20 minutes making beats. 🎛️\n\n{{ Attach your downloaded video }}\n\nDangerous → kernelcon.org\n#AlgoRhythm #KernelCon2027 @_kernelcon_`,
+    `Loop assembled. Beat compiled. 🎛️\n\n{{ Insert downloaded video here }}\n\nBuild it at Kernelcon 2027 → kernelcon.org\n#AlgoRhythm #KernelCon2027 @_kernelcon_`,
+    `I just hacked together a beat. 🎵\n\n{{ Insert downloaded video here }}\n\nCome make yours at Kernelcon 2027 → kernelcon.org\n#AlgoRhythm #KernelCon2027 @_kernelcon_`,
+    `The hacker con with a music studio.\nCome see what else we built. 🔊\n\n{{ Insert downloaded video here }}\n\nkernelcon.org — #AlgoRhythm #KernelCon2027 @_kernelcon_`,
+    `Kernelcon 2027 is different.\n\n{{ Insert downloaded video here }}\n\nFind out why → kernelcon.org\n#AlgoRhythm #KernelCon2027 @_kernelcon_`,
+    `This is what #AlgoRhythm looks like. 🎵\n\n{{ Insert downloaded video here }}\n\nJoin us at Kernelcon 2027 → kernelcon.org\n#KernelCon2027 @_kernelcon_`,
+    `I went to check out the Kernelcon site and spent 20 minutes making beats. 🎛️\n\n{{ Insert downloaded video here }}\n\nDangerous → kernelcon.org\n#AlgoRhythm #KernelCon2027 @_kernelcon_`,
   ];
   const randomTweetText = () => TWEET_TEMPLATES[Math.floor(Math.random() * TWEET_TEMPLATES.length)];
 
-  const tweetLoop = (url?: string | null) => {
-    const text = encodeURIComponent(randomTweetText());
-    window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
-    if (url) {
-      const a = document.createElement('a'); a.href = url;
-      a.download = 'kernelcon-algo-rhythm-loop.webm'; a.click();
-    }
+  const tweetLoop = () => {
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(randomTweetText())}`, '_blank');
   };
   const tweetRecord = () => {
-    // Open Twitter immediately while we have the user gesture — async callbacks can't open popups
-    const text = encodeURIComponent(randomTweetText());
-    window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
-    captureVideo('tweet', url => {
-      const a = document.createElement('a'); a.href = url;
-      a.download = 'kernelcon-algo-rhythm-loop.webm'; a.click();
-      showToast('Video downloaded — attach it to your tweet!');
-    });
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(randomTweetText())}`, '_blank');
   };
   const showToast = (msg: string) => {
     setToast(msg);
@@ -3362,7 +3394,7 @@ function PianoSection() {
     navigator.clipboard.writeText(text).catch(() => {});
     if (url) {
       const a = document.createElement('a'); a.href = url;
-      a.download = 'kernelcon-algo-rhythm-loop.webm'; a.click();
+      a.download = 'kernelcon-algo-rhythm-loop.mp4'; a.click();
     }
     window.open('https://www.linkedin.com/feed/', '_blank');
     showToast(url ? 'Video downloaded · Share text copied — paste on LinkedIn to post!' : 'Share text copied — paste on LinkedIn to post!');
@@ -3724,9 +3756,9 @@ function PianoSection() {
               <div className="share-modal-actions">
                 <button className="piano-btn download" onClick={() => {
                   const a = document.createElement('a'); a.href = videoUrl;
-                  a.download = 'kernelcon-algo-rhythm-loop.webm'; a.click();
+                  a.download = 'kernelcon-algo-rhythm-loop.mp4'; a.click();
                 }}>⬇ Download</button>
-                <button className="piano-btn tweet" onClick={() => tweetLoop(videoUrl)}>𝕏 Tweet to Kernelcon</button>
+                <button className="piano-btn tweet" onClick={() => tweetLoop()}>𝕏 Tweet to Kernelcon</button>
                 <button className="piano-btn linkedin" onClick={() => linkedInShare(videoUrl)}>in LinkedIn</button>
               </div>
             </div>
