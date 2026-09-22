@@ -477,3 +477,10 @@ $glow-yellow: 0 0 12px #ffe600, 0 0 24px #ffe600, 0 0 48px rgba(255,230,0,.4);
   .algo-cta-row { flex-direction: column; align-items: center; }
   .algo-btn-primary, .algo-btn-secondary { width: 100%; text-align: center; }
 }
+
+// Safari-only: use filter:drop-shadow instead of text-shadow (renders sharply, no blur bleed)
+@supports (background: -webkit-named-image(i)) {
+  .algo-pre-label { text-shadow: none; filter: drop-shadow(0 0 6px #7b2fff) drop-shadow(0 0 12px rgba(123,47,255,.6)); }
+  .algo-date-val  { text-shadow: none; filter: drop-shadow(0 0 6px #ffe600) drop-shadow(0 0 12px rgba(255,230,0,.6)); }
+  .stat-num       { text-shadow: none; filter: drop-shadow(0 0 6px #39ff14) drop-shadow(0 0 12px rgba(57,255,20,.6)); }
+}

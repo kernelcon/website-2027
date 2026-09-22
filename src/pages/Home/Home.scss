@@ -2686,3 +2686,12 @@ _:-ms-lang(x),
 .focus {
   color: rgba(0, 0, 0, 0.5) !important;
 }
+// Safari-only: use filter:drop-shadow instead of text-shadow (renders sharply, no blur bleed)
+@supports (background: -webkit-named-image(i)) {
+  .rhythm-title {
+    .accent-yellow { text-shadow: none; filter: drop-shadow(0 0 6px #ffe600) drop-shadow(0 0 12px rgba(255,230,0,0.6)); }
+    .accent-purple { text-shadow: none; filter: drop-shadow(0 0 6px #7b2fff) drop-shadow(0 0 12px rgba(123,47,255,0.6)); }
+    .accent-green  { text-shadow: none; filter: drop-shadow(0 0 6px #39ff14) drop-shadow(0 0 12px rgba(57,255,20,0.6));  }
+    .accent-pink   { text-shadow: none; filter: drop-shadow(0 0 6px #ff006e) drop-shadow(0 0 12px rgba(255,0,110,0.6));  }
+  }
+}
