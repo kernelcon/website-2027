@@ -28,9 +28,9 @@ const NavBar = ({ onOpenPlayer }: Props) => {
           <button className="navbar-player-btn" onClick={onOpenPlayer} aria-label="Now Playing">
             ♫
           </button>
-          <Link to="/register" className="navbar-register">
+          <a href="https://reg.kernelcon.org" target="_blank" rel="noopener noreferrer" className="navbar-register">
             Register
-          </Link>
+          </a>
         </div>
       </div>
     </div>

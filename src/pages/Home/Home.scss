@@ -1514,8 +1514,11 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
     letter-spacing: 0.08em;
     color: var(--track-color);
     text-shadow: 0 0 10px var(--track-color);
-    min-width: 60px;
+    width: 90px;
     flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .track-chunks-bar {
     flex: 1;
@@ -1524,7 +1527,21 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
     align-items: center;
     height: 14px;
     min-width: 60px;
-    overflow: hidden;
+    overflow: visible;
+    position: relative;
+  }
+  .track-playhead {
+    position: absolute;
+    top: -5px;
+    bottom: -5px;
+    width: 2px;
+    left: calc(var(--play-pos, 0) * 100%);
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 0 8px rgba(255,255,255,0.7);
+    pointer-events: none;
+    z-index: 5;
+    border-radius: 1px;
   }
   .track-chunk {
     height: 100%;
@@ -1543,6 +1560,59 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
     }
 
     &:first-child { opacity: 0.9; }
+  }
+  .track-editor-accordion {
+    border-top: 1px solid rgba(var(--track-color-rgb, 57,255,20), 0.15);
+    background: rgba(255,255,255,0.03);
+  }
+  .track-editor-row {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    padding: 0.4rem 1rem 0.45rem;
+    & + .track-editor-row {
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+  }
+  .track-editor-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.47rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--track-color) 60%, transparent);
+    flex-shrink: 0;
+  }
+  .track-editor-pitch {
+    display: flex; align-items: center; gap: 0.4rem; margin-right: 0.3rem;
+  }
+  .track-editor-slider {
+    width: 90px; height: 3px; accent-color: var(--track-color); cursor: pointer;
+  }
+  .track-editor-val {
+    font-family: 'Space Mono', monospace; font-size: 0.58rem;
+    color: rgba(255,255,255,0.7); min-width: 36px; text-align: left;
+  }
+  .track-editor-pills {
+    display: flex; gap: 0.2rem; flex-shrink: 0;
+  }
+  .track-editor-pill {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.18);
+    color: rgba(255,255,255,0.45);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.48rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.18rem 0.5rem;
+    cursor: pointer;
+    transition: all 0.12s;
+    &:hover { border-color: var(--track-color); color: var(--track-color); }
+    &.active {
+      background: color-mix(in srgb, var(--track-color) 18%, transparent);
+      border-color: var(--track-color);
+      color: var(--track-color);
+    }
   }
   .studio-track-btn {
     background: none;
@@ -1581,6 +1651,13 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
     &.remove-chunk:hover { border-color: $rhythm-yellow; color: $rhythm-yellow; }
     &.remove-chunk:disabled { opacity: 0.2; cursor: not-allowed; &:hover { border-color: rgba(255,255,255,0.15); color: rgba(255,255,255,0.6); } }
     &.delete:hover { border-color: $rhythm-pink; color: $rhythm-pink; }
+    &.edit { color: rgba(255,255,255,0.5); }
+    &.edit:hover, &.edit.active { border-color: var(--track-color); color: var(--track-color); }
+  }
+  .track-btn-group {
+    display: flex;
+    gap: 0.2rem;
+    flex-shrink: 0;
   }
 
   // Mic modifier row — shown on audio tracks
@@ -2158,6 +2235,42 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0.25rem;
+}
+
+.example-strip-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.speed-control {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.speed-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.47rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(123, 47, 255, 0.7);
+  flex-shrink: 0;
+}
+
+.speed-slider {
+  width: 80px;
+  height: 3px;
+  accent-color: $rhythm-purple;
+  cursor: pointer;
+}
+
+.speed-val {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem;
+  color: rgba(255, 255, 255, 0.7);
+  min-width: 32px;
+  text-align: left;
 }
 
 .example-carousel {

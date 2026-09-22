@@ -111,7 +111,7 @@ class Training extends Component {
                   className="cybr-btn btn-bottom"
                   target="_blank"
                   rel="noopener noreferrer"
-                  href="https://reg.kernelcon.org/e/2138684337">
+                  href="https://reg.kernelcon.org">
                   Register Now
                   <span aria-hidden className="cybr-btn__glitch">
                     Register Now
@@ -189,7 +189,7 @@ class Training extends Component {
                     className="cybr-btn btn-bottom"
                     target="_blank"
                     rel="noopener noreferrer"
-                    href="https://reg.kernelcon.org/e/2138684337">
+                    href="https://reg.kernelcon.org">
                     Register Now
                     <span aria-hidden className="cybr-btn__glitch">
                       Register Now

@@ -1,6 +1,11 @@
 import { Component, useState, useRef, useEffect, useCallback } from "react";
 import BackGround from '../../components/BackGround/BackGround';
+import KernelconLogoUrl from '../../static/images/logos/kernelcon_white.png';
 import "./Home.scss";
+
+// Preload logo once at module level so every draw() call can use it synchronously
+const _logoImg = new Image();
+_logoImg.src = KernelconLogoUrl;
 
 // ── DATA ──────────────────────────────────────────────────────────────────────
 
@@ -438,7 +443,32 @@ function ensureAudioCtx(ref: React.MutableRefObject<AudioContext|null>): AudioCo
   }
   return ref.current;
 }
-interface Track { id: number; inst: string; events: NoteEvent[]; dur: number; baseDur: number; chunks: number; muted: boolean; audioUrl?: string; micMods?: MicMods; }
+interface TrackMods {
+  semitones: number; gain: number; pan: number;
+  filterType: 'none'|'lowpass'|'highpass'|'bandpass'; filterFreq: number;
+  echo: boolean; echoMs: number; reverb: number;
+}
+const DEFAULT_TRACK_MODS: TrackMods = {
+  semitones: 0, gain: 1, pan: 0,
+  filterType: 'none', filterFreq: 2000,
+  echo: false, echoMs: 300, reverb: 0,
+};
+const _reverbCache = new Map<string, AudioBuffer>();
+const makeReverbBuf = (ctx: AudioContext, decaySec: number): AudioBuffer => {
+  const key = `${ctx.sampleRate}:${decaySec.toFixed(1)}`;
+  if (_reverbCache.has(key)) return _reverbCache.get(key)!;
+  const len = Math.floor(ctx.sampleRate * decaySec);
+  const buf = ctx.createBuffer(2, len, ctx.sampleRate);
+  for (let c = 0; c < 2; c++) {
+    const d = buf.getChannelData(c);
+    for (let i = 0; i < len; i++)
+      d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
+  }
+  _reverbCache.set(key, buf);
+  return buf;
+};
+
+interface Track { id: number; inst: string; events: NoteEvent[]; dur: number; baseDur: number; chunks: number; muted: boolean; audioUrl?: string; micMods?: MicMods; mods?: TrackMods; }
 interface ExampleTrack { inst: string; events: NoteEvent[]; }
 interface Example { name: string; emoji: string; desc: string; dur: number; tracks: ExampleTrack[]; chorus?: boolean; }
 
@@ -2218,6 +2248,11 @@ function PianoSection() {
   const micChunksRef = useRef<Blob[]>([]);
   const micPlaybackMapRef = useRef<Map<number, MicPlayback>>(new Map());
   const micAnalyserRef = useRef<AnalyserNode|null>(null);
+  const playStartRef = useRef<number>(0);
+  const trackManagerRef = useRef<HTMLDivElement|null>(null);
+  const playSpeedRef = useRef(1.0);
+  const [playSpeed, setPlaySpeed] = useState(1.0);
+  const [openEditors, setOpenEditors] = useState<Set<number>>(new Set());
 
   const getCtx = useCallback(() => {
     if (!audioCtxRef.current) {
@@ -2290,11 +2325,42 @@ function PianoSection() {
     if (padId === 'cymbal') { noise(0.8, 'highpass', 6000, 0.45); }
   }, [getCtx, getDest]);
 
-  const playNote = useCallback((note: string, inst: string, record = true) => {
+  const playNote = useCallback((note: string, inst: string, record = true, mods?: TrackMods) => {
     const ctx = getCtx();
     const dest = getDest();
     const t = ctx.currentTime;
-    const wire = (src: AudioNode) => { src.connect(ctx.destination); src.connect(dest); };
+    const pitchRatio = (mods?.semitones && inst !== 'drums') ? Math.pow(2, mods.semitones / 12) : 1;
+
+    // Effects bus: all instrument nodes connect here → gain → pan → [filter] → [echo] → [reverb] → out
+    const effectsBus = ctx.createGain(); effectsBus.gain.value = 1.0;
+    const busGain = ctx.createGain();
+    busGain.gain.value = (mods?.gain !== undefined && inst !== 'drums') ? mods.gain : 1;
+    const busPan = ctx.createStereoPanner();
+    busPan.pan.value = (mods?.pan && inst !== 'drums') ? mods.pan : 0;
+    effectsBus.connect(busGain); busGain.connect(busPan);
+    let chainTail: AudioNode = busPan;
+    if (mods?.filterType && mods.filterType !== 'none' && inst !== 'drums') {
+      const filt = ctx.createBiquadFilter();
+      filt.type = mods.filterType; filt.frequency.value = mods.filterFreq ?? 2000;
+      chainTail.connect(filt); chainTail = filt;
+    }
+    const echoWet: AudioNode | null = (() => {
+      if (!mods?.echo || inst === 'drums') return null;
+      const delay = ctx.createDelay(2.0); delay.delayTime.value = (mods.echoMs ?? 300) / 1000;
+      const fb = ctx.createGain(); fb.gain.value = 0.35;
+      const wet = ctx.createGain(); wet.gain.value = 0.4;
+      chainTail.connect(delay); delay.connect(fb); fb.connect(delay); delay.connect(wet);
+      return wet;
+    })();
+    const revWet: AudioNode | null = (() => {
+      if (!mods?.reverb || inst === 'drums') return null;
+      const conv = ctx.createConvolver(); conv.buffer = makeReverbBuf(ctx, 1.5 + mods.reverb * 2.5);
+      const wet = ctx.createGain(); wet.gain.value = mods.reverb * 0.8;
+      chainTail.connect(conv); conv.connect(wet); return wet;
+    })();
+    const toOut = (dst: AudioNode) => { chainTail.connect(dst); echoWet?.connect(dst); revWet?.connect(dst); };
+    toOut(ctx.destination); toOut(dest);
+    const wire = (src: AudioNode) => { src.connect(effectsBus); };
     // Chorus: delay + LFO modulation on delay time — thickens and widens the sound
     const wireChorus = (src: AudioNode, dur: number) => {
       const delay = ctx.createDelay(0.05);
@@ -2318,7 +2384,7 @@ function PianoSection() {
     if (inst === 'drums') {
       makeDrum(note);
     } else {
-      const freq = FREQS[note];
+      const freq = (FREQS[note] ?? 0) * pitchRatio;
       if (!freq) return;
       if (inst === 'piano') {
         // Register-dependent decay: bass notes ring longer than treble
@@ -2737,7 +2803,7 @@ function PianoSection() {
     const FADE   = 800;
     const LANE_H = 27;
     const LANE_G = 2;
-    const Y0     = 26;
+    const Y0     = 58;
     const NAME_W = 96;
     const NOTE_W = 76;
     const THIN_H = 2;   // canvas height when nothing is loaded
@@ -2746,6 +2812,12 @@ function PianoSection() {
       const W = canvas.width;
       const now = Date.now();
       const trs = tracksVizRef.current;
+
+      // Playhead — update CSS var directly so no re-render needed
+      if (playStartRef.current > 0 && loopDurRef.current > 0) {
+        const pos = ((now - playStartRef.current) % loopDurRef.current) / loopDurRef.current;
+        trackManagerRef.current?.style.setProperty('--play-pos', String(pos));
+      }
 
       // Deduplicate instrument ids from active tracks only — nothing shown when empty
       const seen = new Set<string>();
@@ -2768,10 +2840,39 @@ function PianoSection() {
         return;
       }
 
-      // Header row
-      c.font = '11px "Space Mono", monospace';
-      c.fillStyle = '#3a1a8c';
-      c.fillText('⬡ ALGO(RHYTHM) 2027  ·  KERNELCON  ·  VISUALIZER', 16, 18);
+      // ── Branding header ──────────────────────────────────────────────────
+      // Logo (left)
+      const logoH = 38, logoW = _logoImg.complete && _logoImg.naturalWidth
+        ? Math.round(logoH * _logoImg.naturalWidth / _logoImg.naturalHeight) : 0;
+      if (logoW > 0) c.drawImage(_logoImg, 10, 10, logoW, logoH);
+
+      // "Algo(RHYTHM)" — Bebas Neue, coloured segments
+      const titleX = logoW ? logoW + 24 : 10;
+      c.font = 'bold 32px "Bebas Neue", sans-serif';
+      c.shadowBlur = 0; c.globalAlpha = 1;
+      c.fillStyle = 'rgba(190,160,255,0.85)';
+      const pre = 'Algo('; const preW = c.measureText(pre).width;
+      c.fillText(pre, titleX, 42);
+      c.fillStyle = '#39ff14';
+      c.shadowBlur = 12; c.shadowColor = '#39ff14';
+      const rhy = 'RHYTHM'; const rhyW = c.measureText(rhy).width;
+      c.fillText(rhy, titleX + preW, 42);
+      c.shadowBlur = 0;
+      c.fillStyle = 'rgba(190,160,255,0.85)';
+      c.fillText(')', titleX + preW + rhyW, 42);
+
+      // Date + location (right-aligned)
+      c.font = '10px "Space Mono", monospace';
+      c.fillStyle = 'rgba(255,255,255,0.45)';
+      c.textAlign = 'right';
+      c.fillText('MAR 4–5, 2027', W - 14, 30);
+      c.fillText('HILTON DOWNTOWN OMAHA', W - 14, 46);
+      c.textAlign = 'left';
+
+      // Separator line
+      c.strokeStyle = 'rgba(123,47,255,0.35)';
+      c.lineWidth = 1;
+      c.beginPath(); c.moveTo(0, Y0 - 4); c.lineTo(W, Y0 - 4); c.stroke();
 
       // Pre-compute mic analyser data for live waveform drawing
       let micWaveData: Uint8Array | null = null;
@@ -2907,8 +3008,9 @@ function PianoSection() {
 
   const scheduleTrack = useCallback((tr: Track) => {
     const timers: ReturnType<typeof setTimeout>[] = [];
+    const spd = playSpeedRef.current;
     tr.events.forEach(({note, t}) => {
-      timers.push(setTimeout(() => playNote(note, tr.inst, false), Math.max(0, t)));
+      timers.push(setTimeout(() => playNote(note, tr.inst, false, tr.mods), Math.max(0, t / spd)));
     });
     return timers;
   }, [playNote]);
@@ -2922,6 +3024,8 @@ function PianoSection() {
       pb.oscNodes?.forEach(o => { try { o.stop(); } catch {} });
     });
     micPlaybackMapRef.current.clear();
+    playStartRef.current = 0;
+    trackManagerRef.current?.style.setProperty('--play-pos', '0');
     setIsPlaying(false);
   }, []);
 
@@ -2934,7 +3038,7 @@ function PianoSection() {
       ...(noteActive.length ? noteActive.map(tr => tr.dur) : []),
       ...(audioActive.length ? audioActive.map(tr => tr.dur) : []),
       1000
-    );
+    ) / playSpeedRef.current;
     loopDurRef.current = maxDur;
 
     const fireMicAudio = () => {
@@ -3016,6 +3120,7 @@ function PianoSection() {
     };
 
     const fireNotes = () => noteActive.forEach(tr => loopTimersRef.current.push(...scheduleTrack(tr)));
+    playStartRef.current = Date.now();
     setIsPlaying(true);
     fireMicAudio();
     fireNotes();
@@ -3135,6 +3240,15 @@ function PianoSection() {
     }
   };
 
+  const updateTrackMods = (id: number, patch: Partial<TrackMods>) => {
+    const updated = tracks.map(t => t.id === id
+      ? {...t, mods: {...DEFAULT_TRACK_MODS, ...t.mods, ...patch} as TrackMods}
+      : t
+    );
+    setTracks(updated);
+    if (isPlaying) playAll(updated);
+  };
+
   const scrollDemos = (dir: number) => {
     demoScrollRef.current?.scrollBy({ left: dir * 280, behavior: 'smooth' });
   };
@@ -3249,10 +3363,23 @@ function PianoSection() {
         <div className="example-strip">
           <div className="example-strip-header">
             <span className="example-strip-label">▶ DEMO LOOPS</span>
-            {!isPlaying
-              ? <button className="piano-btn play" onClick={() => playAll(tracks)} disabled={tracks.length === 0}>▶ Play Loop</button>
-              : <button className="piano-btn stop"  onClick={stopAll}>⏹ Stop</button>
-            }
+            <div className="example-strip-controls">
+              <div className="speed-control">
+                <span className="speed-label">Speed</span>
+                <input type="range" className="speed-slider" min={0.25} max={2} step={0.05}
+                  value={playSpeed}
+                  onChange={e => {
+                    const v = Number(e.target.value);
+                    setPlaySpeed(v); playSpeedRef.current = v;
+                    if (isPlaying) playAll(tracks);
+                  }} />
+                <span className="speed-val">{playSpeed === 1 ? '1×' : playSpeed.toFixed(2) + '×'}</span>
+              </div>
+              {!isPlaying
+                ? <button className="piano-btn play" onClick={() => playAll(tracks)} disabled={tracks.length === 0}>▶ Play Loop</button>
+                : <button className="piano-btn stop-play" onClick={stopAll}>⏸ Stop</button>
+              }
+            </div>
           </div>
           <div className="example-carousel">
             <button className="carousel-arrow carousel-arrow-left" onClick={() => scrollDemos(-1)} aria-label="Scroll left">◀</button>
@@ -3385,7 +3512,7 @@ function PianoSection() {
 
         {/* Track manager */}
         {tracks.length > 0 && (
-          <div className="track-manager">
+          <div className="track-manager" ref={trackManagerRef}>
             <div className="track-manager-label">▶ TRACKS</div>
             {(() => {
               const maxLoopDur = Math.max(...tracks.map(t => t.dur), 1);
@@ -3399,21 +3526,74 @@ function PianoSection() {
                       <span className="studio-track-icon">{inst?.icon}</span>
                       <span className="studio-track-name">{inst?.name}</span>
                       <div className="track-chunks-bar" title={`${tr.chunks} chunk${tr.chunks !== 1 ? 's' : ''} · ${(tr.dur/1000).toFixed(1)}s`}>
+                        {isPlaying && <div className="track-playhead" />}
                         {Array.from({length: tr.chunks}).map((_, i) => (
                           <div key={i} className="track-chunk" style={{width: `${(tr.baseDur / maxLoopDur) * 100}%`}} />
                         ))}
                       </div>
-                      <button className="studio-track-btn" data-tip={tr.muted ? 'Unmute' : 'Mute'} onClick={() => {
-                        const updated = tracks.map(t => t.id === tr.id ? {...t, muted: !t.muted} : t);
-                        setTracks(updated);
-                        if (isPlaying) playAll(updated);
-                      }}>
-                        {tr.muted ? '🔇' : '🔊'}
-                      </button>
-                      {!tr.audioUrl && <button className="studio-track-btn add-chunk" data-tip="Add chunk" onClick={() => addChunk(tr.id)}>+</button>}
-                      {!tr.audioUrl && <button className="studio-track-btn remove-chunk" data-tip="Remove chunk" onClick={() => removeChunk(tr.id)} disabled={tr.chunks <= 1}>−</button>}
-                      <button className="studio-track-btn delete" data-tip="Delete" onClick={() => { stopAll(); setTracks(p => p.filter(t => t.id !== tr.id)); setActiveDemo(null); }}>✕</button>
+                      <div className="track-btn-group">
+                        <button className="studio-track-btn" data-tip={tr.muted ? 'Unmute' : 'Mute'} onClick={() => {
+                          const updated = tracks.map(t => t.id === tr.id ? {...t, muted: !t.muted} : t);
+                          setTracks(updated);
+                          if (isPlaying) playAll(updated);
+                        }}>
+                          {tr.muted ? '🔇' : '🔊'}
+                        </button>
+                        {!tr.audioUrl && <button className="studio-track-btn add-chunk" data-tip="Add chunk" onClick={() => addChunk(tr.id)}>+</button>}
+                        {!tr.audioUrl && <button className="studio-track-btn remove-chunk" data-tip="Remove chunk" onClick={() => removeChunk(tr.id)} disabled={tr.chunks <= 1}>−</button>}
+                        <button className={`studio-track-btn edit${openEditors.has(tr.id) ? ' active' : ''}`} data-tip="Edit" onClick={() => setOpenEditors(p => { const s = new Set(p); s.has(tr.id) ? s.delete(tr.id) : s.add(tr.id); return s; })}>✎</button>
+                        <button className="studio-track-btn delete" data-tip="Delete" onClick={() => { stopAll(); setTracks(p => p.filter(t => t.id !== tr.id)); setActiveDemo(null); }}>✕</button>
+                      </div>
                     </div>
+                    {/* Track editor accordion */}
+                    {openEditors.has(tr.id) && !tr.audioUrl && (() => {
+                      const m = tr.mods ?? DEFAULT_TRACK_MODS;
+                      const upd = (p: Partial<TrackMods>) => updateTrackMods(tr.id, p);
+                      const panV = m.pan === 0 ? 'C' : m.pan > 0 ? `R${Math.round(m.pan*100)}` : `L${Math.round(-m.pan*100)}`;
+                      const freqV = m.filterFreq >= 1000 ? (m.filterFreq/1000).toFixed(1)+'k' : m.filterFreq+'';
+                      return (
+                        <div className="track-editor-accordion">
+                          <div className="track-editor-row">
+                            <span className="track-editor-label">Pitch</span>
+                            <input type="range" className="track-editor-slider" min={-24} max={24} step={1} value={m.semitones} onChange={e => upd({semitones: +e.target.value})} />
+                            <span className="track-editor-val">{(m.semitones > 0 ? '+' : '') + m.semitones}st</span>
+                            <span className="track-editor-label">Vol</span>
+                            <input type="range" className="track-editor-slider" min={0} max={2} step={0.05} value={m.gain} onChange={e => upd({gain: +e.target.value})} />
+                            <span className="track-editor-val">{Math.round(m.gain * 100)}%</span>
+                            <span className="track-editor-label">Pan</span>
+                            <input type="range" className="track-editor-slider" min={-1} max={1} step={0.05} value={m.pan} onChange={e => upd({pan: +e.target.value})} />
+                            <span className="track-editor-val">{panV}</span>
+                          </div>
+                          <div className="track-editor-row">
+                            <span className="track-editor-label">Filter</span>
+                            <div className="track-editor-pills">
+                              {(['none','lowpass','highpass','bandpass'] as const).map(ft => (
+                                <button key={ft} className={`track-editor-pill${m.filterType === ft ? ' active' : ''}`} onClick={() => upd({filterType: ft})}>
+                                  {ft === 'none' ? 'Off' : ft === 'lowpass' ? 'Low' : ft === 'highpass' ? 'High' : 'Band'}
+                                </button>
+                              ))}
+                            </div>
+                            {m.filterType !== 'none' && <>
+                              <span className="track-editor-label">Cutoff</span>
+                              <input type="range" className="track-editor-slider" min={80} max={18000} step={10} value={m.filterFreq} onChange={e => upd({filterFreq: +e.target.value})} />
+                              <span className="track-editor-val">{freqV}</span>
+                            </>}
+                          </div>
+                          <div className="track-editor-row">
+                            <span className="track-editor-label">Echo</span>
+                            <button className={`track-editor-pill${m.echo ? ' active' : ''}`} onClick={() => upd({echo: !m.echo})}>{m.echo ? 'On' : 'Off'}</button>
+                            {m.echo && <>
+                              <span className="track-editor-label">Delay</span>
+                              <input type="range" className="track-editor-slider" min={50} max={800} step={10} value={m.echoMs} onChange={e => upd({echoMs: +e.target.value})} />
+                              <span className="track-editor-val">{m.echoMs}ms</span>
+                            </>}
+                            <span className="track-editor-label">Reverb</span>
+                            <input type="range" className="track-editor-slider" min={0} max={1} step={0.05} value={m.reverb} onChange={e => upd({reverb: +e.target.value})} />
+                            <span className="track-editor-val">{Math.round(m.reverb * 100)}%</span>
+                          </div>
+                        </div>
+                      );
+                    })()}
                     {/* Mic modifier row */}
                     {tr.audioUrl && tr.micMods && (
                       <div className="mic-track-mods">
@@ -3759,7 +3939,7 @@ export default class Home extends Component<object, HomeState> {
                   <li>Passes are transferable (no refunds)</li>
                   <li>Training sold separately. Mar 2-3.</li>
                 </ul>
-                <a href="/register" className="cta-button">▶ Register Now</a>
+                <a href="https://reg.kernelcon.org" target="_blank" rel="noopener noreferrer" className="cta-button">▶ Register Now</a>
               </div>
               <div className="cta-details">
                 <div className="cta-detail-title">EVENT DETAILS</div>

@@ -11,7 +11,7 @@ const Register = () => {
         <p className="reg-subtitle">Secure your spot at the stage. Mar 4–5, 2027.</p>
         <a
           className="reg-cta"
-          href="https://reg.kernelcon.org/e/2138684337"
+          href="https://reg.kernelcon.org"
           target="_blank"
           rel="noopener noreferrer"
         >
