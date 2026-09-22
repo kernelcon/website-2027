@@ -2270,6 +2270,8 @@ function PianoSection() {
 
   const audioCtxRef = useRef<AudioContext|null>(null);
   const destRef = useRef<MediaStreamAudioDestinationNode|null>(null);
+  const masterBusRef = useRef<GainNode|null>(null);
+  const limiterRef = useRef<DynamicsCompressorNode|null>(null);
   const isRecordingRef = useRef(false);
   const recEventsRef = useRef<NoteEvent[]>([]);
   const recInstRef = useRef('piano');
@@ -2307,22 +2309,37 @@ function PianoSection() {
       loadChoirSamples(audioCtxRef.current);
       loadVoxSamples(audioCtxRef.current);
       initCornVoices();
+      // Master bus + brick-wall limiter — prevents clipping when chords play
+      const master = audioCtxRef.current.createGain();
+      master.gain.value = 0.35;
+      const limiter = audioCtxRef.current.createDynamicsCompressor();
+      limiter.threshold.value = -6;
+      limiter.ratio.value = 20;
+      limiter.attack.value = 0.003;
+      limiter.release.value = 0.15;
+      master.connect(limiter);
+      limiter.connect(audioCtxRef.current.destination);
+      masterBusRef.current = master;
+      limiterRef.current = limiter;
     }
     if (audioCtxRef.current.state === 'suspended') audioCtxRef.current.resume();
     return audioCtxRef.current;
   }, []);
 
   const getDest = useCallback(() => {
-    const ctx = getCtx();
-    if (!destRef.current) destRef.current = ctx.createMediaStreamDestination();
+    getCtx();
+    if (!destRef.current) {
+      destRef.current = audioCtxRef.current!.createMediaStreamDestination();
+      limiterRef.current?.connect(destRef.current);
+    }
     return destRef.current;
   }, [getCtx]);
 
   const makeDrum = useCallback((padId: string) => {
     const ctx = getCtx();
-    const dest = getDest();
+    getDest();
     const t = ctx.currentTime;
-    const wire = (n: AudioNode) => { n.connect(ctx.destination); n.connect(dest); };
+    const wire = (n: AudioNode) => { n.connect(masterBusRef.current!); };
 
     const noise = (dur: number, filter: 'highpass'|'bandpass', freq: number, vol: number) => {
       const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
@@ -2369,7 +2386,7 @@ function PianoSection() {
 
   const playNote = useCallback((note: string, inst: string, record = true, mods?: TrackMods) => {
     const ctx = getCtx();
-    const dest = getDest();
+    getDest();
     const t = ctx.currentTime;
     const pitchRatio = (mods?.semitones && inst !== 'drums') ? Math.pow(2, mods.semitones / 12) : 1;
 
@@ -2401,7 +2418,7 @@ function PianoSection() {
       chainTail.connect(conv); conv.connect(wet); return wet;
     })();
     const toOut = (dst: AudioNode) => { chainTail.connect(dst); echoWet?.connect(dst); revWet?.connect(dst); };
-    toOut(ctx.destination); toOut(dest);
+    toOut(masterBusRef.current!);
     const wire = (src: AudioNode) => { src.connect(effectsBus); };
     // Chorus: delay + LFO modulation on delay time — thickens and widens the sound
     const wireChorus = (src: AudioNode, dur: number) => {
@@ -3151,12 +3168,12 @@ function PianoSection() {
           const wet = ctx.createGain(); wet.gain.value = 0.55;
           const dry = ctx.createGain(); dry.gain.value = 0.75;
           // Output goes to destination; analyser taps in as side branch (no feedback)
-          last.connect(dry); dry.connect(ctx.destination); dry.connect(analyser);
+          last.connect(dry); dry.connect(masterBusRef.current!); dry.connect(analyser);
           last.connect(d); d.connect(fb); fb.connect(d);
-          d.connect(wet); wet.connect(ctx.destination); wet.connect(analyser);
+          d.connect(wet); wet.connect(masterBusRef.current!); wet.connect(analyser);
           delayNode = d;
         } else {
-          last.connect(ctx.destination);
+          last.connect(masterBusRef.current!);
           last.connect(analyser);
         }
         audio.play().catch(() => {});
