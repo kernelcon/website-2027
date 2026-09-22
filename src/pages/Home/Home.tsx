@@ -3318,12 +3318,22 @@ function PianoSection() {
   };
 
   const tweetLoop = (url?: string | null) => {
+    const text = encodeURIComponent('I just composed a loop at Kernelcon 2027 Algo(Rhythm)! 🎵 Attach your downloaded video and tag us! #KernelCon2027 #AlgoRhythm @_kernelcon_');
+    window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
     if (url) {
       const a = document.createElement('a'); a.href = url;
       a.download = 'kernelcon-algo-rhythm-loop.webm'; a.click();
     }
+  };
+  const tweetRecord = () => {
+    // Open Twitter immediately while we have the user gesture — async callbacks can't open popups
     const text = encodeURIComponent('I just composed a loop at Kernelcon 2027 Algo(Rhythm)! 🎵 Attach your downloaded video and tag us! #KernelCon2027 #AlgoRhythm @_kernelcon_');
     window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+    captureVideo('tweet', url => {
+      const a = document.createElement('a'); a.href = url;
+      a.download = 'kernelcon-algo-rhythm-loop.webm'; a.click();
+      showToast('Video downloaded — attach it to your tweet!');
+    });
   };
   const showToast = (msg: string) => {
     setToast(msg);
@@ -3672,7 +3682,7 @@ function PianoSection() {
             </span>
           </div>
           <div className="share-strip-actions">
-            <button className="piano-btn tweet" onClick={() => captureVideo('tweet', url => tweetLoop(url))} disabled={isPlaying || isRecording || isExporting || tracks.length === 0}>
+            <button className="piano-btn tweet" onClick={tweetRecord} disabled={isPlaying || isRecording || isExporting || tracks.length === 0}>
               {exportingFor === 'tweet' ? '⏳ Recording…' : '𝕏 Tweet to Kernelcon'}
             </button>
             <button className="piano-btn linkedin" onClick={() => captureVideo('linkedin', url => linkedInShare(url))} disabled={isPlaying || isRecording || isExporting || tracks.length === 0}>
