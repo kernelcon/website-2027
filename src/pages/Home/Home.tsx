@@ -21,7 +21,6 @@ const _recMime    = _mp4Native  ? 'video/mp4'
                   : _h264Webm  ? 'video/webm;codecs=h264,opus'
                   : MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus') ? 'video/webm;codecs=vp9,opus'
                   : 'video/webm';
-console.log('[video] mp4Native:', _mp4Native, '| h264Webm:', _h264Webm, '| mime:', _recMime);
 
 const _ff = new FFmpeg();
 let _ffReady = false;
@@ -428,11 +427,11 @@ const BLACK_KEYS = [
   {note:'F#4',left:936},{note:'G#4',left:1016},{note:'A#4',left:1096},
 ];
 const KB_MAP: Record<string,string> = {
-  // white keys
-  z:'B2',
-  q:'C3',w:'D3',e:'E3',r:'F3',t:'G3',y:'A3',u:'B3',
-  a:'C4',s:'D4',d:'E4',f:'F4',g:'G4',h:'A4',j:'B4',k:'C5',
-  // black keys — 1-0 consecutive
+  // Q row — low octave, left to right
+  q:'B2', w:'C3', e:'D3', r:'E3', t:'F3', y:'G3', u:'A3', i:'B3',
+  // A row — high octave, left to right
+  a:'C4', s:'D4', d:'E4', f:'F4', g:'G4', h:'A4', j:'B4', k:'C5',
+  // black keys — number row
   '1':'C#3','2':'D#3','3':'F#3','4':'G#3','5':'A#3',
   '6':'C#4','7':'D#4','8':'F#4','9':'G#4','0':'A#4',
 };
