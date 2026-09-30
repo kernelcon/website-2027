@@ -23,6 +23,26 @@ const Register = () => {
       <div className="reg-cards">
 
         <div className="reg-card">
+          <p className="reg-card-label">Room Block</p>
+          <h2 className="reg-card-title">Need a Room?</h2>
+          <p className="reg-card-body">
+            Stay where the action is. Book at the Hilton Omaha through our room
+            block — just choose "Attendee" as your type. Staying at the
+            conference hotel is convenient and helps Kernelcon a lot. The more
+            attendees staying at the hotel, the more conference space we can
+            retain and activities we can support.
+          </p>
+          <a
+            className="reg-card-link"
+            href="https://book.passkey.com/event/51265270/owner/22518/home"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Book your room
+          </a>
+        </div>
+
+        <div className="reg-card">
           <p className="reg-card-label">Group Admission</p>
           <h2 className="reg-card-title">Rolling with a Crew?</h2>
           <p className="reg-card-body">
