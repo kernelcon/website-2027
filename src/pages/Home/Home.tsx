@@ -3128,6 +3128,7 @@ function PianoSection() {
   }, []);
 
   const playAll = useCallback((trs: Track[]) => {
+    getCtx(); // iOS: AudioContext must be resumed synchronously inside a user gesture
     stopAll();
     const noteActive = trs.filter(tr => !tr.muted && tr.events.length > 0);
     const audioActive = trs.filter(tr => !tr.muted && !!tr.audioUrl);
@@ -3363,6 +3364,7 @@ function PianoSection() {
   };
 
   const startRecord = async () => {
+    getCtx(); // iOS: prime AudioContext inside the user gesture before any async work
     if (instrument === 'mic') { await startMicRecord(); return; }
     recEventsRef.current = []; recInstRef.current = instrument;
     recStartRef.current = Date.now(); isRecordingRef.current = true;
