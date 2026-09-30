@@ -2352,7 +2352,6 @@ function PianoSection() {
 
   const makeDrum = useCallback((padId: string) => {
     const ctx = getCtx();
-    getDest();
     const t = ctx.currentTime;
     const wire = (n: AudioNode) => { n.connect(masterBusRef.current!); };
 
@@ -2397,11 +2396,10 @@ function PianoSection() {
       src.connect(filt); filt.connect(g); wire(g); src.start(t + d); src.stop(t + d + 0.08);
     }); }
     if (padId === 'cymbal') { noise(0.8, 'highpass', 6000, 0.45); }
-  }, [getCtx, getDest]);
+  }, [getCtx]);
 
   const playNote = useCallback((note: string, inst: string, record = true, mods?: TrackMods) => {
     const ctx = getCtx();
-    getDest();
     const t = ctx.currentTime;
     const pitchRatio = (mods?.semitones && inst !== 'drums') ? Math.pow(2, mods.semitones / 12) : 1;
 
@@ -2846,7 +2844,7 @@ function PianoSection() {
     if (record && isRecordingRef.current) {
       recEventsRef.current.push({ note, t: Date.now() - recStartRef.current });
     }
-  }, [getCtx, getDest, makeDrum]);
+  }, [getCtx, makeDrum]);
 
   // Sync tracks into viz ref so the draw loop can read them without deps
   useEffect(() => { tracksVizRef.current = tracks; }, [tracks]);
