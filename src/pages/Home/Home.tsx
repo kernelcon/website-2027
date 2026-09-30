@@ -3070,6 +3070,15 @@ function PianoSection() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // iOS Safari: React's event delegation can lose the "user gesture" context that AudioContext requires.
+  // A native capture-phase touchstart listener fires before React's synthetic events and primes the
+  // AudioContext in a genuine user-gesture context, so any subsequent audio scheduling finds it running.
+  useEffect(() => {
+    const unlock = () => getCtx();
+    document.addEventListener('touchstart', unlock, { passive: true, capture: true });
+    return () => document.removeEventListener('touchstart', unlock, { capture: true });
+  }, [getCtx]);
+
   useEffect(() => {
     const instRef = {current: instrument};
     instRef.current = instrument;
