@@ -2297,8 +2297,6 @@ function PianoSection() {
   const [playSpeed, setPlaySpeed] = useState(1.0);
   const [openEditors, setOpenEditors] = useState<Set<number>>(new Set());
   const [cdBoosted, setCdBoosted] = useState(false);
-  const [debugLog, setDebugLog] = useState<string[]>([]);
-  const dbg = (msg: string) => setDebugLog(prev => [...prev.slice(-8), `${new Date().toISOString().slice(11,23)} ${msg}`]);
   const cdRef = useRef<HTMLImageElement|null>(null);
   const cdAngleRef = useRef(0);
   const cdLastTsRef = useRef<number|null>(null);
@@ -2309,11 +2307,8 @@ function PianoSection() {
 
   const getCtx = useCallback(() => {
     if (!audioCtxRef.current) {
-      try {
-        audioCtxRef.current = new (window.AudioContext ||
-          (window as unknown as {webkitAudioContext:typeof AudioContext}).webkitAudioContext)();
-        dbg(`ctx created state=${audioCtxRef.current.state}`);
-      } catch(e) { dbg(`ctx create ERROR: ${e}`); throw e; }
+      audioCtxRef.current = new (window.AudioContext ||
+        (window as unknown as {webkitAudioContext:typeof AudioContext}).webkitAudioContext)();
       loadPianoSamples(audioCtxRef.current);   // fire-and-forget; falls back to synthesis
       loadAcousticSamples(audioCtxRef.current);
       loadGuitarElSamples(audioCtxRef.current);
@@ -2334,12 +2329,9 @@ function PianoSection() {
       masterBusRef.current = master;
       limiterRef.current = limiter;
     }
-    if (audioCtxRef.current.state === 'suspended') {
-      dbg(`ctx suspended→resuming`);
-      audioCtxRef.current.resume().then(() => dbg(`ctx resumed ok`)).catch(e => dbg(`resume err: ${e}`));
-    }
+    if (audioCtxRef.current.state === 'suspended') audioCtxRef.current.resume();
     return audioCtxRef.current;
-  }, [dbg]);
+  }, []);
 
   const getDest = useCallback(() => {
     getCtx();
@@ -2407,8 +2399,8 @@ function PianoSection() {
     const effectsBus = ctx.createGain(); effectsBus.gain.value = 1.0;
     const busGain = ctx.createGain();
     busGain.gain.value = (mods?.gain !== undefined && inst !== 'drums') ? mods.gain : 1;
-    // StereoPannerNode has known bugs on older iOS Safari — use GainNode instead
-    const busPan = ctx.createGain(); busPan.gain.value = 1;
+    const busPan = ctx.createStereoPanner();
+    busPan.pan.value = (mods?.pan && inst !== 'drums') ? mods.pan : 0;
     effectsBus.connect(busGain); busGain.connect(busPan);
     let chainTail: AudioNode = busPan;
     if (mods?.filterType && mods.filterType !== 'none' && inst !== 'drums') {
@@ -3080,10 +3072,18 @@ function PianoSection() {
   // A native capture-phase touchstart listener fires before React's synthetic events and primes the
   // AudioContext in a genuine user-gesture context, so any subsequent audio scheduling finds it running.
   useEffect(() => {
-    const unlock = () => { dbg(`native touchstart fired, ctx=${audioCtxRef.current?.state ?? 'null'}`); getCtx(); };
-    document.addEventListener('touchstart', unlock, { passive: true, capture: true });
+    const unlock = () => {
+      // Play a silent <audio> element to promote iOS audio session from "ambient"
+      // (muted by silent switch) to "playback" (ignores silent switch), then
+      // prime the Web Audio context in the same gesture.
+      const sil = document.createElement('audio');
+      sil.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+      sil.play().catch(() => {/* ignore */});
+      getCtx();
+    };
+    document.addEventListener('touchstart', unlock, { once: true, passive: true, capture: true });
     return () => document.removeEventListener('touchstart', unlock, { capture: true });
-  }, [getCtx, dbg]);
+  }, [getCtx]);
 
   useEffect(() => {
     const instRef = {current: instrument};
@@ -3116,14 +3116,7 @@ function PianoSection() {
     return () => { window.removeEventListener('keydown', down); window.removeEventListener('keyup', up); };
   }, [playNote, instrument]);
 
-  const press   = (key: string) => {
-    dbg(`press ${key} inst=${instrument} ctx=${audioCtxRef.current?.state ?? 'null'} master=${!!masterBusRef.current}`);
-    // TEST: bypass tone direct to ctx.destination — if you hear this, the master bus chain is broken
-    const _ctx = audioCtxRef.current;
-    if (_ctx) { try { const _o = _ctx.createOscillator(); const _g = _ctx.createGain(); _g.gain.value = 0.2; _o.connect(_g); _g.connect(_ctx.destination); _o.start(_ctx.currentTime); _o.stop(_ctx.currentTime + 0.25); dbg('bypass tone started'); } catch(e) { dbg(`bypass err: ${e}`); } }
-    setPressedKeys(p => new Set([...p, key]));
-    try { playNote(key, instrument); } catch(e) { dbg(`playNote err: ${e}`); }
-  };
+  const press   = (key: string) => { setPressedKeys(p => new Set([...p, key])); playNote(key, instrument); };
   const release = (key: string) => setPressedKeys(p => { const s = new Set(p); s.delete(key); return s; });
 
   const scheduleTrack = useCallback((tr: Track) => {
@@ -3657,12 +3650,6 @@ function PianoSection() {
             </div>
           </div>
         ))}
-
-        {/* DEBUG PANEL — remove before ship */}
-        <div style={{position:'fixed',bottom:0,left:0,right:0,background:'rgba(0,0,0,0.85)',color:'#39ff14',fontFamily:'monospace',fontSize:'11px',padding:'6px 10px',zIndex:9999,maxHeight:'160px',overflowY:'auto'}}>
-          <b>DEBUG</b> ctx={audioCtxRef.current?.state ?? 'null'} master={masterBusRef.current ? 'ok' : 'null'}<br/>
-          {debugLog.map((l,i) => <div key={i}>{l}</div>)}
-        </div>
 
         {/* Track manager */}
         {tracks.length > 0 && (
