@@ -2407,8 +2407,8 @@ function PianoSection() {
     const effectsBus = ctx.createGain(); effectsBus.gain.value = 1.0;
     const busGain = ctx.createGain();
     busGain.gain.value = (mods?.gain !== undefined && inst !== 'drums') ? mods.gain : 1;
-    const busPan = ctx.createStereoPanner();
-    busPan.pan.value = (mods?.pan && inst !== 'drums') ? mods.pan : 0;
+    // StereoPannerNode has known bugs on older iOS Safari — use GainNode instead
+    const busPan = ctx.createGain(); busPan.gain.value = 1;
     effectsBus.connect(busGain); busGain.connect(busPan);
     let chainTail: AudioNode = busPan;
     if (mods?.filterType && mods.filterType !== 'none' && inst !== 'drums') {
@@ -3116,7 +3116,14 @@ function PianoSection() {
     return () => { window.removeEventListener('keydown', down); window.removeEventListener('keyup', up); };
   }, [playNote, instrument]);
 
-  const press   = (key: string) => { dbg(`press ${key} inst=${instrument} ctx=${audioCtxRef.current?.state ?? 'null'} master=${!!masterBusRef.current}`); setPressedKeys(p => new Set([...p, key])); try { playNote(key, instrument); } catch(e) { dbg(`playNote err: ${e}`); } };
+  const press   = (key: string) => {
+    dbg(`press ${key} inst=${instrument} ctx=${audioCtxRef.current?.state ?? 'null'} master=${!!masterBusRef.current}`);
+    // TEST: bypass tone direct to ctx.destination — if you hear this, the master bus chain is broken
+    const _ctx = audioCtxRef.current;
+    if (_ctx) { try { const _o = _ctx.createOscillator(); const _g = _ctx.createGain(); _g.gain.value = 0.2; _o.connect(_g); _g.connect(_ctx.destination); _o.start(_ctx.currentTime); _o.stop(_ctx.currentTime + 0.25); dbg('bypass tone started'); } catch(e) { dbg(`bypass err: ${e}`); } }
+    setPressedKeys(p => new Set([...p, key]));
+    try { playNote(key, instrument); } catch(e) { dbg(`playNote err: ${e}`); }
+  };
   const release = (key: string) => setPressedKeys(p => { const s = new Set(p); s.delete(key); return s; });
 
   const scheduleTrack = useCallback((tr: Track) => {
