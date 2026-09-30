@@ -3625,9 +3625,6 @@ function PianoSection() {
           </div>
         )}
 
-        {/* iOS silent-mode notice */}
-        {isIOS && <div className="ios-silent-notice">🔕 On mobile? Check silent mode — flip the switch for full audio.</div>}
-
         {/* Drum pads OR keyboard (hidden for mic) */}
         {instrument !== 'mic' && (instrument === 'drums' ? (
           <div className="drum-pads">
@@ -3829,6 +3826,9 @@ function PianoSection() {
             </>
           )}
         </div>
+
+        {/* iOS silent-mode notice */}
+        {isIOS && <div className="ios-silent-notice">🔕 On mobile? Check silent mode — flip the switch for full audio.</div>}
 
         {/* Share strip — always visible */}
         <div className="piano-share-strip">
