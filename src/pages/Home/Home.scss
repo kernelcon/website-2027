@@ -2474,6 +2474,15 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
   max-width: 720px;
 }
 
+.ios-silent-notice {
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.04em;
+  padding: 0.35rem 0;
+}
+
 .piano-toast {
   position: fixed;
   top: 40%;

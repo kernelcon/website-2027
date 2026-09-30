@@ -2271,6 +2271,9 @@ const EXAMPLES: Example[] = [
   */
 ];
 
+const isIOS = typeof navigator !== 'undefined' &&
+  (/iPad|iPhone|iPod/.test(navigator.userAgent) || navigator.maxTouchPoints > 1);
+
 function PianoSection() {
   const [instrument, setInstrument] = useState('piano');
   const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
@@ -3844,6 +3847,9 @@ function PianoSection() {
             </button>
           </div>
         </div>
+
+        {/* iOS silent-mode notice */}
+        {isIOS && <div className="ios-silent-notice">🔕 Silent mode on? Turn it off for full audio.</div>}
 
         {/* Toast */}
         {toast && <div className="piano-toast">{toast}</div>}
