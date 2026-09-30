@@ -3625,6 +3625,9 @@ function PianoSection() {
           </div>
         )}
 
+        {/* iOS silent-mode notice */}
+        {isIOS && <div className="ios-silent-notice">🔕 On mobile? Check silent mode — flip the switch for full audio.</div>}
+
         {/* Drum pads OR keyboard (hidden for mic) */}
         {instrument !== 'mic' && (instrument === 'drums' ? (
           <div className="drum-pads">
@@ -3847,9 +3850,6 @@ function PianoSection() {
             </button>
           </div>
         </div>
-
-        {/* iOS silent-mode notice */}
-        {isIOS && <div className="ios-silent-notice">🔕 Silent mode on? Turn it off for full audio.</div>}
 
         {/* Toast */}
         {toast && <div className="piano-toast">{toast}</div>}
