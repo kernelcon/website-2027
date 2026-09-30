@@ -69,7 +69,7 @@ export default class Venue extends Component<LegacyRouteProps, VenueState> {
 								Book directly with the hotel {" "}
 								<a
 									className="text-highlight"
-									href="https://book.passkey.com/event/51054175/owner/22518/landing"
+									href="https://book.passkey.com/event/51265270/owner/22518/home"
 									rel="noopener noreferrer"
 									target="_blank">
 									here
