@@ -213,6 +213,20 @@ const SALM_HZ: Record<string, number> = {
   'C5':523.25,
 };
 const pianoCache = new Map<string, AudioBuffer>();
+// Raw ArrayBuffers pre-fetched at page load — no AudioContext needed for fetch.
+// iOS OscillatorNode is muted by the silent switch; AudioBufferSourceNode is not.
+// Pre-fetching ensures samples are ready to decode the moment the user first touches,
+// so piano keys use AudioBufferSourceNode (works in silent mode) as fast as possible.
+const pianoRawCache = new Map<string, ArrayBuffer>();
+(async () => {
+  const keys = [...new Set(Object.values(PIANO_SAMPLE_MAP))];
+  await Promise.all(keys.map(async (k) => {
+    try {
+      const r = await fetch(`https://tonejs.github.io/audio/salamander/${k}.mp3`);
+      if (r.ok) pianoRawCache.set(k, await r.arrayBuffer());
+    } catch { /* network unavailable — synthesis fallback */ }
+  }));
+})();
 let pianoLoadStarted = false;
 function loadPianoSamples(ctx: AudioContext) {
   if (pianoLoadStarted) return;
@@ -220,9 +234,14 @@ function loadPianoSamples(ctx: AudioContext) {
   const keys = [...new Set(Object.values(PIANO_SAMPLE_MAP))];
   keys.forEach(async (k) => {
     try {
-      const r = await fetch(`https://tonejs.github.io/audio/salamander/${k}.mp3`);
-      if (!r.ok) return;
-      pianoCache.set(k, await ctx.decodeAudioData(await r.arrayBuffer()));
+      // Use pre-fetched buffer if available (avoids a round-trip on first touch)
+      const raw = pianoRawCache.get(k);
+      const ab = raw ? raw.slice(0) : await (async () => {
+        const r = await fetch(`https://tonejs.github.io/audio/salamander/${k}.mp3`);
+        if (!r.ok) throw new Error('!ok');
+        return r.arrayBuffer();
+      })();
+      pianoCache.set(k, await ctx.decodeAudioData(ab));
     } catch { /* synthesis fallback stays active */ }
   });
 }
