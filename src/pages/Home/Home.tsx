@@ -3070,16 +3070,20 @@ function PianoSection() {
 
   // iOS Safari: React's event delegation can lose the "user gesture" context that AudioContext requires.
   // A native capture-phase touchstart listener fires before React's synthetic events and primes the
-  // AudioContext in a genuine user-gesture context, so any subsequent audio scheduling finds it running.
+  // iOS Safari: native capture-phase touchstart primes AudioContext in a genuine user-gesture context.
+  // Routing a silent HTMLMediaElement *through* the AudioContext via createMediaElementSource promotes
+  // the AudioContext's audio session from "ambient" (muted by silent switch) to "playback" (ignores it).
   useEffect(() => {
     const unlock = () => {
-      // Play a silent <audio> element to promote iOS audio session from "ambient"
-      // (muted by silent switch) to "playback" (ignores silent switch), then
-      // prime the Web Audio context in the same gesture.
-      const sil = document.createElement('audio');
-      sil.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
-      sil.play().catch(() => {/* ignore */});
-      getCtx();
+      const ctx = getCtx();
+      try {
+        const sil = document.createElement('audio');
+        sil.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+        sil.loop = true;
+        const src = ctx.createMediaElementSource(sil);
+        src.connect(ctx.destination);
+        sil.play().catch(() => {/* ignore */});
+      } catch { /* unsupported — silent mode may still mute, graceful degradation */ }
     };
     document.addEventListener('touchstart', unlock, { once: true, passive: true, capture: true });
     return () => document.removeEventListener('touchstart', unlock, { capture: true });
