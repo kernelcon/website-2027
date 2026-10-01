@@ -225,11 +225,6 @@ $bg:      #0d0520;
 // ── Mobile ────────────────────────────────────────────────────────────────
 
 @media only screen and (max-width: 768px) {
-  .venue-section .sponsors {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
   .spons-page .spons-groups .spons-block {
     .spons-img    { margin-bottom: 30px; }
     .plat-spons   { max-width: 90vw; width: calc(25vh + 25vw); }
