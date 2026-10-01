@@ -480,7 +480,12 @@ $glow-yellow: 0 0 12px #ffe600, 0 0 24px #ffe600, 0 0 48px rgba(255,230,0,.4);
 
 // Safari-only: use filter:drop-shadow instead of text-shadow (renders sharply, no blur bleed)
 @supports (background: -webkit-named-image(i)) {
-  .algo-pre-label { text-shadow: none; filter: drop-shadow(0 0 6px #7b2fff) drop-shadow(0 0 12px rgba(123,47,255,.6)); }
-  .algo-date-val  { text-shadow: none; filter: drop-shadow(0 0 6px #ffe600) drop-shadow(0 0 12px rgba(255,230,0,.6)); }
-  .stat-num       { text-shadow: none; filter: drop-shadow(0 0 6px #39ff14) drop-shadow(0 0 12px rgba(57,255,20,.6)); }
+  .algo-pre-label  { text-shadow: none; filter: drop-shadow(0 0 6px #7b2fff) drop-shadow(0 0 12px rgba(123,47,255,.6)); }
+  .algo-date-val   { text-shadow: none; filter: drop-shadow(0 0 6px #ffe600) drop-shadow(0 0 12px rgba(255,230,0,.6)); }
+  .stat-num        { text-shadow: none; filter: drop-shadow(0 0 6px #39ff14) drop-shadow(0 0 12px rgba(57,255,20,.6)); }
+  .content-label   { text-shadow: none; filter: drop-shadow(0 0 6px #7b2fff) drop-shadow(0 0 12px rgba(123,47,255,.6)); }
+  .content-title   { text-shadow: none; filter: drop-shadow(0 0 8px rgba(183,243,245,.5)) drop-shadow(0 0 16px rgba(183,243,245,.3)); }
+  .content-subtitle { text-shadow: none; filter: drop-shadow(0 0 6px rgba(212,124,255,.7)) drop-shadow(0 0 12px rgba(212,124,255,.4)); }
+  .algo-word-green  { text-shadow: none; filter: drop-shadow(0 0 6px #39ff14) drop-shadow(0 0 10px rgba(57,255,20,.5)); }
+  .algo-word-purple { text-shadow: none; filter: drop-shadow(0 0 6px #7b2fff) drop-shadow(0 0 10px rgba(123,47,255,.5)); }
 }
