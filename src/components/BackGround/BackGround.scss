@@ -490,6 +490,6 @@ $glow-yellow: 0 0 12px #ffe600, 0 0 24px #ffe600, 0 0 48px rgba(255,230,0,.4);
     .content-subtitle          { text-shadow: none; filter: drop-shadow(0 0 6px rgba(212,124,255,.6)) drop-shadow(0 0 12px rgba(212,124,255,.3)); }
     .algo-word-green           { text-shadow: none; filter: drop-shadow(0 0 6px #39ff14) drop-shadow(0 0 12px rgba(57,255,20,.6)); }
     .algo-word-purple          { text-shadow: none; filter: drop-shadow(0 0 6px #7b2fff) drop-shadow(0 0 12px rgba(123,47,255,.6)); }
-    .stat-num                  { text-shadow: none; filter: drop-shadow(0 0 6px #39ff14) drop-shadow(0 0 12px rgba(57,255,20,.6)); }
+    .content-stats .content-stat .stat-num { text-shadow: none; filter: drop-shadow(0 0 6px #39ff14) drop-shadow(0 0 12px rgba(57,255,20,.6)); }
   }
 }
