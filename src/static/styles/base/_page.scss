@@ -135,6 +135,15 @@ body {
 
 @media (max-width: 768px) {
   .venue-section {
+    padding-top: 2.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@supports (background: -webkit-named-image(i)) {
+  .venue-section {
+    padding-top: 2.5rem;
     padding-left: 1rem;
     padding-right: 1rem;
   }
