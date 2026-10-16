@@ -5,20 +5,21 @@
         "title": "Keynote",
         "authors": [
           {
-            "name": "Casey Ellis",
-            "speaker_id": "caseyellis",
-            "company": "cje.io",
-            "twitter": "",
+            "name": "John Hammond",
+            "speaker_id": "johnhammond",
+            "company": "https://www.huntress.com/",
+            "twitter": "https://x.com/_johnhammond",
             "mastodon": "",
             "bluesky": "",
-            "github": "",
-            "linkedin": "",
-            "image": "Casey.png",
-            "bio": "Casey is a serial entrepreneur and executive, best known as the founder of Bugcrowd and co-founder of The disclose.io Project. He is a 25+ year veteran of information security who grew up inventing things, hacking things, and generally getting technology to do things it isn't supposed to do. Casey pioneered the crowdsourced security as-a-service model, launching the first bug bounty programs on the Bugcrowd platform in 2012, and he co-founded disclose.io vulnerability disclosure standardization project in 2014 prior to its launch in 2018. He's an active member of a variety of policy and threat intelligence working groups and think tanks such as the Hacking Policy Council and the Election Security Research Forum. He has personally advised the US White House, DoD, Department of Justice, Department of Homeland Security/CISA, the Australian and UK intelligence communities, and various US House and Senate legislative cybersecurity initiatives, including preemptive cyberspace protection ahead of the 2020 and 2024 Presidential Elections, the US National Cyber Strategy, and a variety of policies and EO's relating to security research, anti-hacking law, and artificial intelligence. Casey, a native of Sydney, Australia, is based in the San Francisco Bay Area.",
-            "talk_id": "keynote-casey-ellis"
+            "github": "https://github.com/JohnHammond",
+            "linkedin": "https://www.linkedin.com/in/johnhammond010/",
+            "youtube": "https://www.youtube.com/@_JohnHammond",
+            "image": "hammond.png",
+            "bio": "John Hammond is a cybersecurity researcher, educator and content creator. As part of the Adversary Tactics team at Huntress, John spends his days investigating hacker tradecraft and telling the stories behind current threats. Previously, as a Department of Defense Cyber Training Academy instructor, he taught the Cyber Threat Emulation course, educating both civilian and military members on the adversarial mindset and real-world attacks. John is an online YouTube personality, showcasing live demonstrations of malware, vulnerabilities, exploits, and broader cybersecurity education.",
+            "talk_id": "keynote-john-hammond"
           }
         ],
-        "talk_id": "keynote-casey-ellis",
+        "talk_id": "keynote-john-hammond",
         "pdf": "",
         "video": "",
         "length": "60",
