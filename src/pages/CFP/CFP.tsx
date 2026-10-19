@@ -12,7 +12,7 @@ return (
       <p className="tab-paragraph">Calling all hackers, researchers, and builders!</p>
   	  <p className="tab-paragraph">TL;DR - submit via  {" "}
 			<a
-				href="https://forms.gle/EJr4EK7NjZeDyBZb8"
+				href="href="https://forms.gle/PgJZehLnVicjrokT6"
 				className="text-highlight"
 				rel="noopener noreferrer"
 				target="_blank">
