@@ -10,7 +10,6 @@ return (
     <div>
       {/* Opening */}
       <p className="tab-paragraph">Calling all hackers, researchers, and builders!</p>
-      {/* Form-based submission disabled while the CFP form is broken.
   	  <p className="tab-paragraph">TL;DR - submit via  {" "}
 			<a
 				href="https://forms.gle/EJr4EK7NjZeDyBZb8"
@@ -20,12 +19,6 @@ return (
 			this form
 			</a> (but you really should read the instructions).
 		</p>
-      */}
-      <p className="tab-paragraph">TL;DR - email your submission to {" "}
-        <a href="mailto:cfp@kernelcon.org" className="text-highlight" rel="noopener noreferrer">
-          cfp@kernelcon.org
-        </a> (but you really should read the instructions).
-      </p>
       <p className="tab-paragraph">
         The Kernelcon Crew is soliciting presentations for the eighth annual Kernelcon,
         held at the Hilton Downtown in Omaha, NE, March 4-5, 2027.
@@ -187,7 +180,6 @@ return (
         Supplementary files like draft slides, outlines, or whitepapers may also be
         included via URL (Dropbox, Drive, etc.).
       </p>
-      {/* Form-based submission disabled while the CFP form is broken.
   		<p className="tab-paragraph">We're continuing into our 3rd year of a form-based CFP submission system rather than email.</p>
 	    <p className="tab-paragraph">Submissions are collected by {" "}
 			<a
@@ -197,13 +189,6 @@ return (
 				target="_blank">
 			form
 			</a>{""}. </p>
-      */}
-      <p className="tab-paragraph">
-        Email your submission to {" "}
-        <a href="mailto:cfp@kernelcon.org" className="text-highlight" rel="noopener noreferrer">
-          cfp@kernelcon.org
-        </a>.
-      </p>
 
       {/* Grant of Copyright */}
       <p className="tab-heading">Grant of Copyright Use</p>
