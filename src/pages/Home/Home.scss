@@ -2328,6 +2328,88 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
   margin-bottom: 1.4rem;
 }
 
+// ── Beat code ─────────────────────────────────────────────
+
+.code-strip {
+  margin-bottom: 1.4rem;
+  border: 1px solid $rhythm-grey-dim;
+  background: $rhythm-bg-deep;
+  &.open { border-color: $rhythm-purple; }
+}
+
+.code-strip-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.7rem 0.9rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: 'Space Mono', monospace;
+  text-align: left;
+
+  .code-strip-label { font-size: 0.6rem; letter-spacing: 0.3em; color: $rhythm-purple; }
+  .code-strip-hint  { font-size: 0.62rem; letter-spacing: 0.08em; color: $rhythm-grey-text; }
+  &:hover .code-strip-hint { color: $rhythm-green; }
+}
+
+.code-strip-body {
+  padding: 0 0.9rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.code-input {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 9rem;
+  resize: vertical;
+  padding: 0.8rem;
+  background: #05020d;
+  color: $rhythm-green;
+  caret-color: $rhythm-green;
+  border: 1px solid $rhythm-grey-dim;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  tab-size: 2;
+  white-space: pre;
+  overflow-x: auto;
+  &:focus { outline: none; border-color: $rhythm-green; box-shadow: 0 0 10px rgba(57,255,20,0.25); }
+}
+
+.code-error {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  color: $rhythm-pink;
+}
+
+.code-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.8rem;
+
+  .code-reset {
+    background: transparent;
+    color: $rhythm-grey-text;
+    outline: 1px solid $rhythm-grey-dim;
+    outline-offset: -1px;
+    &:hover { color: #fff; }
+  }
+
+  .code-help {
+    flex: 1 1 260px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    line-height: 1.6;
+    color: $rhythm-grey-text;
+  }
+}
+
 .example-strip-header {
   display: flex;
   align-items: center;
