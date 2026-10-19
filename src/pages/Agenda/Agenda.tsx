@@ -2,10 +2,13 @@ import { Component } from 'react';
 import { Tabs, Tab, TabPanel, TabList } from '../../components/ui/Tabs';
 import MediaQuery from 'react-responsive';
 import TalksSchedule from './TalksSchedule/TalksSchedule';
+import Individuals from './Speakers/Individuals';
+import { KEYNOTES } from '../../content';
 // import CallOuts from '../../components/CallOuts/CallOuts';
 // import type { ComponentProps } from 'react';
 // import { villageConfig, competitionConfig } from '../../content';
 import './Agenda.scss';
+import './Speakers/Speakers.scss';
 import type { LegacyRouteProps } from '../../router-compat';
 
 // Commented out until content is ready:
@@ -56,7 +59,7 @@ export default class Agenda extends Component<AgendaProps, AgendaState> {
       >
         <TabList>
           <Tab tabFor="schedule">Schedule</Tab>
-          {/* <Tab tabFor="keynotes">Keynotes</Tab> */}
+          <Tab tabFor="keynotes">Keynotes</Tab>
           {/* <Tab tabFor="speakers">Speakers</Tab> */}
           {/* <Tab tabFor="talks">Talks</Tab> */}
           <Tab tabFor="villages">Villages</Tab>
@@ -71,6 +74,29 @@ export default class Agenda extends Component<AgendaProps, AgendaState> {
             <div className="coming-soon-block">
               <div className="coming-soon-title">Schedule</div>
               <p className="coming-soon-text">Check back soon. The full talk schedule will be posted once speaker selections are finalized.</p>
+            </div>
+          </div>
+        </TabPanel>
+
+        <TabPanel tabId="keynotes">
+          <div className="text-area">
+            <div className="speaker-section keynote-speakers">
+              <div className="speakers">
+                {KEYNOTES.map((k) => (
+                  <Individuals key={k.speaker_id}
+                    speakerId={k.speaker_id}
+                    talkId={k.talk_id}
+                    speaker={k.name}
+                    company={k.company}
+                    twitter={k.twitter}
+                    mastodon={k.mastodon}
+                    linkedin={k.linkedin}
+                    github={k.github}
+                    image={`speakers/${k.image}`}
+                    bio={k.bio}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </TabPanel>
@@ -99,7 +125,7 @@ export default class Agenda extends Component<AgendaProps, AgendaState> {
           </div>
         </TabPanel>
 
-        {/* keynotes, speakers, talks, entertainment, careers - coming soon */}
+        {/* speakers, talks, entertainment, careers - coming soon */}
       </Tabs>
     );
   }

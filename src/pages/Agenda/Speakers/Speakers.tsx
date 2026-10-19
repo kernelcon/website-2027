@@ -3,7 +3,7 @@ import Individuals from './Individuals';
 import './Speakers.scss';
 
 // import { agendaConfig as config } from '../../../content';
-import { speakerConfig as config } from '../../../content';
+import { speakerConfig as config, KEYNOTE_SPEAKER_IDS } from '../../../content';
 
 interface SpeakerAuthor {
   name: string;
@@ -26,8 +26,6 @@ interface SpeakerTalk {
 interface SpeakerGroup {
   talks: SpeakerTalk[];
 }
-
-const KEYNOTE_SPEAKER_IDS = ['caseyellis', 'phillipwylie'];
 
 function getParsedSpeakerConfig(): SpeakerGroup[] {
   const raw: unknown = config;
