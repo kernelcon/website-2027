@@ -183,7 +183,7 @@ return (
   		<p className="tab-paragraph">We're continuing into our 3rd year of a form-based CFP submission system rather than email.</p>
 	    <p className="tab-paragraph">Submissions are collected by {" "}
 			<a
-				href="https://forms.gle/EJr4EK7NjZeDyBZb8"
+				href="https://forms.gle/PgJZehLnVicjrokT6"
 				className="text-highlight"
 				rel="noopener noreferrer"
 				target="_blank">
