@@ -245,7 +245,7 @@ $glow-yellow: 0 0 12px #ffe600, 0 0 24px #ffe600, 0 0 48px rgba(255,230,0,.4);
 
 .algo-wave-strip {
   position: absolute;
-  bottom: 80px;
+  bottom: 36px;
   left: 0;
   right: 0;
   z-index: 5;
@@ -262,7 +262,7 @@ $glow-yellow: 0 0 12px #ffe600, 0 0 24px #ffe600, 0 0 48px rgba(255,230,0,.4);
 
 .algo-eq-strip {
   position: absolute;
-  bottom: 44px; /* offset by footer height so bars sit flush on the footer */
+  bottom: 0; /* sit flush on the hero's bottom edge so no rain shows beneath */
   left: 0;
   right: 0;
   height: 80px;
