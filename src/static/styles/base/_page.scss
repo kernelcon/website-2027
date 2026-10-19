@@ -28,6 +28,8 @@
 html {
   margin: 0;
   padding: 0;
+  // Reserve scrollbar space so centered content doesn't shift between short and long pages
+  scrollbar-gutter: stable;
 }
 
 *,*:before,*:after{
