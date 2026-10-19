@@ -533,6 +533,111 @@ interface Example { name: string; emoji: string; desc: string; dur: number; trac
 const seq = (note: string, s: number, e: number, step: number): NoteEvent[] =>
   Array.from({length: Math.ceil((e - s) / step)}, (_, i) => ({note, t: s + i * step}));
 
+// ── Beat code: text → tracks ─────────────────────────────────────────────────
+// One "inst: steps" line per track. Each step is an 8th note; "." is a rest,
+// "C4+E4" is a chord, "[ ... ]*4" and "C4*4" repeat. Shorter tracks loop to
+// fill the longest one.
+
+const STARTER_CODE = `// Each step is an 8th note · "." = rest · C4+E4 = chord · [ ... ]*4 = repeat
+bpm 120
+drums: [kick . hihat . snare . hihat .]*2
+bass:  E2 . E2 . G2 . A2 .
+piano: E4+G4+B4 . . . . . . . D4+F#4+A4 . . . . . . .`;
+
+const CODE_INSTRUMENTS: Record<string, string> = Object.fromEntries(
+  INSTRUMENTS.filter(i => i.id !== 'mic').flatMap(i => [
+    [i.id.toLowerCase(), i.id],
+    [i.name.toLowerCase().replace(/[^a-z]/g, ''), i.id],
+  ]),
+);
+CODE_INSTRUMENTS.drum = 'drums';
+
+const CODE_DRUMS: Record<string, string> = {
+  kick: 'kick', snare: 'snare', hihat: 'hihat', hat: 'hihat', hh: 'hihat',
+  tom: 'tom', clap: 'clap', cymbal: 'cymbal', cym: 'cymbal', crash: 'cymbal',
+};
+
+const FLAT_TO_SHARP: Record<string, string> = { Db: 'C#', Eb: 'D#', Gb: 'F#', Ab: 'G#', Bb: 'A#' };
+const MAX_CODE_STEPS = 1024;
+const MAX_CODE_REPEAT = 64;
+const MAX_CODE_DUR = 120000;
+
+const codeNote = (tok: string, drums: boolean): string | null => {
+  if (drums) return CODE_DRUMS[tok.toLowerCase()] ?? null;
+  const m = tok.match(/^([A-Ga-g])([#b]?)(\d)$/);
+  if (!m) return null;
+  const name = m[1].toUpperCase() + m[2];
+  const note = (FLAT_TO_SHARP[name] ?? name) + m[3];
+  return note in FREQS ? note : null;
+};
+
+const expandRepeats = (src: string): string => {
+  let s = src;
+  const group = /\[([^[\]]*)\]\s*(?:\*\s*(\d+))?/;
+  for (let m = s.match(group); m; m = s.match(group)) {
+    const n = Math.min(Number(m[2] ?? 1), MAX_CODE_REPEAT);
+    s = s.slice(0, m.index) + ` ${Array(n).fill(m[1]).join(' ')} ` + s.slice(m.index! + m[0].length);
+    if (s.length > MAX_CODE_STEPS * 16) break;
+  }
+  return s.replace(/(\S+)\*(\d+)/g, (_, tok: string, n: string) =>
+    Array(Math.min(Number(n), MAX_CODE_REPEAT)).fill(tok).join(' '));
+};
+
+type BeatCodeResult = { ok: true; tracks: ExampleTrack[]; dur: number } | { ok: false; error: string };
+
+function parseBeatCode(src: string): BeatCodeResult {
+  let bpm = 120;
+  const parsed: { inst: string; steps: string[][] }[] = [];
+  const lines = src.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].replace(/\/\/.*$/, '').trim();
+    const where = `Line ${i + 1}`;
+    if (!line || line.startsWith('#')) continue;
+    const bpmMatch = line.match(/^bpm\s*:?\s*(\d+)$/i);
+    if (bpmMatch) {
+      bpm = Number(bpmMatch[1]);
+      if (bpm < 30 || bpm > 300) return { ok: false, error: `${where}: bpm must be between 30 and 300` };
+      continue;
+    }
+    const trackMatch = line.match(/^([a-z!' ]+?)\s*:\s*(.*)$/i);
+    if (!trackMatch) return { ok: false, error: `${where}: expected "instrument: steps" or "bpm 120"` };
+    const inst = CODE_INSTRUMENTS[trackMatch[1].toLowerCase().replace(/[^a-z]/g, '')];
+    if (!inst) return { ok: false, error: `${where}: unknown instrument "${trackMatch[1]}"` };
+    if (/[[\]]/.test(expandRepeats(trackMatch[2]))) return { ok: false, error: `${where}: unmatched [ or ]` };
+    const tokens = expandRepeats(trackMatch[2]).split(/\s+/).filter(Boolean);
+    if (tokens.length > MAX_CODE_STEPS) return { ok: false, error: `${where}: too many steps (max ${MAX_CODE_STEPS})` };
+    const steps: string[][] = [];
+    for (const tok of tokens) {
+      if (tok === '.' || tok === '-' || tok === '_') { steps.push([]); continue; }
+      const notes = tok.split('+').map(n => codeNote(n, inst === 'drums'));
+      const bad = tok.split('+').find((_, j) => !notes[j]);
+      if (bad !== undefined) {
+        return { ok: false, error: inst === 'drums'
+          ? `${where}: unknown drum "${bad}" (use kick, snare, hihat, tom, clap, cymbal)`
+          : `${where}: "${bad}" isn't a playable note (C2–C5, e.g. C4, F#3, Bb3)` };
+      }
+      steps.push(notes as string[]);
+    }
+    if (steps.length) parsed.push({ inst, steps });
+  }
+  if (!parsed.length) return { ok: false, error: 'Add at least one track, e.g. "piano: C4 E4 G4 ."' };
+
+  const stepMs = 60000 / bpm / 2;
+  const dur = Math.min(Math.max(...parsed.map(p => p.steps.length)) * stepMs, MAX_CODE_DUR);
+  const tracks = parsed.map(({ inst, steps }) => {
+    const events: NoteEvent[] = [];
+    const len = steps.length * stepMs;
+    for (let start = 0; start < dur; start += len) {
+      steps.forEach((notes, s) => {
+        const t = Math.round(start + s * stepMs);
+        if (t < dur) notes.forEach(note => events.push({ note, t }));
+      });
+    }
+    return { inst, events };
+  });
+  return { ok: true, tracks, dur };
+}
+
 const EXAMPLES: Example[] = [
   {
     name: 'SYSTEM BREACH', emoji: '⚡', desc: 'Dark techno with driving kick and synths · C minor · 120 BPM · 24s',
@@ -2278,6 +2383,9 @@ function PianoSection() {
   const [isRecording, setIsRecording] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeDemo, setActiveDemo] = useState<string | null>(null);
+  const [codeOpen, setCodeOpen] = useState(false);
+  const [beatCode, setBeatCode] = useState(STARTER_CODE);
+  const [codeError, setCodeError] = useState<string | null>(null);
   const [videoUrl, setVideoUrl] = useState<string|null>(null);
   const [shareOpen, setShareOpen] = useState(false);
   const [exportingFor, setExportingFor] = useState<'share'|'tweet'|'linkedin'|null>(null);
@@ -3111,8 +3219,10 @@ function PianoSection() {
   useEffect(() => {
     const instRef = {current: instrument};
     instRef.current = instrument;
+    const inField = (e: KeyboardEvent) =>
+      e.target instanceof HTMLElement && !!e.target.closest('input, textarea, select, [contenteditable="true"]');
     const down = (e: KeyboardEvent) => {
-      if (e.repeat) return;
+      if (e.repeat || inField(e)) return;
       if (instRef.current === 'drums') {
         const pad = DRUM_KB[e.key.toLowerCase()];
         if (!pad) return;
@@ -3126,6 +3236,7 @@ function PianoSection() {
       }
     };
     const up = (e: KeyboardEvent) => {
+      if (inField(e)) return;
       if (instRef.current === 'drums') {
         const pad = DRUM_KB[e.key.toLowerCase()];
         if (pad) setPressedKeys(p => { const s = new Set(p); s.delete(pad); return s; });
@@ -3401,6 +3512,21 @@ function PianoSection() {
     setActiveDemo(ex.name);
   };
 
+  const runCode = () => {
+    const result = parseBeatCode(beatCode);
+    if (!result.ok) { setCodeError(result.error); return; }
+    setCodeError(null);
+    let id = trackIdRef.current;
+    const codeTracks: Track[] = result.tracks.map(tr => ({
+      id: ++id, inst: tr.inst, events: tr.events, dur: result.dur, baseDur: result.dur, chunks: 1, muted: false,
+    }));
+    trackIdRef.current = id;
+    loopDurRef.current = result.dur;
+    setTracks(codeTracks);
+    setActiveDemo(null);
+    playAll(codeTracks);
+  };
+
   const startRecord = async () => {
     getCtx(); // iOS: prime AudioContext inside the user gesture before any async work
     if (instrument === 'mic') { await startMicRecord(); return; }
@@ -3573,6 +3699,38 @@ function PianoSection() {
             </div>
             <button className="carousel-arrow carousel-arrow-right" onClick={() => scrollDemos(1)} aria-label="Scroll right">▶</button>
           </div>
+        </div>
+
+        {/* Beat code */}
+        <div className={`code-strip${codeOpen ? ' open' : ''}`}>
+          <button className="code-strip-toggle" onClick={() => setCodeOpen(o => !o)} aria-expanded={codeOpen}>
+            <span className="code-strip-label">⌨ CODE A BEAT</span>
+            <span className="code-strip-hint">{codeOpen ? '▲ Hide' : '▼ Write your loop as code'}</span>
+          </button>
+          {codeOpen && (
+            <div className="code-strip-body">
+              <textarea
+                className="code-input"
+                value={beatCode}
+                onChange={e => setBeatCode(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); runCode(); } }}
+                spellCheck={false}
+                autoCapitalize="off"
+                autoCorrect="off"
+                rows={8}
+                aria-label="Beat code"
+              />
+              {codeError && <div className="code-error" role="alert">✕ {codeError}</div>}
+              <div className="code-actions">
+                <button className="piano-btn play" onClick={runCode} disabled={isRecording || isExporting}>▶ Run Code</button>
+                <button className="piano-btn code-reset" onClick={() => { stopAll(); setBeatCode(STARTER_CODE); setCodeError(null); }}>↺ Reset</button>
+                <span className="code-help">
+                  Instruments: {INSTRUMENTS.filter(i => i.id !== 'mic').map(i => i.id).join(', ')}
+                  {' · '}Drums: kick, snare, hihat, tom, clap, cymbal · Notes C2–C5 · Ctrl/⌘+Enter to run
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Instrument selector */}
