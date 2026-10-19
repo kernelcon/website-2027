@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { img as resolveImg } from '../../../static/images';
+import { hostLabel } from '../../../content';
 import TwitterLogoLight from "../../../static/images/icons/x-logo-black.png"
 import TwitterLogoDark from "../../../static/images/icons/x-logo-white.png"
 import MastodonLogoLight from "../../../static/images/icons/mastodon-logo-black.svg"
@@ -61,7 +62,9 @@ class Individuals extends Component<IndividualsProps> {
                 {this.props.speaker}
             </h3>
             {(this.props.company || twitter || this.props.mastodon || github || this.props.linkedin) && <span className='speaker-titles'>
-              {this.props.company && <span>{this.props.company}</span>}
+              {this.props.company && <span>{/^https?:\/\//.test(this.props.company)
+                ? <a href={this.props.company} target="_blank" rel="noopener noreferrer nofollow">{hostLabel(this.props.company)}</a>
+                : this.props.company}</span>}
               {twitter && 
                 <span>
                   <a href={twitter} 

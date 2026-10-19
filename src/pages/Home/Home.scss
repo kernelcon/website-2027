@@ -1069,6 +1069,74 @@ $glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600, 0 0 40px rgba(255,230,0,0.4);
   }
 }
 
+.headliner-card--feature {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(180px, 280px) 1fr;
+  gap: 2.5rem;
+  align-items: start;
+
+  .headliner-photo {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border: 1px solid $rhythm-grey-dim;
+    position: relative;
+  }
+
+  .headliner-body { position: relative; }
+
+  .headliner-org {
+    display: inline-block;
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
+
+  .headliner-bio {
+    margin: 1.2rem 0;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: $rhythm-grey-text;
+    max-width: 70ch;
+  }
+
+  .headliner-socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.4rem;
+
+    a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: $rhythm-green;
+      text-decoration: none;
+      &:hover { text-shadow: $glow-green; }
+    }
+  }
+
+  .headliner-more {
+    display: inline-block;
+    margin-top: 1.6rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: $rhythm-pink;
+    text-decoration: none;
+    &:hover { text-shadow: $glow-pink; }
+  }
+
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+
+    .headliner-photo { max-width: 240px; }
+  }
+}
+
 @keyframes spin-slow { to { transform: rotate(360deg); } }
 
 .performers-label {

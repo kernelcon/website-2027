@@ -5,6 +5,8 @@ import BackGround from '../../components/BackGround/BackGround';
 import KernelconLogoUrl from '../../static/images/logos/kernelcon_white.png';
 import AlgoLogoUrl from '../../static/images/algo-logo.png';
 import SocialCdUrl from '../../static/images/social-cd.png';
+import { KEYNOTES, hostLabel } from '../../content';
+import { imgIn } from '../../static/images';
 import "./Home.scss";
 
 // Preload logos once at module level so every draw() call can use them synchronously
@@ -75,11 +77,6 @@ function getKeyDateStatuses(today = new Date()) {
     return { ...k, status: "coming" };
   });
 }
-
-// const KEYNOTES = [
-//   { name: "Casey Ellis",    org: "cje.io",      badge: "Keynote" },
-//   { name: "Phillip Wylie",  org: "Suzu Labs",   badge: "Keynote" },
-// ];
 
 // const PERFORMERS = [
 //   { name: "Matt Scheurer",        track: '"Definitely Not Secure (DNS)"' },
@@ -3960,7 +3957,7 @@ export default class Home extends Component<object, HomeState> {
 
           <div className="rhythm-stripe" />
 
-          {/* ── HEADLINERS ── (commented out until speakers are announced)
+          {/* ── HEADLINERS ── */}
           <div className="rhythm-section headliners-section">
             <div className="rhythm-inner">
               <div className="rhythm-label">Keynote Speakers</div>
@@ -3968,15 +3965,31 @@ export default class Home extends Component<object, HomeState> {
 
               <div className="headliner-grid">
                 {KEYNOTES.map((k) => (
-                  <div key={k.name} className="headliner-card">
-                    <div className="headliner-badge">★ {k.badge}</div>
-                    <div className="headliner-name">{k.name}</div>
-                    <div className="headliner-org">{k.org}</div>
+                  <div key={k.speaker_id} className="headliner-card headliner-card--feature">
+                    <img className="headliner-photo" src={imgIn('speakers', k.image)} alt={k.name} />
+                    <div className="headliner-body">
+                      <div className="headliner-badge">★ Keynote</div>
+                      <div className="headliner-name">{k.name}</div>
+                      {k.company && (
+                        <a className="headliner-org" href={k.company} target="_blank" rel="noopener noreferrer">
+                          {hostLabel(k.company)}
+                        </a>
+                      )}
+                      {k.bio && <p className="headliner-bio">{k.bio}</p>}
+                      <div className="headliner-socials">
+                        {k.twitter && <a href={k.twitter} target="_blank" rel="noopener noreferrer nofollow">X</a>}
+                        {k.youtube && <a href={k.youtube} target="_blank" rel="noopener noreferrer nofollow">YouTube</a>}
+                        {k.github && <a href={k.github} target="_blank" rel="noopener noreferrer nofollow">GitHub</a>}
+                        {k.linkedin && <a href={k.linkedin} target="_blank" rel="noopener noreferrer nofollow">LinkedIn</a>}
+                      </div>
+                      <a className="headliner-more" href="/agenda/keynotes">▶ View in Agenda</a>
+                    </div>
                     <div className="headliner-bg-text">K/N</div>
                   </div>
                 ))}
               </div>
 
+              {/* Featured Performers (hidden until 2027 talks are announced)
               <div className="performers-label">♪ Featured Performers</div>
               <div className="performers-grid">
                 {PERFORMERS.map((p) => (
@@ -3986,11 +3999,11 @@ export default class Home extends Component<object, HomeState> {
                   </div>
                 ))}
               </div>
+              */}
             </div>
           </div>
 
           <div className="rhythm-stripe" />
-          */}
 
           {/* ── SOUNDCHECK / TRAINING ── (hidden until training is announced)
           <div className="rhythm-section soundcheck-section">

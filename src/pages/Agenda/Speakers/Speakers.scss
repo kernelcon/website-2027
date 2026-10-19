@@ -102,6 +102,9 @@
               vertical-align: middle;
             }
           }
+          // Site is always dark, so always use the white logos.
+          .light-mode-logo { display: none !important; }
+          .dark-mode-logo { display: inline !important; }
           .speaker-socials-logo {
             width: 16px;
             // margin: 0px 3px 0px 3px;
@@ -123,5 +126,34 @@
         }
       }
     }
+  }
+}
+// Keynotes tab: one speaker per row, full width, larger photo.
+.speaker-section.keynote-speakers {
+  .speakers .individual-speaker-section {
+    width: 100%;
+    padding-bottom: 50px;
+
+    .speaker-wording {
+      .bio-image {
+        width: 240px;
+        height: 240px;
+        margin: -40px 0 20px 30px;
+      }
+      p {
+        font-size: 16px;
+        line-height: 26px;
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .speaker-section.keynote-speakers .speakers .individual-speaker-section .speaker-wording .bio-image {
+    float: none;
+    display: block;
+    width: 180px;
+    height: 180px;
+    margin: 15px 0;
   }
 }

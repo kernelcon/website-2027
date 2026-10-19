@@ -11,6 +11,8 @@ import ocConfig from "./oc.json";
 import trainingConfig from "./training.json";
 import villageConfig from "./villages.json";
 import competitionConfig from "./competitions.json";
+export { KEYNOTES, KEYNOTE_SPEAKER_IDS, hostLabel } from "./keynotes";
+export type { KeynoteSpeaker } from "./keynotes";
 
 export {
   agendaConfig,
