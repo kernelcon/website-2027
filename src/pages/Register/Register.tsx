@@ -70,6 +70,7 @@ const Register = () => {
             <li>Photo proof of enrollment — you + your student ID at school</li>
             <li>Letter of recommendation from an advisor or instructor</li>
             <li>Brief letter of interest — why Kernelcon, what you hope to learn</li>
+            <li>Video, 2 minutes minimum — what you're doing outside of school in cybersecurity or technology. We're looking for passionate students who want to give back to the community</li>
             <li>At least one letter sent from a school email address</li>
           </ul>
         </div>
