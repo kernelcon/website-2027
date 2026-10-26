@@ -1,5 +1,7 @@
 import { Component } from "react";
 import "./Sponsors.scss";
+import Aikido from "../../static/images/sponsors/aikido-dark-mode.svg";
+import Shamar from "../../static/images/sponsors/shamar.png";
 
 export default class Sponsors extends Component {
 	static displayName = "Sponsors";
@@ -54,32 +56,6 @@ export default class Sponsors extends Component {
                 </div>
               </div>
             </div>
-            <div>
-              <h3 className="title">Sponsor a Student</h3>
-              <div className="text-block">
-                <h4>
-                  Interested in sponsoring a student for this year's
-                  Kernelcon?
-                </h4>
-                <p>
-                  With your assistance, Kernelcon hopes to sponsor up
-                  to 50 students this year. In addition to entry for
-                  you, your money will help pay for a student's
-                  admission, hotel room (for traveling students), and
-                  this year's "hacker education kit".
-                </p>
-                <div className="tab-title">
-                  Would you like to hear more? Please contact{" "}
-                  <a
-                    href="mailto:sponsor@kernelcon.org?Subject=Sponorship"
-                    style={{ textDecoration: "underline" }}
-                    target="_top">
-                    sponsor@kernelcon.org
-                  </a>
-                  .
-                </div>
-              </div>
-            </div>
             <div className="spons-page">
               <div className="text-block">
                 <div className="past-sponsors">
@@ -115,6 +91,27 @@ export default class Sponsors extends Component {
                   <span className="sponsor-year">
                     <a href="https://2019.kernelcon.org/sponsors/" target="_blank" rel="noopener noreferrer">2019</a>
                   </span>
+                </div>
+              </div>
+
+              <div className="text-block spons-groups">
+                {/* Gold Sponsors */}
+                <div className="spons-block">
+                  <h2 className="gold spons-title">Gold</h2>
+                  <a href="https://www.aikido.dev/"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    <img src={Aikido}
+                      className="spons-img gold-spons aikido-logo"
+                      alt="Aikido Security"/>
+                  </a>
+                  <a href="https://www.shamarinfosec.com/"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    <img src={Shamar}
+                      className="spons-img gold-spons all-bright"
+                      alt="Shamar Information Security"/>
+                  </a>
                 </div>
               </div>
             </div>
