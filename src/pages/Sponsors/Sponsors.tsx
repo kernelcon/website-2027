@@ -56,32 +56,6 @@ export default class Sponsors extends Component {
                 </div>
               </div>
             </div>
-            <div>
-              <h3 className="title">Sponsor a Student</h3>
-              <div className="text-block">
-                <h4>
-                  Interested in sponsoring a student for this year's
-                  Kernelcon?
-                </h4>
-                <p>
-                  With your assistance, Kernelcon hopes to sponsor up
-                  to 50 students this year. In addition to entry for
-                  you, your money will help pay for a student's
-                  admission, hotel room (for traveling students), and
-                  this year's "hacker education kit".
-                </p>
-                <div className="tab-title">
-                  Would you like to hear more? Please contact{" "}
-                  <a
-                    href="mailto:sponsor@kernelcon.org?Subject=Sponorship"
-                    style={{ textDecoration: "underline" }}
-                    target="_top">
-                    sponsor@kernelcon.org
-                  </a>
-                  .
-                </div>
-              </div>
-            </div>
             <div className="spons-page">
               <div className="text-block">
                 <div className="past-sponsors">
