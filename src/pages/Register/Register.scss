@@ -7,7 +7,7 @@ $grey:   #a090c0;
 
 .reg-page {
   min-height: 100vh;
-  padding: 180px 2rem 6rem;
+  padding: 49px 2rem 6rem;
   max-width: 860px;
   margin: 0 auto;
 }
@@ -143,8 +143,36 @@ $grey:   #a090c0;
   }
 }
 
+.reg-apply {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem 1.4rem;
+  margin-top: 1.6rem;
+}
+
+.reg-cta-sm {
+  font-size: 1.25rem;
+  padding: 0.6rem 2rem;
+}
+
+.reg-apply-deadline {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: $grey;
+}
+
+.reg-apply-help {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.5);
+  margin: 1.2rem 0 0;
+}
+
 // ── Responsive ───────────────────────────────────────────────────────────────
 
 @media (max-width: 600px) {
-  .reg-page { padding: 160px 1.2rem 4rem; }
+  .reg-page { padding: 65px 1.2rem 4rem; }
 }

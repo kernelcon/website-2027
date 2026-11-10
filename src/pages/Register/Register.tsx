@@ -1,4 +1,12 @@
+import { dateConfig } from "../../content";
 import "./Register.scss";
+
+const SCHOLARSHIP_FORM_URL =
+  "https://docs.google.com/forms/d/e/1FAIpQLSch4IsnuBYwvQJC77zFephV2zcjOAn_ZOMdsknwG-psZJRNEA/viewform";
+
+const scholarshipDeadline = dateConfig.find(
+  (d) => d.title === "Student Scholarship Applications Close"
+)?.date;
 
 const Register = () => {
   return (
@@ -63,16 +71,35 @@ const Register = () => {
             admission, a hotel room if traveling, and this year's hacker
             education kit.
           </p>
-          <p className="reg-card-label" style={{marginTop: '1rem'}}>To apply, send the following to{' '}
-            <a className="reg-card-link" href="mailto:students@kernelcon.org">students@kernelcon.org</a>
+          <p className="reg-card-body">
+            We're looking for passionate students who want to give back to the
+            community.
           </p>
+          <p className="reg-card-label" style={{marginTop: '1rem'}}>Have these ready before you apply</p>
           <ul className="reg-scholarship-list">
             <li>Photo proof of enrollment — you + your student ID at school</li>
             <li>Letter of recommendation from an advisor or instructor</li>
             <li>Brief letter of interest — why Kernelcon, what you hope to learn</li>
-            <li>Video, 2 minutes minimum — what you're doing outside of school in cybersecurity or technology. We're looking for passionate students who want to give back to the community</li>
-            <li>At least one letter sent from a school email address</li>
+            <li>Video, 2 minutes minimum — what you're doing outside of school in cybersecurity or technology</li>
+            <li>Your school email address</li>
           </ul>
+          <div className="reg-apply">
+            <a
+              className="reg-cta reg-cta-sm"
+              href={SCHOLARSHIP_FORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Apply for a Scholarship
+            </a>
+            {scholarshipDeadline && (
+              <span className="reg-apply-deadline">Applications close {scholarshipDeadline}</span>
+            )}
+          </div>
+          <p className="reg-apply-help">
+            Questions? Email{' '}
+            <a className="reg-card-link" href="mailto:students@kernelcon.org">students@kernelcon.org</a>
+          </p>
         </div>
 
       </div>
