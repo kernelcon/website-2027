@@ -2,6 +2,7 @@ import { Component } from "react";
 import "./Sponsors.scss";
 import Aikido from "../../static/images/sponsors/aikido-dark-mode.svg";
 import Shamar from "../../static/images/sponsors/shamar.png";
+import SentinelOne from "../../static/images/sponsors/sentinelone-dark-mode.svg";
 
 export default class Sponsors extends Component {
 	static displayName = "Sponsors";
@@ -111,6 +112,13 @@ export default class Sponsors extends Component {
                     <img src={Shamar}
                       className="spons-img gold-spons all-bright"
                       alt="Shamar Information Security"/>
+                  </a>
+                  <a href="https://www.sentinelone.com/"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    <img src={SentinelOne}
+                      className="spons-img gold-spons"
+                      alt="SentinelOne"/>
                   </a>
                 </div>
               </div>
