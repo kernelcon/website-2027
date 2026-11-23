@@ -148,12 +148,20 @@ class Training extends Component {
           <div className='venue-section'>
             <h3>Training</h3>
             {/* <p>Once again Kernelcon will be offering several amazing options for training taking place in the days before the con.  Check back soon for more details or if you're interested in leading a training class, checkout our <a rel="noopener noreferrer" className="text-highlight" href="/open-calls">Open Calls page</a> for more details.</p> */}
+            <div className='training-coming-soon'>
+              <br />
+              <p><strong>Coming Soon!</strong></p>
+              <p>Kernelcon 2027 training courses will be announced soon. Training takes place {dayOneTraining} and {dayTwoTraining}, {trainingYear}, the two days before the conference. Check back for course details and registration.</p>
+            </div>
+            {/* Hidden until 2027 training is announced
             <div>
             <br /><p>Kernelcon Training offers courses from experienced trainers on relevant topics in information security. These are hands-on, in-person courses that will help expand attendees' skill sets and knowledge. Kernelcon's goal is to provide top-notch training at an affordable price. Each training ticket includes a badge to the Kernelcon conference and snacks and lunch during training. Whether new to the field or an old blackhat, offense or defense, technical or general, or anything and everything inbetween, we hope you find something you like.</p>
           </div>
           {training}
+            */}
           </div>
-          
+
+          {/* Hidden until 2027 workshops are announced
           <div className='venue-section' style={{ marginTop: '60px' }}>
             <h3>Workshops</h3>
             <div>
@@ -209,6 +217,7 @@ class Training extends Component {
               </div>
             </div>
           </div>
+          */}
         </div>
       </div>
     );
